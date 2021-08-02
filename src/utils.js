@@ -1,4 +1,8 @@
-import {RANDOM_SEPARATOR} from './const';
+import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
+import {DateFormatPattern, RANDOM_SEPARATOR} from './const';
+
+dayjs.extend(duration);
 
 /**
  * Отрисовывает компоненты.
@@ -44,4 +48,65 @@ export const getRandomArrayItem = (array) => {
  * Перемешивает входящий массив случайным образом.
  * @param {*} array входящий массив
  */
-export const shuffleArray = (array) => array.slice().sort(() => Math.random() - RANDOM_SEPARATOR);
+export const shuffleArray = (array) =>
+  array
+    .slice()
+    .sort(() => Math.random() - RANDOM_SEPARATOR);
+
+/**
+ * Форматирует дату в указанном формате.
+ * @param {number} timestamp форматируемая дата в Unix time.
+ * @param {string} pattern паттерн для форматирования в {@link https://en.wikipedia.org/wiki/ISO_8601 ISO 8601}. Значение по-умолчанию: `MMM DD`.
+ * @returns {string} дата в человекочитаемом формате.
+ */
+export const formatDate = (timestamp, pattern = DateFormatPattern.HUMAN.DEFAULT) => dayjs(timestamp).format(pattern);
+
+/**
+ * Возвращает разницу между двумя датами в человекочитаемом формате.
+ * @param {number} firstTimestamp первая дата в Unix time.
+ * @param {number} secondTimestamp вторая дата в Unix time.
+ * @returns {string} дата в человекочитаемом формате.
+ */
+export const getHumanizedDateDifference = (firstTimestamp, secondTimestamp) => {
+  const lower = Math.min(firstTimestamp, secondTimestamp);
+  const upper = Math.max(firstTimestamp, secondTimestamp);
+  const diff = dayjs.duration(dayjs(upper).diff(dayjs(lower)));
+  let pattern = DateFormatPattern.HUMAN.DURATION_MIN;
+
+  if (diff.days()) {
+    pattern = DateFormatPattern.HUMAN.DURATION_DAYS;
+  } else if (diff.hours()) {
+    pattern = DateFormatPattern.HUMAN.DURATION_HOURS;
+  }
+
+  return diff.format(pattern);
+};
+
+/**
+ * Проверяет, является ли проверяемая дата прошлой.
+ * @param {number} timestamp дата в Unix time.
+ * @returns {Boolean} возвращает булево значение (`true` или `false`).
+ */
+export const isPastDate = (timestamp) => {
+  const now = dayjs();
+  return dayjs(timestamp).isBefore(now, 'ms');
+};
+
+/**
+ * Проверяет, является ли проверяемая дата будущей.
+ * @param {number} timestamp дата в Unix time.
+ * @returns {Boolean} возвращает булево значение (`true` или `false`).
+ */
+export const isFutureDate = (timestamp) => {
+  const now = dayjs();
+  return dayjs(now).isBefore(timestamp, 'ms');
+};
+
+/**
+ * Проверяет, находятся ли указанные даты в одном месяце.
+ * @param {number} firstTimestamp дата в Unix time.
+ * @param {number} secondTimestamp дата в Unix time.
+ * @returns {boolean} возвращает булево значение (`true` или `false`).
+ */
+export const isOneMonthDates = (firstTimestamp, secondTimestamp) =>
+  dayjs(firstTimestamp).month() === dayjs(secondTimestamp).month();
