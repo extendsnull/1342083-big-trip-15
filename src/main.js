@@ -1,4 +1,4 @@
-import {EVENTS_COUNT} from './const';
+import {Event} from './const';
 import {render} from './utils';
 import * as view from './view';
 
@@ -7,7 +7,7 @@ const navigationContainer = document.querySelector('.trip-controls__navigation')
 const filtersContainer = document.querySelector('.trip-controls__filters');
 const contentContainer = document.querySelector('.trip-events');
 
-const eventItems = Array.from(new Array(EVENTS_COUNT), () => view.getEventTemplate());
+const eventItems = Array.from(new Array(Event.COUNT), () => view.getEventTemplate());
 
 render(mainContainer, view.getTripInfoTemplate(), 'afterbegin');
 render(navigationContainer, view.getTripNavigationTemplate());
