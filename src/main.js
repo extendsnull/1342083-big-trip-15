@@ -15,7 +15,6 @@ render(filtersContainer, view.getTripFiltersTemplate());
 
 render(contentContainer, view.getTripSortTemplate());
 render(contentContainer, view.getEventListTemplate(
-  view.getEditEventTemplate(),
-  view.getAddEventTemplate(),
+  view.getEventFormTemplate(),
   ...eventItems,
 ));
