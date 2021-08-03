@@ -1,4 +1,4 @@
-import {EVENTS_COUNT} from './const';
+import { getMockPoints, getInfoState, getFiltersState } from './mocks';
 import {render} from './utils';
 import * as view from './view';
 
@@ -7,15 +7,19 @@ const navigationContainer = document.querySelector('.trip-controls__navigation')
 const filtersContainer = document.querySelector('.trip-controls__filters');
 const contentContainer = document.querySelector('.trip-events');
 
-const eventItems = Array.from(new Array(EVENTS_COUNT), () => view.getEventTemplate());
+const points = getMockPoints();
+const infoState = getInfoState(points);
+const filtersState = getFiltersState(points);
+const [firstPoint, ...restPoints] = points;
 
-render(mainContainer, view.getTripInfoTemplate(), 'afterbegin');
+const eventItems = restPoints.map((point) => view.getEventTemplate(point));
+
+render(mainContainer, view.getTripInfoTemplate(infoState), 'afterbegin');
 render(navigationContainer, view.getTripNavigationTemplate());
-render(filtersContainer, view.getTripFiltersTemplate());
+render(filtersContainer, view.getTripFiltersTemplate(filtersState));
 
 render(contentContainer, view.getTripSortTemplate());
 render(contentContainer, view.getEventListTemplate(
-  view.getEditEventTemplate(),
-  view.getAddEventTemplate(),
+  view.getEventFormTemplate(firstPoint),
   ...eventItems,
 ));
