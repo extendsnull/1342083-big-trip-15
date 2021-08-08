@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
-import {DateFormatPattern, RANDOM_SEPARATOR} from './const';
+import {HumanDateFormatPattern, RANDOM_SEPARATOR} from './const';
 
 dayjs.extend(duration);
 
@@ -59,7 +59,7 @@ export const shuffleArray = (array) =>
  * @param {string} pattern паттерн для форматирования в {@link https://en.wikipedia.org/wiki/ISO_8601 ISO 8601}. Значение по-умолчанию: `MMM DD`.
  * @returns {string} дата в человекочитаемом формате.
  */
-export const formatDate = (timestamp, pattern = DateFormatPattern.HUMAN.DEFAULT) => dayjs(timestamp).format(pattern);
+export const formatDate = (timestamp, pattern = HumanDateFormatPattern.DEFAULT) => dayjs(timestamp).format(pattern);
 
 /**
  * Возвращает разницу между двумя датами в человекочитаемом формате.
@@ -71,12 +71,12 @@ export const getHumanizedDateDifference = (firstTimestamp, secondTimestamp) => {
   const lower = Math.min(firstTimestamp, secondTimestamp);
   const upper = Math.max(firstTimestamp, secondTimestamp);
   const diff = dayjs.duration(dayjs(upper).diff(dayjs(lower)));
-  let pattern = DateFormatPattern.HUMAN.DURATION_MIN;
+  let pattern = HumanDateFormatPattern.DURATION_MIN;
 
   if (diff.days()) {
-    pattern = DateFormatPattern.HUMAN.DURATION_DAYS;
+    pattern = HumanDateFormatPattern.DURATION_DAYS;
   } else if (diff.hours()) {
-    pattern = DateFormatPattern.HUMAN.DURATION_HOURS;
+    pattern = HumanDateFormatPattern.DURATION_HOURS;
   }
 
   return diff.format(pattern);

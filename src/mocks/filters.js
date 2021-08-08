@@ -7,15 +7,15 @@ export const getFiltersState = (points) => {
   return {
     everything: {
       items: points,
-      disabled: Boolean(points.length === 0),
+      disabled: !points.length,
     },
     future: {
       items: futureItems,
-      disabled: Boolean(futureItems.length === 0),
+      disabled: !futureItems.length,
     },
     past: {
       items: pastItems,
-      disabled: Boolean(pastItems.length === 0),
+      disabled: !pastItems.length,
     },
   };
 };

@@ -1,8 +1,8 @@
-import {Point} from '../const';
+import {MOCK_CITIES, POINT_TYPES} from '../const';
 import {formatDate} from '../utils';
 
 const getTypeItemsTemplate = (currentType) => {
-  const template = Point.TYPES.map((type) => {
+  const template = POINT_TYPES.map((type) => {
     const isChecked = type === currentType;
     return `
       <div class="event__type-item">
@@ -15,7 +15,7 @@ const getTypeItemsTemplate = (currentType) => {
 };
 
 const getDestinationItemsTemplate = () =>
-  Point.MOCK_CITIES.map((city) => `<option value="${city}"></option>`).join('\n');
+  MOCK_CITIES.map((city) => `<option value="${city}"></option>`).join('\n');
 
 const getOffersTemlate = (offers) => {
   if (Array.isArray(offers) && offers.length) {

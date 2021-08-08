@@ -1,5 +1,5 @@
 import {formatDate, getHumanizedDateDifference} from '../utils';
-import {DateFormatPattern} from '../const';
+import {HumanDateFormatPattern, MachineDateFormatPattern} from '../const';
 
 const getOffersTemplate = (offers) => {
   if (Array.isArray(offers) && offers.length) {
@@ -30,8 +30,8 @@ export const getEventTemplate = (props) => {
 
   return `
     <div class="event">
-      <time class="event__date" datetime="${formatDate(dateFrom, DateFormatPattern.MACHINE.DEFAULT)}">
-        ${formatDate(dateFrom, DateFormatPattern.HUMAN.MONTH_DAY)}
+      <time class="event__date" datetime="${formatDate(dateFrom, MachineDateFormatPattern.DEFAULT)}">
+        ${formatDate(dateFrom, HumanDateFormatPattern.MONTH_DAY)}
       </time>
       <div class="event__type">
         <img class="event__type-icon" width="42" height="42" src="img/icons/${type.name}.png" alt="Event type icon">
@@ -39,12 +39,12 @@ export const getEventTemplate = (props) => {
       <h3 class="event__title">${title}</h3>
       <div class="event__schedule">
         <p class="event__time">
-          <time class="event__start-time" datetime="${formatDate(dateFrom, DateFormatPattern.MACHINE.WITH_HOURS)}">
-            ${formatDate(dateFrom, DateFormatPattern.HUMAN.ONLY_TIME)}
+          <time class="event__start-time" datetime="${formatDate(dateFrom, MachineDateFormatPattern.WITH_HOURS)}">
+            ${formatDate(dateFrom, HumanDateFormatPattern.ONLY_TIME)}
           </time>
           &mdash;
-          <time class="event__end-time" datetime="${formatDate(dateTo, DateFormatPattern.MACHINE.WITH_HOURS)}">
-            ${formatDate(dateTo, DateFormatPattern.HUMAN.ONLY_TIME)}
+          <time class="event__end-time" datetime="${formatDate(dateTo, MachineDateFormatPattern.WITH_HOURS)}">
+            ${formatDate(dateTo, HumanDateFormatPattern.ONLY_TIME)}
           </time>
         </p>
         <p class="event__duration">
