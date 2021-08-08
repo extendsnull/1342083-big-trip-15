@@ -16,6 +16,11 @@ export const POINT_TYPES = [
 
 export const RANDOM_SEPARATOR = 0.5;
 
+export const RenderPosition = {
+  AFTER_BEGIN: 'afterbegin',
+  BEFORE_END: 'beforeend',
+};
+
 export const HumanDateFormatPattern = {
   DEFAULT: 'DD/MM/YY HH:mm',
   ONLY_DAY: 'DD',
