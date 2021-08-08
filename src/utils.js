@@ -76,7 +76,7 @@ export const shuffleArray = (array) =>
 /**
  * Форматирует дату в указанном формате.
  * @param {number} timestamp форматируемая дата в Unix time.
- * @param {string} pattern паттерн для форматирования в {@link https://en.wikipedia.org/wiki/ISO_8601 ISO 8601}. Значение по-умолчанию: `MMM DD`.
+ * @param {string} pattern паттерн для форматирования в {@link https://en.wikipedia.org/wiki/ISO_8601 ISO 8601}. Значение по-умолчанию: `DD/MM/YY HH:mm`.
  * @returns {string} дата в человекочитаемом формате.
  */
 export const formatDate = (timestamp, pattern = HumanDateFormatPattern.DEFAULT) => dayjs(timestamp).format(pattern);
