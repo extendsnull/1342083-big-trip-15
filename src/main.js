@@ -86,7 +86,7 @@ const renderPointsList = (items) => {
 const renderBoard = (items) => {
   const isEmpty = items.every((point) => point.isExpired);
 
-  if (!items.length || isEmpty) {
+  if (isEmpty) {
     const noPoint = new NoPoints(NoPointsMessage.EVERYTHING);
     render(contentContainer, noPoint.getElement());
     return;
