@@ -1,5 +1,5 @@
 import {getMockPoints, getInfoState, getFiltersState} from './mocks';
-import {RenderPosition} from './const';
+import {NoPointsMessage} from './const';
 import {render, isEscKey, createElement} from './utils';
 
 import Info from './view/info';
@@ -14,12 +14,13 @@ const pointsProps = getMockPoints();
 const infoState = getInfoState(pointsProps);
 const filtersState = getFiltersState(pointsProps);
 
-const mainContainer = document.querySelector('.trip-main');
+const pageHeaderContainer = document.querySelector('.page-header__container');
+render(pageHeaderContainer, new Info(infoState).getElement());
+
 const navigationContainer = document.querySelector('.trip-controls__navigation');
 const filtersContainer = document.querySelector('.trip-controls__filters');
 const contentContainer = document.querySelector('.trip-events');
 
-render(mainContainer, new Info(infoState).getElement(), RenderPosition.AFTER_BEGIN);
 render(navigationContainer, new Navigation().getElement());
 render(filtersContainer, new FilterForm(filtersState).getElement());
 
@@ -82,15 +83,17 @@ const renderPointsList = (items) => {
   render(contentContainer, pointsListElement);
 };
 
-const renderBoard = (items = []) => {
-  if (items.length) {
-    render(contentContainer, new SortForm().getElement());
-    renderPointsList(items);
+const renderBoard = (items) => {
+  const isEmpty = items.every((point) => point.isExpired);
+
+  if (isEmpty) {
+    const noPoint = new NoPoints(NoPointsMessage.EVERYTHING);
+    render(contentContainer, noPoint.getElement());
     return;
   }
 
-  const noPoint = new NoPoints();
-  render(contentContainer, noPoint.getElement());
+  render(contentContainer, new SortForm().getElement());
+  renderPointsList(items);
 };
 
 renderBoard(pointsProps);

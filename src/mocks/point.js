@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import {getRandomIntInclusive, getRandomBoolean, getRandomArrayItem, shuffleArray} from '../utils';
-import {MOCK_CITIES, POINT_TYPES} from '../const';
+import {DAYS_GAP, MOCK_CITIES, POINT_TYPES} from '../const';
 
 const POINT_COUNT = 20;
 
@@ -31,7 +31,7 @@ const mockOffers = [
 ];
 
 dayjs.extend(duration);
-const dateGap = dayjs.duration({ days: 3 }).asMilliseconds();
+const dateGap = dayjs.duration({ days: DAYS_GAP }).asMilliseconds();
 
 const getRandomDescription = () => {
   const descriptionLength = getRandomIntInclusive(DescriptionSizeRestrict.MIN, DescriptionSizeRestrict.MAX);
@@ -106,6 +106,7 @@ const getMockPoint = () => {
     basePrice: getRandomIntInclusive(PriceRestrict.MIN, PriceRestrict.MAX),
     dateFrom,
     dateTo,
+    isExpired: dateTo < Date.now(),
     isFavorite: getRandomBoolean(),
   };
 };
