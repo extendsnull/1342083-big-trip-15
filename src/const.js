@@ -16,9 +16,8 @@ export const POINT_TYPES = [
 
 export const RANDOM_SEPARATOR = 0.5;
 
-export const RenderPosition = {
-  AFTER_BEGIN: 'afterbegin',
-  BEFORE_END: 'beforeend',
+export const KeyName = {
+  ESC: ['Esc', 'Escape'],
 };
 
 export const HumanDateFormatPattern = {
@@ -34,6 +33,17 @@ export const HumanDateFormatPattern = {
 export const MachineDateFormatPattern = {
   DEFAULT: 'YYYY-MM-DD',
   WITH_HOURS: 'YYYY-MM-DDTHH:mm',
+};
+
+export const NoPointsMessage = {
+  EVERYTHING: 'Click New Event to create your first point',
+  PAST: 'There are no past events now',
+  FUTURE: 'There are no future events now',
+};
+
+export const RenderPosition = {
+  AFTER_BEGIN: 'afterbegin',
+  BEFORE_END: 'beforeend',
 };
 
 export const TextSeparator = {

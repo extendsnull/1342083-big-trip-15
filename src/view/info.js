@@ -1,5 +1,5 @@
 import {MAIN_TITLE_MAX_LENGTH, HumanDateFormatPattern, TextSeparator} from '../const';
-import {formatDate, isOneMonthDates} from '../utils';
+import {createElement, formatDate, isOneMonthDates} from '../utils';
 
 const formatTitle = (destinations) => {
   if (destinations.length > MAIN_TITLE_MAX_LENGTH) {
@@ -27,7 +27,7 @@ const formatDates = (dateFrom, dateTo) => {
   ].join(TextSeparator.DATES);
 };
 
-export const getTripInfoTemplate = (props) => {
+const getInfoTemplate = (props) => {
   const {destinations, dates, cost} = props;
   const [dateFrom] = dates[0];
   const [, dateTo] = dates[dates.length - 1];
@@ -35,8 +35,12 @@ export const getTripInfoTemplate = (props) => {
   return `
     <section class="trip-main__trip-info trip-info">
       <div class="trip-info__main">
-        <h1 class="trip-info__title">${formatTitle(destinations)}</h1>
-        <p class="trip-info__dates">${formatDates(dateFrom, dateTo)}</p>
+        <h1 class="trip-info__title">
+          ${formatTitle(destinations)}
+        </h1>
+        <p class="trip-info__dates">
+          ${formatDates(dateFrom, dateTo)}
+        </p>
       </div>
 
       <p class="trip-info__cost">
@@ -44,3 +48,26 @@ export const getTripInfoTemplate = (props) => {
       </p>
     </section>`;
 };
+
+export default class Info {
+  constructor(props) {
+    this._element = null;
+    this._props = props;
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return getInfoTemplate(this._props);
+  }
+}

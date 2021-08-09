@@ -1,25 +1,96 @@
-import { getMockPoints, getInfoState, getFiltersState } from './mocks';
-import {render} from './utils';
-import * as view from './view';
+import {getMockPoints, getInfoState, getFiltersState} from './mocks';
+import {RenderPosition} from './const';
+import {render, isEscKey, createElement} from './utils';
+
+import Info from './view/info';
+import FilterForm from './view/filter-form';
+import Navigation from './view/navigation';
+import SortForm from './view/sort-form';
+import Point from './view/point';
+import PointForm from './view/point-form';
+import NoPoints from './view/no-points';
+
+const pointsProps = getMockPoints();
+const infoState = getInfoState(pointsProps);
+const filtersState = getFiltersState(pointsProps);
 
 const mainContainer = document.querySelector('.trip-main');
 const navigationContainer = document.querySelector('.trip-controls__navigation');
 const filtersContainer = document.querySelector('.trip-controls__filters');
 const contentContainer = document.querySelector('.trip-events');
 
-const points = getMockPoints();
-const infoState = getInfoState(points);
-const filtersState = getFiltersState(points);
-const [firstPoint, ...restPoints] = points;
+render(mainContainer, new Info(infoState).getElement(), RenderPosition.AFTER_BEGIN);
+render(navigationContainer, new Navigation().getElement());
+render(filtersContainer, new FilterForm(filtersState).getElement());
 
-const eventItems = restPoints.map((point) => view.getEventTemplate(point));
+const renderPoint = (container, props) => {
+  const pointComponent = new Point(props);
+  const pointFormComponent = new PointForm(props, true);
 
-render(mainContainer, view.getTripInfoTemplate(infoState), 'afterbegin');
-render(navigationContainer, view.getTripNavigationTemplate());
-render(filtersContainer, view.getTripFiltersTemplate(filtersState));
+  const showPointFormButton = pointComponent.getElement().querySelector('.event__rollup-btn');
+  const hidePointFormButton = pointFormComponent.getElement().querySelector('.event__rollup-btn');
 
-render(contentContainer, view.getTripSortTemplate());
-render(contentContainer, view.getEventListTemplate(
-  view.getEventFormTemplate(firstPoint),
-  ...eventItems,
-));
+  const replaceFormToPoint = () => {
+    container.replaceChild(
+      pointComponent.getElement(),
+      pointFormComponent.getElement(),
+    );
+  };
+
+  const replacePointToForm = () => {
+    container.replaceChild(
+      pointFormComponent.getElement(),
+      pointComponent.getElement(),
+    );
+  };
+
+  const onEscKeyPress = (evt) => {
+    if (isEscKey(evt.key)) {
+      replaceFormToPoint();
+      document.removeEventListener('keydown', onEscKeyPress);
+    }
+  };
+
+  showPointFormButton.addEventListener('click', (evt) => {
+    evt.preventDefault();
+    replacePointToForm();
+    document.addEventListener('keydown', onEscKeyPress);
+  });
+
+  hidePointFormButton.addEventListener('click', (evt) => {
+    evt.preventDefault();
+    replaceFormToPoint();
+    document.removeEventListener('keydown', onEscKeyPress);
+  });
+
+  pointFormComponent.getElement().addEventListener('submit', (evt) => {
+    evt.preventDefault();
+    replaceFormToPoint();
+    document.removeEventListener('keydown', onEscKeyPress);
+  });
+
+  render(container, pointComponent.getElement());
+};
+
+const renderPointsList = (items) => {
+  const pointsListElement = createElement('<ul class="trip-events__list"></ul>');
+
+  for (const pointProps of items) {
+    renderPoint(pointsListElement, pointProps);
+  }
+
+  render(contentContainer, pointsListElement);
+};
+
+const renderBoard = (items = []) => {
+  if (items.length) {
+    render(contentContainer, new SortForm().getElement());
+    renderPointsList(items);
+    return;
+  }
+
+  const noPoint = new NoPoints();
+  render(contentContainer, noPoint.getElement());
+};
+
+renderBoard(pointsProps);

@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
-import {RANDOM_SEPARATOR, HumanDateFormatPattern, RenderPosition} from './const';
+import {RANDOM_SEPARATOR, KeyName, HumanDateFormatPattern, RenderPosition} from './const';
 
 dayjs.extend(duration);
 
@@ -31,7 +31,7 @@ export const render = (parent, child, where = RenderPosition.BEFORE_END) => {
 export const createElement = (html) => {
   const templateParentElement = document.createElement('div');
   templateParentElement.innerHTML = html;
-  return templateParentElement.firstChild;
+  return templateParentElement.firstElementChild;
 };
 
 /**
@@ -130,3 +130,10 @@ export const isFutureDate = (timestamp) => {
  */
 export const isOneMonthDates = (firstTimestamp, secondTimestamp) =>
   dayjs(firstTimestamp).month() === dayjs(secondTimestamp).month();
+
+/**
+ * Проверяет нажал ли пользователь кнопку `Escape`.
+ * @param {string} key строковый идентификатор клавиши, нажатой пользователем.
+ * @returns {boolean} возвращает булево значение (`true` или `false`).
+ */
+export const isEscKey = (key) => KeyName.ESC.indexOf(key) > -1;
