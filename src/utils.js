@@ -1,17 +1,37 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
-import {DateFormatPattern, RANDOM_SEPARATOR} from './const';
+import {RANDOM_SEPARATOR, KeyName, HumanDateFormatPattern, RenderPosition} from './const';
 
 dayjs.extend(duration);
 
 /**
- * Отрисовывает компоненты.
- * @param {HTMLElement} element элемент, по отношению к которому происходит вставка компонента.
- * @param {string} html разметка для компонента.
- * @param {InsertPosition} where местоположение компонента (см. {@link https://developer.mozilla.org/en-US/docs/Web/API/Element/insertAdjacentHTML insertAdjacentHTML}). Значение по-умолчанию: `beforeend`.
+ * Рендерит html-элемент на странице.
+ * @param {HTMLElement} parent _родительский_ элемент, внутрь которого происходит вставка _дочернего_ элемента.
+ * @param {HTMLElement} child _дочерний_ элемент, который нужно отрендерить на странице.
+ * @param {string} where местоположение _дочернего_ элемента. Значение по-умолчанию: `beforeend`. Возможные значения: `afterbegin`, `beforeend`.
  */
-export const render = (element, html, where = 'beforeend') => {
-  element.insertAdjacentHTML(where, html);
+export const render = (parent, child, where = RenderPosition.BEFORE_END) => {
+  switch (where) {
+    case RenderPosition.AFTER_BEGIN: {
+      parent.prepend(child);
+      break;
+    }
+    case RenderPosition.BEFORE_END: {
+      parent.append(child);
+      break;
+    }
+  }
+};
+
+/**
+ * Создает html-элемент из строки с разметкой.
+ * @param {string} html разметка для компонента.
+ * @returns {HTMLElement} html-элемент.
+ */
+export const createElement = (html) => {
+  const templateParentElement = document.createElement('div');
+  templateParentElement.innerHTML = html;
+  return templateParentElement.firstElementChild;
 };
 
 /**
@@ -56,10 +76,10 @@ export const shuffleArray = (array) =>
 /**
  * Форматирует дату в указанном формате.
  * @param {number} timestamp форматируемая дата в Unix time.
- * @param {string} pattern паттерн для форматирования в {@link https://en.wikipedia.org/wiki/ISO_8601 ISO 8601}. Значение по-умолчанию: `MMM DD`.
+ * @param {string} pattern паттерн для форматирования в {@link https://en.wikipedia.org/wiki/ISO_8601 ISO 8601}. Значение по-умолчанию: `DD/MM/YY HH:mm`.
  * @returns {string} дата в человекочитаемом формате.
  */
-export const formatDate = (timestamp, pattern = DateFormatPattern.HUMAN.DEFAULT) => dayjs(timestamp).format(pattern);
+export const formatDate = (timestamp, pattern = HumanDateFormatPattern.DEFAULT) => dayjs(timestamp).format(pattern);
 
 /**
  * Возвращает разницу между двумя датами в человекочитаемом формате.
@@ -71,12 +91,12 @@ export const getHumanizedDateDifference = (firstTimestamp, secondTimestamp) => {
   const lower = Math.min(firstTimestamp, secondTimestamp);
   const upper = Math.max(firstTimestamp, secondTimestamp);
   const diff = dayjs.duration(dayjs(upper).diff(dayjs(lower)));
-  let pattern = DateFormatPattern.HUMAN.DURATION_MIN;
+  let pattern = HumanDateFormatPattern.DURATION_MIN;
 
   if (diff.days()) {
-    pattern = DateFormatPattern.HUMAN.DURATION_DAYS;
+    pattern = HumanDateFormatPattern.DURATION_DAYS;
   } else if (diff.hours()) {
-    pattern = DateFormatPattern.HUMAN.DURATION_HOURS;
+    pattern = HumanDateFormatPattern.DURATION_HOURS;
   }
 
   return diff.format(pattern);
@@ -110,3 +130,10 @@ export const isFutureDate = (timestamp) => {
  */
 export const isOneMonthDates = (firstTimestamp, secondTimestamp) =>
   dayjs(firstTimestamp).month() === dayjs(secondTimestamp).month();
+
+/**
+ * Проверяет нажал ли пользователь кнопку `Escape`.
+ * @param {string} key строковый идентификатор клавиши, нажатой пользователем.
+ * @returns {boolean} возвращает булево значение (`true` или `false`).
+ */
+export const isEscKey = (key) => KeyName.ESC.indexOf(key) > -1;
