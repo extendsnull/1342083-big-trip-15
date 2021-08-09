@@ -9,10 +9,12 @@ export const getInfoState = (points) => {
 
     return mainAcc + point.basePrice + offersPrice;
   }, 0);
+  const isEmpty = points.every((point) => point.isExpired);
 
   return {
     destinations,
     dates,
     cost,
+    isEmpty,
   };
 };

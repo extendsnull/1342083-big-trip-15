@@ -66,12 +66,38 @@ export const getRandomArrayItem = (array) => {
 
 /**
  * Перемешивает входящий массив случайным образом.
- * @param {*} array входящий массив
+ * @param {*} array входящий массив.
  */
 export const shuffleArray = (array) =>
   array
     .slice()
     .sort(() => Math.random() - RANDOM_SEPARATOR);
+
+/**
+ * Возвращает первый элемент массива.
+ * @param {Array} array входящий массив.
+ * @returns {any} первый элемент массива.
+ */
+export const getArrayFirst = (array) => {
+  if (!Array.isArray(array) || !array.length) {
+    return null;
+  }
+
+  return [...array][0];
+};
+
+/**
+ * Возвращает последний элемент массива.
+ * @param {Array} array входящий массив.
+ * @returns {any} последний элемент массива.
+ */
+export const getArrayLast = (array) => {
+  if (!Array.isArray(array) || !array.length) {
+    return null;
+  }
+
+  return [...array][array.length - 1];
+};
 
 /**
  * Форматирует дату в указанном формате.
