@@ -1,6 +1,7 @@
-import {getMockPoints, getInfoState, getFiltersState} from './mocks';
+import {getMockPoints, getInfoState, getFilterState} from './mocks';
 import {NoPointsMessage} from './const';
-import {render, isEscKey, createElement} from './utils';
+import {isEscKey} from './utils/common';
+import {render, createElement} from './utils/render';
 
 import Info from './view/info';
 import FilterForm from './view/filter-form';
@@ -12,7 +13,7 @@ import NoPoints from './view/no-points';
 
 const pointsProps = getMockPoints();
 const infoState = getInfoState(pointsProps);
-const filtersState = getFiltersState(pointsProps);
+const filterState = getFilterState(pointsProps);
 
 const pageHeaderContainer = document.querySelector('.page-header__container');
 render(pageHeaderContainer, new Info(infoState).getElement());
@@ -22,7 +23,7 @@ const filtersContainer = document.querySelector('.trip-controls__filters');
 const contentContainer = document.querySelector('.trip-events');
 
 render(navigationContainer, new Navigation().getElement());
-render(filtersContainer, new FilterForm(filtersState).getElement());
+render(filtersContainer, new FilterForm(filterState).getElement());
 
 const renderPoint = (container, props) => {
   const pointComponent = new Point(props);
