@@ -262,9 +262,43 @@ export default class PointForm extends AbstractView {
     super();
     this._pointProps = pointProps;
     this._isEdit = isEdit;
+
+    this._deleteClickHandler = this._deleteClickHandler.bind(this);
+    this._resetClickHandler = this._resetClickHandler.bind(this);
+    this._submitHandler = this._submitHandler.bind(this);
   }
 
   _getTemplate() {
     return getPointFormTemplate(this._pointProps, this._isEdit);
+  }
+
+  setDeleteClickHandler(callback) {
+    this._callback.deleteClick = callback;
+    this.getElement().querySelector('.event__reset-btn').addEventListener('click', this._deleteClickHandler);
+  }
+
+  setResetClickHandler(callback) {
+    this._callback.resetClick = callback;
+    this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._resetClickHandler);
+  }
+
+  setSubmitHandler(callback) {
+    this._callback.submit = callback;
+    this.getElement().addEventListener('submit', this._submitHandler);
+  }
+
+  _deleteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.deleteClick();
+  }
+
+  _submitHandler(evt) {
+    evt.preventDefault();
+    this._callback.submit();
+  }
+
+  _resetClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.resetClick();
   }
 }

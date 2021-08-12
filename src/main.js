@@ -1,7 +1,7 @@
 import {getMockPoints, getInfoState, getFilterState} from './mocks';
 import {NoPointsMessage} from './const';
 import {isEscKey} from './utils/common';
-import {createElement, render, replace} from './utils/render';
+import {createElement, render, replace, remove} from './utils/render';
 
 import Info from './view/info';
 import FilterForm from './view/filter-form';
@@ -29,11 +29,8 @@ const renderPoint = (container, props) => {
   const pointComponent = new Point(props);
   const pointFormComponent = new PointForm(props, true);
 
-  const showPointFormButton = pointComponent.getElement().querySelector('.event__rollup-btn');
-  const hidePointFormButton = pointFormComponent.getElement().querySelector('.event__rollup-btn');
-
-  const replaceFormToPoint = () => replace(pointComponent, pointFormComponent);
   const replacePointToForm = () => replace(pointFormComponent, pointComponent);
+  const replaceFormToPoint = () => replace(pointComponent, pointFormComponent);
 
   const onEscKeyPress = (evt) => {
     if (isEscKey(evt.key)) {
@@ -42,20 +39,23 @@ const renderPoint = (container, props) => {
     }
   };
 
-  showPointFormButton.addEventListener('click', (evt) => {
-    evt.preventDefault();
+  pointComponent.setEditClickHandler(() => {
     replacePointToForm();
     document.addEventListener('keydown', onEscKeyPress);
   });
 
-  hidePointFormButton.addEventListener('click', (evt) => {
-    evt.preventDefault();
+  pointFormComponent.setDeleteClickHandler(() => {
+    remove(pointComponent);
+    remove(pointFormComponent);
+    document.removeEventListener('keydown', onEscKeyPress);
+  });
+
+  pointFormComponent.setResetClickHandler(() => {
     replaceFormToPoint();
     document.removeEventListener('keydown', onEscKeyPress);
   });
 
-  pointFormComponent.getElement().addEventListener('submit', (evt) => {
-    evt.preventDefault();
+  pointFormComponent.setSubmitHandler(() => {
     replaceFormToPoint();
     document.removeEventListener('keydown', onEscKeyPress);
   });
