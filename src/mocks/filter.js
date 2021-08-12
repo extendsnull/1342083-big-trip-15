@@ -1,7 +1,7 @@
 import {FILTER_CONTROLS} from '../const';
 import {isFutureDate, isPastDate} from '../utils/date';
 
-export const getFiltersState = (points) => {
+export const getFilterState = (points) => {
   const futureItems = points.filter((point) => isFutureDate(point.dateFrom));
   const pastItems = points.filter((point) => isPastDate(point.dateTo));
 
