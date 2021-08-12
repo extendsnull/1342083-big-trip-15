@@ -1,33 +1,8 @@
-import {createElement} from '../utils';
+import AbstractView from './abstract';
+import {SORT_CONTROLS} from '../const';
 
-const sortControls = [
-  {
-    name: 'day',
-    label: 'Day',
-    isChecked: true,
-  },
-  {
-    name: 'event',
-    label: 'Event',
-    isDisabled: true,
-  },
-  {
-    name: 'time',
-    label: 'Time',
-  },
-  {
-    name: 'price',
-    label: 'Price',
-  },
-  {
-    name: 'offer',
-    label: 'Offers',
-    isDisabled: true,
-  },
-];
-
-const getSortFormControlTemplate = (props) => {
-  const {name, label, isChecked, isDisabled} = props;
+const getSortFormControlTemplate = (controlProps) => {
+  const {name, label, isChecked, isDisabled} = controlProps;
 
   return `
     <div class="trip-sort__item trip-sort__item--${name}">
@@ -48,7 +23,7 @@ const getSortFormControlTemplate = (props) => {
 };
 
 const getSortFormTemplate = () => {
-  const controlsTemplate = sortControls.map(getSortFormControlTemplate).join('\n');
+  const controlsTemplate = SORT_CONTROLS.map(getSortFormControlTemplate).join('\n');
 
   return `
     <form
@@ -60,24 +35,8 @@ const getSortFormTemplate = () => {
     </form>`;
 };
 
-export default class SortForm {
-  constructor() {
-    this._element = null;
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
-
+export default class SortForm extends AbstractView {
   getTemplate() {
-    return getSortFormTemplate(this._props);
+    return getSortFormTemplate();
   }
 }

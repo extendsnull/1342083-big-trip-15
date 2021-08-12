@@ -1,36 +1,12 @@
-import {MAIN_TITLE_MAX_LENGTH, HumanDateFormatPattern, TextSeparator} from '../const';
-import {createElement, getArrayFirst, getArrayLast, formatDate, isOneMonthDates} from '../utils';
+import AbstractView from './abstract';
+import {getArrayFirstItem, getArrayLastItem} from '../utils/array';
+import {formatTitle, formatDates} from '../utils/info';
 
-const formatTitle = (destinations) => {
-  if (destinations.length > MAIN_TITLE_MAX_LENGTH) {
-    const firstDestination = getArrayFirst(destinations);
-    const lastDestination = getArrayLast(destinations);
-    return [firstDestination, '...', lastDestination].join(TextSeparator.TITLE);
-  }
 
-  if (destinations.length) {
-    return destinations.join(TextSeparator.TITLE);
-  }
-
-  return '';
-};
-
-const formatDates = (dateFrom, dateTo) => {
-  const secondDateFormatPattern =
-    isOneMonthDates(dateFrom, dateTo)
-      ? HumanDateFormatPattern.ONLY_DAY
-      : HumanDateFormatPattern.MONTH_DAY;
-
-  return [
-    formatDate(dateFrom, HumanDateFormatPattern.MONTH_DAY),
-    formatDate(dateTo, secondDateFormatPattern),
-  ].join(TextSeparator.DATES);
-};
-
-const getMainInfoTemplate = (props) => {
-  const {destinations, dates, cost} = props;
-  const [dateFrom] = dates[0];
-  const [, dateTo] = dates[dates.length - 1];
+const getMainInfoTemplate = (infoState) => {
+  const {destinations, dates, cost} = infoState;
+  const [dateFrom] = getArrayFirstItem(dates);
+  const [, dateTo] = getArrayLastItem(dates);
 
   return `
     <section class="trip-main__trip-info trip-info">
@@ -49,9 +25,9 @@ const getMainInfoTemplate = (props) => {
     </section>`;
 };
 
-const getInfoTemplate = (props) => (`
+const getInfoTemplate = (infoState) => (`
   <div class="trip-main">
-    ${!props.isEmpty ? getMainInfoTemplate(props) : ''}
+    ${!infoState.isEmpty ? getMainInfoTemplate(infoState) : ''}
 
     <div class="trip-main__trip-controls trip-controls">
       <div class="trip-controls__navigation">
@@ -69,25 +45,13 @@ const getInfoTemplate = (props) => (`
     >New event</button>
   </div>`);
 
-export default class Info {
-  constructor(props) {
-    this._element = null;
-    this._props = props;
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+export default class Info extends AbstractView {
+  constructor(infoState) {
+    super();
+    this._infoState = infoState;
   }
 
   getTemplate() {
-    return getInfoTemplate(this._props);
+    return getInfoTemplate(this._infoState);
   }
 }

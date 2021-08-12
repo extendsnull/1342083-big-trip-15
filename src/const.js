@@ -32,6 +32,32 @@ export const FILTER_CONTROLS = [
   },
 ];
 
+export const SORT_CONTROLS = [
+  {
+    name: 'day',
+    label: 'Day',
+    isChecked: true,
+  },
+  {
+    name: 'event',
+    label: 'Event',
+    isDisabled: true,
+  },
+  {
+    name: 'time',
+    label: 'Time',
+  },
+  {
+    name: 'price',
+    label: 'Price',
+  },
+  {
+    name: 'offer',
+    label: 'Offers',
+    isDisabled: true,
+  },
+];
+
 export const RANDOM_SEPARATOR = 0.5;
 
 export const KeyName = {

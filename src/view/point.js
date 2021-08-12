@@ -1,5 +1,6 @@
-import {createElement, formatDate, getHumanizedDateDifference} from '../utils';
+import AbstractView from './abstract';
 import {HumanDateFormatPattern, MachineDateFormatPattern} from '../const';
+import {formatDate, getHumanizedDateDifference} from '../utils/date';
 
 const getOffersTemplate = (offers) => {
   if (Array.isArray(offers) && offers.length) {
@@ -13,8 +14,7 @@ const getOffersTemplate = (offers) => {
             &plus;&euro;&nbsp;
             <span class="event__offer-price">${price}</span>
           </li>`;
-      })
-      .join('\n');
+      }).join('\n');
 
     return `
       <h4 class="visually-hidden">Offers:</h4>
@@ -24,8 +24,8 @@ const getOffersTemplate = (offers) => {
   return '';
 };
 
-const getPointTemplate = (props) => {
-  const {type, destination, dateFrom, dateTo, basePrice, offers, isFavorite} = props;
+const getPointTemplate = (pointProps) => {
+  const {type, destination, dateFrom, dateTo, basePrice, offers, isFavorite} = pointProps;
   const title = `${type.label} ${destination.title}`;
 
   return `
@@ -95,25 +95,13 @@ const getPointTemplate = (props) => {
     </li>`;
 };
 
-export default class Point {
-  constructor(props) {
-    this._element = null;
-    this._props = props;
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+export default class Point extends AbstractView {
+  constructor(pointProps) {
+    super();
+    this._pointProps = pointProps;
   }
 
   getTemplate() {
-    return getPointTemplate(this._props);
+    return getPointTemplate(this._pointProps);
   }
 }

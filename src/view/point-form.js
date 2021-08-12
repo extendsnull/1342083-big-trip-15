@@ -1,7 +1,8 @@
+import AbstractView from './abstract';
 import {MOCK_CITIES, POINT_TYPES} from '../const';
-import {createElement, formatDate} from '../utils';
+import {formatDate} from '../utils/date';
 
-const defaultProps = {
+const DEFAULT_POINT_PROPS = {
   type: POINT_TYPES[0],
   destination: {
     title: MOCK_CITIES[0],
@@ -38,10 +39,9 @@ const getTypeItemsTemplate = (currentType) => {
   return template.join('\n');
 };
 
-const getDestinationItemsTemplate = () =>
-  MOCK_CITIES.map((city) => `<option value="${city}"></option>`).join('\n');
+const getDestinationItemsTemplate = () => MOCK_CITIES.map((city) => `<option value="${city}"></option>`).join('\n');
 
-const getOffersTemlate = (offers) => {
+const getOffersTemplate = (offers) => {
   if (Array.isArray(offers) && offers.length) {
     const template = offers.map((offer) => {
       const {name, label, price, isChecked} = offer;
@@ -63,14 +63,14 @@ const getOffersTemlate = (offers) => {
             <span class="event__offer-price">${price}</span>
           </label>
         </div>`;
-    });
+    }).join('\n');
 
 
     return `
       <section class="event__section event__section--offers">
         <h3 class="event__section-title event__section-title--offers">Offers</h3>
         <div class="event__available-offers">
-          ${template.join('\n')}
+          ${template}
         </div>
       </section>`;
   }
@@ -88,14 +88,12 @@ const getDescriptionTemplate = (description) => {
 
 const getPhotosTemplate = (photos) => {
   if (Array.isArray(photos) && photos.length) {
-    const items = photos
-      .map((photo) => `
-        <img
-          class="event__photo"
-          src="${photo.src}"
-          alt="${photo.alt}"
-        >`)
-      .join('\n');
+    const items = photos.map((photo) => `
+      <img
+        class="event__photo"
+        src="${photo.src}"
+        alt="${photo.alt}"
+      >`).join('\n');
 
     return `
       <div class="event__photos-container">
@@ -127,7 +125,7 @@ const getDetailsTemplate = (offers, destination) => {
   if (offers || destination) {
     return `
       <section class="event__details">
-        ${getOffersTemlate(offers)}
+        ${getOffersTemplate(offers)}
         ${getDestinationTemplate(destination)}
       </section>`;
   }
@@ -143,8 +141,8 @@ const getResetButtonTemplate = () => (`
     <span class="visually-hidden">Close event edit</span>
   </button>`);
 
-const getPointFormTemplate = (props, isEdit) => {
-  const {type, destination, dateFrom, dateTo, basePrice, offers} = props;
+const getPointFormTemplate = (pointProps, isEdit) => {
+  const {type, destination, dateFrom, dateTo, basePrice, offers} = pointProps;
 
   return `
     <li class="trip-events__item">
@@ -259,26 +257,14 @@ const getPointFormTemplate = (props, isEdit) => {
     </li>`;
 };
 
-export default class PointForm {
-  constructor(props = defaultProps, isEdit) {
-    this._element = null;
-    this._props = props;
+export default class PointForm extends AbstractView {
+  constructor(pointProps = DEFAULT_POINT_PROPS, isEdit) {
+    super();
+    this._pointProps = pointProps;
     this._isEdit = isEdit;
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
-
   getTemplate() {
-    return getPointFormTemplate(this._props, this._isEdit);
+    return getPointFormTemplate(this._pointProps, this._isEdit);
   }
 }

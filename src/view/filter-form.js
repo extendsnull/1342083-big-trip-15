@@ -1,24 +1,7 @@
-import {createElement} from '../utils';
+import AbstractView from './abstract';
 
-const filterControls = [
-  {
-    name: 'everything',
-    label: 'Everything',
-    isChecked: true,
-  },
-  {
-    name: 'future',
-    label: 'Future',
-  },
-  {
-    name: 'past',
-    label: 'Past',
-  },
-];
-
-const getFilterControlsTemplate = (props) => filterControls.map((control) => {
-  const {name, label, isChecked} = control;
-  const isDisabled = props[name].disabled;
+const getFilterControlsTemplate = (filterState) => filterState.map((control) => {
+  const {name, label, isChecked, isDisabled} = control;
 
   return `
     <div class="trip-filters__filter">
@@ -35,8 +18,8 @@ const getFilterControlsTemplate = (props) => filterControls.map((control) => {
     </div>`;
 }).join('\n');
 
-const getFilterTemplate = (props) => {
-  const controlsTemplate = getFilterControlsTemplate(props);
+const getFilterTemplate = (filterState) => {
+  const controlsTemplate = getFilterControlsTemplate(filterState);
 
   return `
     <form
@@ -52,25 +35,13 @@ const getFilterTemplate = (props) => {
     </form>`;
 };
 
-export default class FilterForm {
-  constructor(props) {
-    this._element = null;
-    this._props = props;
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+export default class FilterForm extends AbstractView {
+  constructor(filterState) {
+    super();
+    this._filterState = filterState;
   }
 
   getTemplate() {
-    return getFilterTemplate(this._props);
+    return getFilterTemplate(this._filterState);
   }
 }
