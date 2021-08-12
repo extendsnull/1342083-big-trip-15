@@ -1,7 +1,7 @@
 import {getMockPoints, getInfoState, getFilterState} from './mocks';
 import {NoPointsMessage} from './const';
 import {isEscKey} from './utils/common';
-import {render, createElement} from './utils/render';
+import {createElement, render, replace} from './utils/render';
 
 import Info from './view/info';
 import FilterForm from './view/filter-form';
@@ -16,14 +16,14 @@ const infoState = getInfoState(pointsProps);
 const filterState = getFilterState(pointsProps);
 
 const pageHeaderContainer = document.querySelector('.page-header__container');
-render(pageHeaderContainer, new Info(infoState).getElement());
+render(pageHeaderContainer, new Info(infoState));
 
 const navigationContainer = document.querySelector('.trip-controls__navigation');
 const filtersContainer = document.querySelector('.trip-controls__filters');
 const contentContainer = document.querySelector('.trip-events');
 
-render(navigationContainer, new Navigation().getElement());
-render(filtersContainer, new FilterForm(filterState).getElement());
+render(navigationContainer, new Navigation());
+render(filtersContainer, new FilterForm(filterState));
 
 const renderPoint = (container, props) => {
   const pointComponent = new Point(props);
@@ -32,19 +32,8 @@ const renderPoint = (container, props) => {
   const showPointFormButton = pointComponent.getElement().querySelector('.event__rollup-btn');
   const hidePointFormButton = pointFormComponent.getElement().querySelector('.event__rollup-btn');
 
-  const replaceFormToPoint = () => {
-    container.replaceChild(
-      pointComponent.getElement(),
-      pointFormComponent.getElement(),
-    );
-  };
-
-  const replacePointToForm = () => {
-    container.replaceChild(
-      pointFormComponent.getElement(),
-      pointComponent.getElement(),
-    );
-  };
+  const replaceFormToPoint = () => replace(pointComponent, pointFormComponent);
+  const replacePointToForm = () => replace(pointFormComponent, pointComponent);
 
   const onEscKeyPress = (evt) => {
     if (isEscKey(evt.key)) {
@@ -71,7 +60,7 @@ const renderPoint = (container, props) => {
     document.removeEventListener('keydown', onEscKeyPress);
   });
 
-  render(container, pointComponent.getElement());
+  render(container, pointComponent);
 };
 
 const renderPointsList = (items) => {
@@ -89,11 +78,11 @@ const renderBoard = (items) => {
 
   if (isEmpty) {
     const noPoint = new NoPoints(NoPointsMessage.EVERYTHING);
-    render(contentContainer, noPoint.getElement());
+    render(contentContainer, noPoint);
     return;
   }
 
-  render(contentContainer, new SortForm().getElement());
+  render(contentContainer, new SortForm());
   renderPointsList(items);
 };
 
