@@ -11,7 +11,7 @@ export default class Abstract {
 
   getElement() {
     if (!this._element) {
-      this._element = createElement(this.getTemplate());
+      this._element = createElement(this._getTemplate());
     }
 
     return this._element;
@@ -21,7 +21,7 @@ export default class Abstract {
     this._element = null;
   }
 
-  getTemplate() {
+  _getTemplate() {
     throw new Error(`Non-abstract class '${this.constructor.name}' does not implement inherited abstract member 'getTemplate' from class 'Abstract'.`);
   }
 }

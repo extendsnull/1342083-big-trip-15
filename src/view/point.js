@@ -101,7 +101,7 @@ export default class Point extends AbstractView {
     this._pointProps = pointProps;
   }
 
-  getTemplate() {
+  _getTemplate() {
     return getPointTemplate(this._pointProps);
   }
 }

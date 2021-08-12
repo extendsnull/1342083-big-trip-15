@@ -13,7 +13,7 @@ export default class NoPoints extends AbstractView {
     this._element.textContent = newMessage;
   }
 
-  getTemplate() {
+  _getTemplate() {
     return getNoPointTemplate(this._message);
   }
 }

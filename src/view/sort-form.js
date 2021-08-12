@@ -36,7 +36,7 @@ const getSortFormTemplate = () => {
 };
 
 export default class SortForm extends AbstractView {
-  getTemplate() {
+  _getTemplate() {
     return getSortFormTemplate();
   }
 }

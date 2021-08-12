@@ -264,7 +264,7 @@ export default class PointForm extends AbstractView {
     this._isEdit = isEdit;
   }
 
-  getTemplate() {
+  _getTemplate() {
     return getPointFormTemplate(this._pointProps, this._isEdit);
   }
 }

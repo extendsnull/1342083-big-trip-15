@@ -51,7 +51,7 @@ export default class Info extends AbstractView {
     this._infoState = infoState;
   }
 
-  getTemplate() {
+  _getTemplate() {
     return getInfoTemplate(this._infoState);
   }
 }

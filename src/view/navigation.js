@@ -13,7 +13,7 @@ const getNavigationTemplate = () => (`
   </nav>`);
 
 export default class Navigation extends AbstractView {
-  getTemplate() {
+  _getTemplate() {
     return getNavigationTemplate();
   }
 }

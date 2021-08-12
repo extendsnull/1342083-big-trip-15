@@ -41,7 +41,7 @@ export default class FilterForm extends AbstractView {
     this._filterState = filterState;
   }
 
-  getTemplate() {
+  _getTemplate() {
     return getFilterTemplate(this._filterState);
   }
 }
