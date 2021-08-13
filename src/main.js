@@ -1,6 +1,7 @@
-import {getMockPoints, getInfoState, getFiltersState} from './mocks';
+import {getMockPoints, getInfoState, getFilterState} from './mocks';
 import {NoPointsMessage} from './const';
-import {render, isEscKey, createElement} from './utils';
+import {isEscKey} from './utils/common';
+import {createElement, render, replace, remove} from './utils/render';
 
 import Info from './view/info';
 import FilterForm from './view/filter-form';
@@ -12,38 +13,24 @@ import NoPoints from './view/no-points';
 
 const pointsProps = getMockPoints();
 const infoState = getInfoState(pointsProps);
-const filtersState = getFiltersState(pointsProps);
+const filterState = getFilterState(pointsProps);
 
 const pageHeaderContainer = document.querySelector('.page-header__container');
-render(pageHeaderContainer, new Info(infoState).getElement());
+render(pageHeaderContainer, new Info(infoState));
 
 const navigationContainer = document.querySelector('.trip-controls__navigation');
 const filtersContainer = document.querySelector('.trip-controls__filters');
 const contentContainer = document.querySelector('.trip-events');
 
-render(navigationContainer, new Navigation().getElement());
-render(filtersContainer, new FilterForm(filtersState).getElement());
+render(navigationContainer, new Navigation());
+render(filtersContainer, new FilterForm(filterState));
 
 const renderPoint = (container, props) => {
   const pointComponent = new Point(props);
   const pointFormComponent = new PointForm(props, true);
 
-  const showPointFormButton = pointComponent.getElement().querySelector('.event__rollup-btn');
-  const hidePointFormButton = pointFormComponent.getElement().querySelector('.event__rollup-btn');
-
-  const replaceFormToPoint = () => {
-    container.replaceChild(
-      pointComponent.getElement(),
-      pointFormComponent.getElement(),
-    );
-  };
-
-  const replacePointToForm = () => {
-    container.replaceChild(
-      pointFormComponent.getElement(),
-      pointComponent.getElement(),
-    );
-  };
+  const replacePointToForm = () => replace(pointFormComponent, pointComponent);
+  const replaceFormToPoint = () => replace(pointComponent, pointFormComponent);
 
   const onEscKeyPress = (evt) => {
     if (isEscKey(evt.key)) {
@@ -52,25 +39,28 @@ const renderPoint = (container, props) => {
     }
   };
 
-  showPointFormButton.addEventListener('click', (evt) => {
-    evt.preventDefault();
+  pointComponent.setEditClickHandler(() => {
     replacePointToForm();
     document.addEventListener('keydown', onEscKeyPress);
   });
 
-  hidePointFormButton.addEventListener('click', (evt) => {
-    evt.preventDefault();
+  pointFormComponent.setDeleteClickHandler(() => {
+    remove(pointComponent);
+    remove(pointFormComponent);
+    document.removeEventListener('keydown', onEscKeyPress);
+  });
+
+  pointFormComponent.setResetClickHandler(() => {
     replaceFormToPoint();
     document.removeEventListener('keydown', onEscKeyPress);
   });
 
-  pointFormComponent.getElement().addEventListener('submit', (evt) => {
-    evt.preventDefault();
+  pointFormComponent.setSubmitHandler(() => {
     replaceFormToPoint();
     document.removeEventListener('keydown', onEscKeyPress);
   });
 
-  render(container, pointComponent.getElement());
+  render(container, pointComponent);
 };
 
 const renderPointsList = (items) => {
@@ -88,11 +78,11 @@ const renderBoard = (items) => {
 
   if (isEmpty) {
     const noPoint = new NoPoints(NoPointsMessage.EVERYTHING);
-    render(contentContainer, noPoint.getElement());
+    render(contentContainer, noPoint);
     return;
   }
 
-  render(contentContainer, new SortForm().getElement());
+  render(contentContainer, new SortForm());
   renderPointsList(items);
 };
 

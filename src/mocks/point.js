@@ -1,9 +1,18 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
-import {getRandomIntInclusive, getRandomBoolean, getRandomArrayItem, shuffleArray} from '../utils';
 import {DAYS_GAP, MOCK_CITIES, POINT_TYPES} from '../const';
+import {getRandomArrayItem, shuffleArray} from '../utils/array';
+import {getRandomIntInclusive, getRandomBoolean} from '../utils/common';
 
 const POINT_COUNT = 20;
+const MOCK_DESCRIPTION = ['Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 'Cras aliquet varius magna, non porta ligula feugiat eget.', 'Fusce tristique felis at fermentum pharetra.', 'Aliquam id orci ut lectus varius viverra.', 'Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.', 'Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.', 'Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.', 'Sed sed nisi sed augue convallis suscipit in sed felis.', 'Aliquam erat volutpat.', 'Nunc fermentum tortor ac porta dapibus.', 'In rutrum ac purus sit amet tempus.'];
+const MOCK_OFFERS = [
+  { name: 'luggage', label: 'Add luggage', price: 30 },
+  { name: 'comfort', label: 'Switch to comfort class', price: 100 },
+  { name: 'meal', label: 'Add meal', price: 15 },
+  { name: 'seats', label: 'Choose seats', price: 5 },
+  { name: 'train', label: 'Travel by train', price: 40 },
+];
 
 const DescriptionSizeRestrict = {
   MIN: 1,
@@ -20,16 +29,6 @@ const PriceRestrict = {
   MAX: 420,
 };
 
-const mockDescriptions = ['Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 'Cras aliquet varius magna, non porta ligula feugiat eget.', 'Fusce tristique felis at fermentum pharetra.', 'Aliquam id orci ut lectus varius viverra.', 'Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.', 'Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.', 'Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.', 'Sed sed nisi sed augue convallis suscipit in sed felis.', 'Aliquam erat volutpat.', 'Nunc fermentum tortor ac porta dapibus.', 'In rutrum ac purus sit amet tempus.'];
-
-const mockOffers = [
-  { name: 'luggage', label: 'Add luggage', price: 30 },
-  { name: 'comfort', label: 'Switch to comfort class', price: 100 },
-  { name: 'meal', label: 'Add meal', price: 15 },
-  { name: 'seats', label: 'Choose seats', price: 5 },
-  { name: 'train', label: 'Travel by train', price: 40 },
-];
-
 dayjs.extend(duration);
 const dateGap = dayjs.duration({ days: DAYS_GAP }).asMilliseconds();
 
@@ -37,9 +36,7 @@ const getRandomDescription = () => {
   const descriptionLength = getRandomIntInclusive(DescriptionSizeRestrict.MIN, DescriptionSizeRestrict.MAX);
 
   if (descriptionLength) {
-    return shuffleArray([...mockDescriptions])
-      .slice(0, descriptionLength)
-      .join(' ');
+    return shuffleArray([...MOCK_DESCRIPTION]).slice(0, descriptionLength).join(' ');
   }
 
   return null;
@@ -51,7 +48,7 @@ const getRandomPhotos = () => {
   if (photosCount) {
     return Array.from(new Array(photosCount), () => ({
       src: `http://picsum.photos/248/152?r=${Math.random()}`,
-      alt: getRandomArrayItem(mockDescriptions),
+      alt: getRandomArrayItem(MOCK_DESCRIPTION),
     }));
   }
 
@@ -71,8 +68,8 @@ const getRandomOffers = () => {
     return null;
   }
 
-  const offersCount = getRandomIntInclusive(0, mockOffers.length - 1);
-  const offers = [...mockOffers].map((offer) => {
+  const offersCount = getRandomIntInclusive(0, MOCK_OFFERS.length - 1);
+  const offers = [...MOCK_OFFERS].map((offer) => {
     offer.isChecked = getRandomBoolean();
     return offer;
   });
@@ -111,7 +108,6 @@ const getMockPoint = () => {
   };
 };
 
-export const getMockPoints = (count = POINT_COUNT) =>
-  Array
-    .from(new Array(count), () => getMockPoint())
-    .sort((pointA, pointB) => pointA.dateFrom - pointB.dateFrom);
+export const getMockPoints = (count = POINT_COUNT) => Array
+  .from(new Array(count), () => getMockPoint())
+  .sort((pointA, pointB) => pointA.dateFrom - pointB.dateFrom);

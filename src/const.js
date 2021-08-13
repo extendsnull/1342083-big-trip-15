@@ -16,6 +16,48 @@ export const POINT_TYPES = [
   { name: 'restaurant', label: 'Restaurant' },
 ];
 
+export const FILTER_CONTROLS = [
+  {
+    name: 'everything',
+    label: 'Everything',
+    isChecked: true,
+  },
+  {
+    name: 'future',
+    label: 'Future',
+  },
+  {
+    name: 'past',
+    label: 'Past',
+  },
+];
+
+export const SORT_CONTROLS = [
+  {
+    name: 'day',
+    label: 'Day',
+    isChecked: true,
+  },
+  {
+    name: 'event',
+    label: 'Event',
+    isDisabled: true,
+  },
+  {
+    name: 'time',
+    label: 'Time',
+  },
+  {
+    name: 'price',
+    label: 'Price',
+  },
+  {
+    name: 'offer',
+    label: 'Offers',
+    isDisabled: true,
+  },
+];
+
 export const RANDOM_SEPARATOR = 0.5;
 
 export const KeyName = {

@@ -1,11 +1,11 @@
+import AbstractView from './abstract';
 import {NoPointsMessage} from '../const';
-import {createElement} from '../utils';
 
 const getNoPointTemplate = (message) => `<p class="trip-events__msg">${message}</p>`;
 
-export default class NoPoints {
+export default class NoPoints extends AbstractView {
   constructor(message = NoPointsMessage.EVERYTHING) {
-    this._element = null;
+    super();
     this._message = message;
   }
 
@@ -13,19 +13,7 @@ export default class NoPoints {
     this._element.textContent = newMessage;
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
-
-  getTemplate() {
+  _getTemplate() {
     return getNoPointTemplate(this._message);
   }
 }

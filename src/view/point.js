@@ -1,5 +1,6 @@
-import {createElement, formatDate, getHumanizedDateDifference} from '../utils';
+import AbstractView from './abstract';
 import {HumanDateFormatPattern, MachineDateFormatPattern} from '../const';
+import {formatDate, getHumanizedDateDifference} from '../utils/date';
 
 const getOffersTemplate = (offers) => {
   if (Array.isArray(offers) && offers.length) {
@@ -13,8 +14,7 @@ const getOffersTemplate = (offers) => {
             &plus;&euro;&nbsp;
             <span class="event__offer-price">${price}</span>
           </li>`;
-      })
-      .join('\n');
+      }).join('\n');
 
     return `
       <h4 class="visually-hidden">Offers:</h4>
@@ -24,8 +24,8 @@ const getOffersTemplate = (offers) => {
   return '';
 };
 
-const getPointTemplate = (props) => {
-  const {type, destination, dateFrom, dateTo, basePrice, offers, isFavorite} = props;
+const getPointTemplate = (pointProps) => {
+  const {type, destination, dateFrom, dateTo, basePrice, offers, isFavorite} = pointProps;
   const title = `${type.label} ${destination.title}`;
 
   return `
@@ -95,25 +95,25 @@ const getPointTemplate = (props) => {
     </li>`;
 };
 
-export default class Point {
-  constructor(props) {
-    this._element = null;
-    this._props = props;
+export default class Point extends AbstractView {
+  constructor(pointProps) {
+    super();
+    this._pointProps = pointProps;
+
+    this._editClickHandler = this._editClickHandler.bind(this);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _getTemplate() {
+    return getPointTemplate(this._pointProps);
   }
 
-  removeElement() {
-    this._element = null;
+  setEditClickHandler(callback) {
+    this._callback.editClick = callback;
+    this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._editClickHandler);
   }
 
-  getTemplate() {
-    return getPointTemplate(this._props);
+  _editClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.editClick();
   }
 }
