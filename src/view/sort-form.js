@@ -1,8 +1,8 @@
 import AbstractView from './abstract';
 import {SORT_CONTROLS} from '../const';
 
-const getSortFormControlTemplate = (controlProps) => {
-  const {name, label, isChecked, isDisabled} = controlProps;
+const getSortFormControlTemplate = (control) => {
+  const {name, label, isChecked, isDisabled} = control;
 
   return `
     <div class="trip-sort__item trip-sort__item--${name}">

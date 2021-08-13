@@ -24,8 +24,8 @@ const getOffersTemplate = (offers) => {
   return '';
 };
 
-const getPointTemplate = (pointProps) => {
-  const {type, destination, dateFrom, dateTo, basePrice, offers, isFavorite} = pointProps;
+const getPointTemplate = (point) => {
+  const {type, destination, dateFrom, dateTo, basePrice, offers, isFavorite} = point;
   const title = `${type.label} ${destination.title}`;
 
   return `
@@ -96,15 +96,15 @@ const getPointTemplate = (pointProps) => {
 };
 
 export default class Point extends AbstractView {
-  constructor(pointProps) {
+  constructor(point) {
     super();
-    this._pointProps = pointProps;
+    this._point = point;
 
     this._editClickHandler = this._editClickHandler.bind(this);
   }
 
   _getTemplate() {
-    return getPointTemplate(this._pointProps);
+    return getPointTemplate(this._point);
   }
 
   setEditClickHandler(callback) {

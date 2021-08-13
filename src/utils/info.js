@@ -7,7 +7,7 @@ export const formatTitle = (destinations) => {
     const firstDestination = getArrayFirstItem(destinations);
     const lastDestination = getArrayLastItem(destinations);
 
-    return [firstDestination, '...', lastDestination].join(TextSeparator.TITLE);
+    return `${firstDestination}${TextSeparator.TITLE}'...'${TextSeparator.TITLE}${lastDestination}`;
   }
 
   if (destinations.length) {

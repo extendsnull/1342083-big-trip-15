@@ -3,8 +3,8 @@ import {getArrayFirstItem, getArrayLastItem} from '../utils/array';
 import {formatTitle, formatDates} from '../utils/info';
 
 
-const getMainInfoTemplate = (infoState) => {
-  const {destinations, dates, cost} = infoState;
+const getMainInfoTemplate = (data) => {
+  const {destinations, dates, cost} = data;
   const [dateFrom] = getArrayFirstItem(dates);
   const [, dateTo] = getArrayLastItem(dates);
 
@@ -25,9 +25,9 @@ const getMainInfoTemplate = (infoState) => {
     </section>`;
 };
 
-const getInfoTemplate = (infoState) => (`
+const getInfoTemplate = (data) => (`
   <div class="trip-main">
-    ${!infoState.isEmpty ? getMainInfoTemplate(infoState) : ''}
+    ${!data.isEmpty ? getMainInfoTemplate(data) : ''}
 
     <div class="trip-main__trip-controls trip-controls">
       <div class="trip-controls__navigation">
@@ -46,12 +46,12 @@ const getInfoTemplate = (infoState) => (`
   </div>`);
 
 export default class Info extends AbstractView {
-  constructor(infoState) {
+  constructor(data) {
     super();
-    this._infoState = infoState;
+    this._data = data;
   }
 
   _getTemplate() {
-    return getInfoTemplate(this._infoState);
+    return getInfoTemplate(this._data);
   }
 }

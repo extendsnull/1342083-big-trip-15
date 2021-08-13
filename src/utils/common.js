@@ -10,4 +10,4 @@ export const getRandomIntInclusive = (min = 0, max = 1) => {
 
 export const getRandomBoolean = () => Boolean(getRandomIntInclusive());
 
-export const isEscKey = (key) => KeyName.ESC.indexOf(key) > -1;
+export const isEscKey = (key) => KeyName.ESC === key;

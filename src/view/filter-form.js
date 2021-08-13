@@ -1,6 +1,6 @@
 import AbstractView from './abstract';
 
-const getFilterControlsTemplate = (filterState) => filterState.map((control) => {
+const getFilterControlsTemplate = (data) => data.map((control) => {
   const {name, label, isChecked, isDisabled} = control;
 
   return `
@@ -18,8 +18,8 @@ const getFilterControlsTemplate = (filterState) => filterState.map((control) => 
     </div>`;
 }).join('\n');
 
-const getFilterTemplate = (filterState) => {
-  const controlsTemplate = getFilterControlsTemplate(filterState);
+const getFilterTemplate = (data) => {
+  const controlsTemplate = getFilterControlsTemplate(data);
 
   return `
     <form
@@ -36,12 +36,12 @@ const getFilterTemplate = (filterState) => {
 };
 
 export default class FilterForm extends AbstractView {
-  constructor(filterState) {
+  constructor(data) {
     super();
-    this._filterState = filterState;
+    this._data = data;
   }
 
   _getTemplate() {
-    return getFilterTemplate(this._filterState);
+    return getFilterTemplate(this._data);
   }
 }

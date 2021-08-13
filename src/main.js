@@ -11,19 +11,19 @@ import Point from './view/point';
 import PointForm from './view/point-form';
 import NoPoints from './view/no-points';
 
-const pointsProps = getMockPoints();
-const infoState = getInfoState(pointsProps);
-const filterState = getFilterState(pointsProps);
+const points = getMockPoints();
+const infoData = getInfoState(points);
+const filterData = getFilterState(points);
 
 const pageHeaderContainer = document.querySelector('.page-header__container');
-render(pageHeaderContainer, new Info(infoState));
+render(pageHeaderContainer, new Info(infoData));
 
 const navigationContainer = document.querySelector('.trip-controls__navigation');
 const filtersContainer = document.querySelector('.trip-controls__filters');
 const contentContainer = document.querySelector('.trip-events');
 
 render(navigationContainer, new Navigation());
-render(filtersContainer, new FilterForm(filterState));
+render(filtersContainer, new FilterForm(filterData));
 
 const renderPoint = (container, props) => {
   const pointComponent = new Point(props);
@@ -86,4 +86,4 @@ const renderBoard = (items) => {
   renderPointsList(items);
 };
 
-renderBoard(pointsProps);
+renderBoard(points);
