@@ -3,12 +3,22 @@ import PointFormView from '../view/point-form';
 import {render, replace, remove} from '../utils/render';
 import {isEscKey} from '../utils/common';
 
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING',
+};
+
 export default class PointPresenter {
-  constructor(container) {
+  constructor(container, changeData, changeMode) {
     this._container = container;
+    this._mode = Mode.DEFAULT;
     this._pointComponent = null;
     this._pointFormComponent = null;
-    this._bindHandlers();
+
+    this._changeData = changeData;
+    this._changeMode = changeMode;
+
+    this._bindContext();
   }
 
   init(point) {
@@ -40,9 +50,16 @@ export default class PointPresenter {
     remove(this._pointFormComponent);
   }
 
-  _bindHandlers() {
+  resetView() {
+    if (this._mode === Mode.EDITING) {
+      this._replaceFormToPoint();
+    }
+  }
+
+  _bindContext() {
     this._handleDeleteClick = this._handleDeleteClick.bind(this);
     this._handleEditClick = this._handleEditClick.bind(this);
+    this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
     this._handleResetClick = this._handleResetClick.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
@@ -52,8 +69,9 @@ export default class PointPresenter {
     this._pointComponent = new PointView(this._point);
     this._pointFormComponent = new PointFormView(this._point, true);
 
-    this._pointFormComponent.setDeleteClickHandler(this._handleDeleteClick);
     this._pointComponent.setEditClickHandler(this._handleEditClick);
+    this._pointComponent.setFavoriteClickHandler(this._handleFavoriteClick);
+    this._pointFormComponent.setDeleteClickHandler(this._handleDeleteClick);
     this._pointFormComponent.setResetClickHandler(this._handleResetClick);
     this._pointFormComponent.setSubmitHandler(this._handleSubmit);
   }
@@ -73,6 +91,13 @@ export default class PointPresenter {
   _handleEditClick() {
     this._replacePointToForm();
     document.addEventListener('keydown', this._escKeyDownHandler);
+  }
+
+  _handleFavoriteClick() {
+    this._changeData({
+      ...this._point,
+      isFavorite: !this._point.isFavorite,
+    });
   }
 
   _handleResetClick() {
@@ -101,9 +126,12 @@ export default class PointPresenter {
 
   _replacePointToForm() {
     replace(this._pointFormComponent, this._pointComponent);
+    this._changeMode();
+    this._mode = Mode.EDITING;
   }
 
   _replaceFormToPoint() {
     replace(this._pointComponent, this._pointFormComponent);
+    this._mode = Mode.DEFAULT;
   }
 }
