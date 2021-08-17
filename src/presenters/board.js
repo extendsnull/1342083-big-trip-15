@@ -2,8 +2,8 @@ import SortFormView from '../view/sort-form';
 import PointsListView from '../view/points-list';
 import NoPointsView from '../view/no-points';
 import PointPresenter from './point';
-import {render} from '../utils/render';
-import { updateItem } from '../utils/common';
+import {remove, render} from '../utils/render';
+import {updateItem} from '../utils/common';
 import {NoPointsMessage} from '../const';
 
 export default class BoardPresenter {
@@ -24,10 +24,10 @@ export default class BoardPresenter {
     this._handleTaskChange = this._handleTaskChange.bind(this);
   }
 
-  _clearPoints() {
+  _clearPointsList() {
     this._pointPresenters.forEach((presenter) => presenter.destroy());
     this._pointPresenters.clear();
-    this._pointsListComponent.destroy();
+    remove(this._pointsListComponent);
   }
 
   _init() {
