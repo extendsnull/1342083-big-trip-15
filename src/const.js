@@ -16,23 +16,13 @@ export const POINT_TYPES = [
   { name: 'restaurant', label: 'Restaurant' },
 ];
 
-export const FILTER_CONTROLS = [
-  {
-    name: 'everything',
-    label: 'Everything',
-    isChecked: true,
-  },
-  {
-    name: 'future',
-    label: 'Future',
-  },
-  {
-    name: 'past',
-    label: 'Past',
-  },
-];
-
 export const RANDOM_SEPARATOR = 0.5;
+
+export const FilterType = {
+  EVERYTHING: 'everything',
+  FUTURE: 'future',
+  PAST: 'past',
+};
 
 export const KeyName = {
   ESC: 'Escape',
