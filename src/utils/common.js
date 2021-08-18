@@ -1,5 +1,11 @@
 import {KeyName} from '../const';
 
+export const formatLabel = (type) => {
+  const [firstLetter, ...restLetters] = type;
+  restLetters.unshift(firstLetter.toUpperCase());
+  return restLetters.join('');
+};
+
 export const getRandomIntInclusive = (min = 0, max = 1) => {
   const restrict = {
     min: Math.ceil(min),

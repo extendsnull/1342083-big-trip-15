@@ -1,15 +1,10 @@
 import AbstractView from './abstract';
 import {SortType} from '../const';
+import {formatLabel} from '../utils/common';
 
 const sortControls = [SortType.DAY, SortType.EVENT, SortType.TIME, SortType.PRICE, SortType.OFFER];
 const checkedControl = SortType.DAY;
 const disabledControls = [SortType.EVENT, SortType.OFFER];
-
-const formatSortLabel = (type) => {
-  const [firstLetter, ...restLetters] = type;
-  restLetters.unshift(firstLetter.toUpperCase());
-  return restLetters.join('');
-};
 
 const getSortFormControlTemplate = (type) => {
   const isChecked = checkedControl === type;
@@ -30,7 +25,7 @@ const getSortFormControlTemplate = (type) => {
       <label
         class="trip-sort__btn"
         for="sort-${type}"
-      >${formatSortLabel(type)}</label>
+      >${formatLabel(type)}</label>
     </div>`;
 };
 
