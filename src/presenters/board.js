@@ -58,16 +58,16 @@ export default class BoardPresenter {
 
   _sortPoints(sortType) {
     switch (sortType) {
-      case 'day':
+      case SortType.DAY:
       default: {
         this._points = this._sourcedPoints.slice();
         break;
       }
-      case 'time': {
+      case SortType.TIME: {
         this._points = sortByDuration(this._points);
         break;
       }
-      case 'price': {
+      case SortType.PRICE: {
         this._points = sortByPrice(this._points);
         break;
       }
