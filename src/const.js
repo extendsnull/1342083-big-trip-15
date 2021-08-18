@@ -61,7 +61,7 @@ export const SORT_CONTROLS = [
 export const RANDOM_SEPARATOR = 0.5;
 
 export const KeyName = {
-  ESC: ['Esc', 'Escape'],
+  ESC: 'Escape',
 };
 
 export const HumanDateFormatPattern = {

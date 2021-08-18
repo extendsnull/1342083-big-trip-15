@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
+import {nanoid} from 'nanoid';
 import {DAYS_GAP, MOCK_CITIES, POINT_TYPES} from '../const';
 import {getRandomArrayItem, shuffleArray} from '../utils/array';
 import {getRandomIntInclusive, getRandomBoolean} from '../utils/common';
@@ -97,6 +98,7 @@ const getMockPoint = () => {
   const [dateFrom, dateTo] = getRandomDates(dateGap);
 
   return {
+    id: nanoid(),
     type: getRandomArrayItem(POINT_TYPES),
     destination: getRandomDestination(),
     offers: getRandomOffers(),

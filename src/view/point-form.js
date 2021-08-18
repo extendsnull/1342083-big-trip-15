@@ -2,7 +2,7 @@ import AbstractView from './abstract';
 import {MOCK_CITIES, POINT_TYPES} from '../const';
 import {formatDate} from '../utils/date';
 
-const DEFAULT_POINT_PROPS = {
+const EMPTY_POINT = {
   type: POINT_TYPES[0],
   destination: {
     title: MOCK_CITIES[0],
@@ -141,8 +141,8 @@ const getResetButtonTemplate = () => (`
     <span class="visually-hidden">Close event edit</span>
   </button>`);
 
-const getPointFormTemplate = (pointProps, isEdit) => {
-  const {type, destination, dateFrom, dateTo, basePrice, offers} = pointProps;
+const getPointFormTemplate = (point, isEdit) => {
+  const {type, destination, dateFrom, dateTo, basePrice, offers} = point;
 
   return `
     <li class="trip-events__item">
@@ -258,9 +258,9 @@ const getPointFormTemplate = (pointProps, isEdit) => {
 };
 
 export default class PointForm extends AbstractView {
-  constructor(pointProps = DEFAULT_POINT_PROPS, isEdit) {
+  constructor(point = EMPTY_POINT, isEdit) {
     super();
-    this._pointProps = pointProps;
+    this._point = point;
     this._isEdit = isEdit;
 
     this._deleteClickHandler = this._deleteClickHandler.bind(this);
@@ -269,7 +269,7 @@ export default class PointForm extends AbstractView {
   }
 
   _getTemplate() {
-    return getPointFormTemplate(this._pointProps, this._isEdit);
+    return getPointFormTemplate(this._point, this._isEdit);
   }
 
   setDeleteClickHandler(callback) {
