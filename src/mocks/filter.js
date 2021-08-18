@@ -1,36 +1,41 @@
-import {FILTER_CONTROLS} from '../const';
+import {FilterType} from '../const';
 import {isFutureDate, isPastDate} from '../utils/date';
+
+const filterControls = [FilterType.EVERYTHING, FilterType.FUTURE, FilterType.PAST];
+const checkedFilter = FilterType.EVERYTHING;
 
 export const getFilterState = (points) => {
   const futureItems = points.filter((point) => isFutureDate(point.dateFrom));
   const pastItems = points.filter((point) => isPastDate(point.dateTo));
 
-  return FILTER_CONTROLS.map((control) => {
+  return filterControls.map((name) => {
+    const isChecked = name === checkedFilter;
+    let isDisabled = null;
     let items = null;
-    let disabled = null;
 
-    switch (control.name) {
-      case 'everything': {
+    switch (name) {
+      case FilterType.EVERYTHING: {
         items = points;
-        disabled = !points.length;
+        isDisabled = !points.length;
         break;
       }
-      case 'future': {
+      case FilterType.FUTURE: {
         items = futureItems;
-        disabled = !futureItems.length;
+        isDisabled = !futureItems.length;
         break;
       }
-      case 'past': {
+      case FilterType.PAST: {
         items = pastItems;
-        disabled = !pastItems.length;
+        isDisabled = !pastItems.length;
         break;
       }
     }
 
     return {
-      ...control,
       items,
-      disabled,
+      name,
+      isChecked,
+      isDisabled,
     };
   });
 };
