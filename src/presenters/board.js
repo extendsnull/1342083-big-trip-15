@@ -2,14 +2,18 @@ import SortFormView from '../view/sort-form';
 import PointsListView from '../view/points-list';
 import NoPointsView from '../view/no-points';
 import PointPresenter from './point';
-import {remove, render} from '../utils/render';
+import {NoPointsMessage, SortType} from '../const';
 import {updateItem} from '../utils/common';
-import {NoPointsMessage} from '../const';
+import {remove, render} from '../utils/render';
+import {sortByDuration, sortByPrice} from '../utils/sort';
 
 export default class BoardPresenter {
   constructor(container, points) {
     this._container = container;
     this._points = points.slice();
+    this._sourcedPoints = points.slice();
+    this._currentSortType = SortType.DAY;
+
     this._pointPresenters = new Map();
     this._pointsListComponent = new PointsListView();
     this._sortFormComponent = new SortFormView();
@@ -21,6 +25,7 @@ export default class BoardPresenter {
 
   _bindContext() {
     this._handleModeChange = this._handleModeChange.bind(this);
+    this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
     this._handleTaskChange = this._handleTaskChange.bind(this);
   }
 
@@ -38,9 +43,37 @@ export default class BoardPresenter {
     this._pointPresenters.forEach((presenter) => presenter.resetView());
   }
 
+  _handleSortTypeChange(sortType) {
+    if (this._currentSortType !== sortType) {
+      this._sortPoints(sortType);
+      this._clearPointsList();
+      this._renderPointsList();
+    }
+  }
+
   _handleTaskChange(updatedTask) {
     this._points = updateItem(this._points, updatedTask);
     this._pointPresenters.get(updatedTask.id).init(updatedTask);
+  }
+
+  _sortPoints(sortType) {
+    switch (sortType) {
+      case 'day':
+      default: {
+        this._points = this._sourcedPoints.slice();
+        break;
+      }
+      case 'time': {
+        this._points = sortByDuration(this._points);
+        break;
+      }
+      case 'price': {
+        this._points = sortByPrice(this._points);
+        break;
+      }
+    }
+
+    this._currentSortType = sortType;
   }
 
   _renderPoint(point) {
@@ -58,6 +91,7 @@ export default class BoardPresenter {
   }
 
   _renderSortForm() {
+    this._sortFormComponent.setChangeSortTypeHandler(this._handleSortTypeChange);
     render(this._container, this._sortFormComponent);
   }
 
