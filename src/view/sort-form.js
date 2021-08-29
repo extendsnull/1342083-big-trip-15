@@ -1,6 +1,6 @@
 import AbstractView from './abstract';
-import {SortType} from '../const';
-import {formatLabel} from '../utils/common';
+import { SortType } from '../const';
+import { formatLabel } from '../utils/common';
 
 const sortControls = [SortType.DAY, SortType.EVENT, SortType.TIME, SortType.PRICE, SortType.OFFER];
 const checkedControl = SortType.DAY;

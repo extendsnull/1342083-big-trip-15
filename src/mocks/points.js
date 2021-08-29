@@ -45,7 +45,7 @@ const getMockPoint = (destination, mockOffers) => {
 
 export const getMockPoints = (mockOffers, mockDestinations, count = POINT_COUNT) => {
   mockOffers = [...mockOffers.values()];
-  const points = shuffleArray(mockDestinations)
-    .slice(0, count).map((destination) => getMockPoint(destination, mockOffers));
+  const points =
+    shuffleArray(mockDestinations).slice(0, count).map((destination) => getMockPoint(destination, mockOffers));
   return points;
 };

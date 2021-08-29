@@ -1,5 +1,5 @@
-import {FilterType} from '../const';
-import {isFutureDate, isPastDate} from '../utils/date';
+import { FilterType } from '../const';
+import { isFutureDate, isPastDate } from '../utils/date';
 
 const filterControls = [FilterType.EVERYTHING, FilterType.FUTURE, FilterType.PAST];
 const checkedFilter = FilterType.EVERYTHING;
@@ -31,11 +31,6 @@ export const getFilterState = (points) => {
       }
     }
 
-    return {
-      items,
-      name,
-      isChecked,
-      isDisabled,
-    };
+    return { items, name, isChecked, isDisabled };
   });
 };

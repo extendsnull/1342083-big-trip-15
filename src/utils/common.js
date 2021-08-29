@@ -1,4 +1,4 @@
-import {KeyName} from '../const';
+import { KeyName } from '../const';
 
 export const formatLabel = (type) => {
   const [firstLetter, ...restLetters] = type;
@@ -25,9 +25,5 @@ export const updateItem = (items, update) => {
     return items;
   }
 
-  return [
-    ...items.slice(0, index),
-    update,
-    ...items.slice(index + 1),
-  ];
+  return [...items.slice(0, index), update, ...items.slice(index + 1)];
 };

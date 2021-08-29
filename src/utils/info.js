@@ -1,6 +1,6 @@
-import {MAIN_TITLE_MAX_LENGTH, HumanDateFormatPattern, TextSeparator} from '../const';
-import {getArrayFirstItem, getArrayLastItem} from './array';
-import {formatDate, isOneMonthDates} from './date';
+import { MAIN_TITLE_MAX_LENGTH, HumanDateFormatPattern, TextSeparator } from '../const';
+import { getArrayFirstItem, getArrayLastItem } from './array';
+import { formatDate, isOneMonthDates } from './date';
 
 export const formatTitle = (destinations) => {
   if (destinations.length > MAIN_TITLE_MAX_LENGTH) {

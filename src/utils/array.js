@@ -1,13 +1,12 @@
-import {RANDOM_SEPARATOR} from '../const';
-import {getRandomIntInclusive} from './common';
+import { RANDOM_SEPARATOR } from '../const';
+import { getRandomIntInclusive } from './common';
 
 export const getRandomArrayItem = (array) => {
   const randomIndex = getRandomIntInclusive(0, array.length - 1);
   return array[randomIndex];
 };
 
-export const shuffleArray = (array) =>
-  array.slice().sort(() => Math.random() - RANDOM_SEPARATOR);
+export const shuffleArray = (array) => array.slice().sort(() => Math.random() - RANDOM_SEPARATOR);
 
 export const getArrayFirstItem = (array) => {
   if (!Array.isArray(array)) {

@@ -1,4 +1,4 @@
-import {getDatesDiff} from './date';
+import { getDatesDiff } from './date';
 
 export const sortByDuration = (items) => items.slice().sort((item1, item2) => {
   const diff1 = getDatesDiff(item1.dateFrom, item1.dateTo);

@@ -1,5 +1,5 @@
 import AbstractView from './abstract';
-import {NoPointsMessage} from '../const';
+import { NoPointsMessage } from '../const';
 
 const getNoPointTemplate = (message) => `<p class="trip-events__msg">${message}</p>`;
 

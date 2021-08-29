@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
-import {HumanDateFormatPattern} from '../const';
+import { HumanDateFormatPattern } from '../const';
 
 dayjs.extend(duration);
 
@@ -33,4 +33,5 @@ export const isFutureDate = (timestamp) => {
   return dayjs(now).isBefore(timestamp, 'ms');
 };
 
-export const isOneMonthDates = (firstTimestamp, secondTimestamp) => dayjs(firstTimestamp).month() === dayjs(secondTimestamp).month();
+export const isOneMonthDates = (firstTimestamp, secondTimestamp) =>
+  dayjs(firstTimestamp).month() === dayjs(secondTimestamp).month();

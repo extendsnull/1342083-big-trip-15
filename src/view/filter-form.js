@@ -1,5 +1,5 @@
 import AbstractView from './abstract';
-import {formatLabel} from '../utils/common';
+import { formatLabel } from '../utils/common';
 
 const getFilterControlsTemplate = (data) => data.map((control) => {
   const {name, isChecked, isDisabled} = control;
@@ -15,7 +15,10 @@ const getFilterControlsTemplate = (data) => data.map((control) => {
         ${isChecked ? 'checked' : ''}
         ${isDisabled ? 'disabled' : ''}
       >
-      <label class="trip-filters__filter-label" for="filter-${name}">
+      <label
+        class="trip-filters__filter-label"
+        for="filter-${name}"
+      >
         ${formatLabel(name)}
       </label>
     </div>`;

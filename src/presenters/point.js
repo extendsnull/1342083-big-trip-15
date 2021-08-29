@@ -1,7 +1,7 @@
 import PointView from '../view/point';
 import PointFormView from '../view/point-form';
-import {render, replace, remove} from '../utils/render';
-import {isEscKey} from '../utils/common';
+import { render, replace, remove } from '../utils/render';
+import { isEscKey } from '../utils/common';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
