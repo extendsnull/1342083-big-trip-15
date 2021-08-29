@@ -46,8 +46,16 @@ const getTypeItemsTemplate = (currentType) => {
 
 const getDestinationItemsTemplate = () => DESTINATION_CITIES.map((city) => `<option value="${city}"></option>`).join('\n');
 
-const getOffersTemplate = (offers) => {
-  if (Array.isArray(offers) && offers.length) {
+const getResetButtonTemplate = () => (`
+  <button
+    class="event__rollup-btn"
+    type="button"
+  >
+    <span class="visually-hidden">Close event edit</span>
+  </button>`);
+
+const getOffersTemplate = (offers, hasOffers) => {
+  if (hasOffers) {
     const template = offers.map((offer, index) => {
       const { title, price, isChecked } = offer;
       return `
@@ -71,7 +79,6 @@ const getOffersTemplate = (offers) => {
         </div>`;
     }).join('\n');
 
-
     return `
       <section class="event__section event__section--offers">
         <h3 class="event__section-title event__section-title--offers">Offers</h3>
@@ -84,27 +91,30 @@ const getOffersTemplate = (offers) => {
   return '';
 };
 
-const getDescriptionTemplate = (description) => {
-  if (description && description.length) {
+const getDescriptionTemplate = (description, hasDescription) => {
+  if (hasDescription) {
     return `<p class="event__destination-description">${description}</p>`;
   }
 
   return '';
 };
 
-const getPicturesTemplate = (pictures) => {
-  if (Array.isArray(pictures) && pictures.length) {
-    const items = pictures.map(({src, description}) => `
-      <img
-        class="event__photo"
-        src="${src}"
-        alt="${description}"
-      >`).join('\n');
+const getPicturesTemplate = (pictures, hasPictures) => {
+  if (hasPictures) {
+    const template = pictures.map((picture) => {
+      const { src, description } = picture;
+      return `
+        <img
+          class="event__photo"
+          src="${src}"
+          alt="${description}"
+        >`;
+    }).join('\n');
 
     return `
       <div class="event__photos-container">
         <div class="event__photos-tape">
-          ${items}
+          ${template}
         </div>
       </div>`;
   }
@@ -112,43 +122,33 @@ const getPicturesTemplate = (pictures) => {
   return '';
 };
 
-const getDestinationTemplate = (destination) => {
+const getDestinationTemplate = (destination, hasDescription, hasPictures) => {
   const { description, pictures } = destination;
 
-  if (description || pictures) {
-    return `
-      <section class="event__section event__section--destination">
-        <h3 class="event__section-title event__section-title--destination">Destination</h3>
-        ${getDescriptionTemplate(description)}
-        ${getPicturesTemplate(pictures)}
-      </section>`;
-  }
-
-  return '';
+  return `
+    <section class="event__section event__section--destination">
+      <h3 class="event__section-title event__section-title--destination">Destination</h3>
+      ${getDescriptionTemplate(description, hasDescription)}
+      ${getPicturesTemplate(pictures, hasPictures)}
+    </section>`;
 };
 
-const getDetailsTemplate = (offers, destination) => {
-  if (offers || destination) {
+const getDetailsTemplate = (offers, destination, flags) => {
+  const { hasDetails, hasOffers, hasDescription, hasPictures } = flags;
+
+  if (hasDetails) {
     return `
       <section class="event__details">
-        ${getOffersTemplate(offers)}
-        ${getDestinationTemplate(destination)}
+        ${getOffersTemplate(offers, hasOffers)}
+        ${getDestinationTemplate(destination, hasDescription, hasPictures)}
       </section>`;
   }
 
   return '';
 };
 
-const getResetButtonTemplate = () => (`
-  <button
-    class="event__rollup-btn"
-    type="button"
-  >
-    <span class="visually-hidden">Close event edit</span>
-  </button>`);
-
 const getPointFormTemplate = (point) => {
-  const { type, destination, dateFrom, dateTo, basePrice, offers, isEditMode } = point;
+  const { type, destination, dateFrom, dateTo, basePrice, offers, isEditMode, flags } = point;
 
   return `
     <li class="trip-events__item">
@@ -256,10 +256,12 @@ const getPointFormTemplate = (point) => {
           <button
             class="event__reset-btn"
             type="reset"
-          >${isEditMode ? 'Delete' : 'Cancel'}</button>
+          >
+            ${isEditMode ? 'Delete' : 'Cancel'}
+          </button>
           ${isEditMode ? getResetButtonTemplate() : ''}
         </header>
-        ${getDetailsTemplate(offers, destination)}
+        ${getDetailsTemplate(offers, destination, flags)}
       </form>
     </li>`;
 };
@@ -386,12 +388,19 @@ export default class PointForm extends SmartView {
   }
 
   static parsePointToState(point, isEditMode) {
-    return { ...point, isEditMode };
+    const hasOffers = Boolean(point.offers.length);
+    const hasDescription = Boolean(point.destination.description);
+    const hasPictures = Boolean(point.destination.pictures.length);
+    const hasDetails = hasOffers || hasDescription || hasPictures;
+
+    const flags = { hasOffers, hasDescription, hasPictures, hasDetails };
+    return { ...point, isEditMode, flags };
   }
 
   static parseStateToPoint(state) {
     const newPoint = { ...state };
     delete newPoint.isEditMode;
+    delete newPoint.flags;
     return newPoint;
   }
 }

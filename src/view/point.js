@@ -3,8 +3,8 @@ import { HumanDateFormatPattern, MachineDateFormatPattern } from '../const';
 import { formatLabel } from '../utils/common';
 import { formatDate, getHumanizedDateDifference } from '../utils/date';
 
-const getOffersTemplate = (offers) => {
-  if (Array.isArray(offers) && offers.length) {
+const getOffersTemplate = (offers, hasOffers) => {
+  if (hasOffers) {
     const items = offers
       .filter((offer) => offer.isChecked)
       .map((offer) => {
@@ -27,6 +27,8 @@ const getOffersTemplate = (offers) => {
 
 const getPointTemplate = (point) => {
   const { type, destination, dateFrom, dateTo, basePrice, offers, isFavorite } = point;
+  const filteredOffers = offers.filter((offer) => offer.isChecked);
+  const hasOffers = Boolean(filteredOffers.length);
   const title = `${formatLabel(type)} ${destination.name}`;
 
   return `
@@ -71,7 +73,7 @@ const getPointTemplate = (point) => {
         <p class="event__price">
           &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
         </p>
-        ${getOffersTemplate(offers)}
+        ${getOffersTemplate(filteredOffers, hasOffers)}
         <button
           class="event__favorite-btn${isFavorite ? ' event__favorite-btn--active' : ''}"
           type="button"
