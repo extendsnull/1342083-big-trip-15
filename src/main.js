@@ -2,8 +2,8 @@ import InfoView from './view/info';
 import FilterFormView from './view/filter-form';
 import NavigationView from './view/navigation';
 import BoardPresenter from './presenters/board';
-import {getMockOffers, getMockDestinations, getMockPoints, getInfoState, getFilterState} from './mocks';
-import {render} from './utils/render';
+import { getMockOffers, getMockDestinations, getMockPoints, getInfoState, getFilterState } from './mocks';
+import { render} from './utils/render';
 
 const mockOffers = getMockOffers();
 const mockDestinations = getMockDestinations();
@@ -29,4 +29,6 @@ render(
 new BoardPresenter(
   document.querySelector('.trip-events'),
   mockPoints,
+  mockOffers,
+  mockDestinations,
 );
