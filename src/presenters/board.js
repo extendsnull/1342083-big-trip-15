@@ -2,10 +2,10 @@ import SortFormView from '../view/sort-form';
 import PointsListView from '../view/points-list';
 import NoPointsView from '../view/no-points';
 import PointPresenter from './point';
-import {NoPointsMessage, SortType} from '../const';
-import {updateItem} from '../utils/common';
-import {remove, render} from '../utils/render';
-import {sortByDuration, sortByPrice} from '../utils/sort';
+import { NoPointsMessage, SortType } from '../const';
+import { updateItem } from '../utils/common';
+import { remove, render } from '../utils/render';
+import { sortByDuration, sortByPrice } from '../utils/sort';
 
 export default class BoardPresenter {
   constructor(container, points) {
@@ -26,7 +26,7 @@ export default class BoardPresenter {
   _bindContext() {
     this._handleModeChange = this._handleModeChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
-    this._handleTaskChange = this._handleTaskChange.bind(this);
+    this._handlePointChange = this._handlePointChange.bind(this);
   }
 
   _clearPointsList() {
@@ -51,9 +51,9 @@ export default class BoardPresenter {
     }
   }
 
-  _handleTaskChange(updatedTask) {
-    this._points = updateItem(this._points, updatedTask);
-    this._pointPresenters.get(updatedTask.id).init(updatedTask);
+  _handlePointChange(updatedPoint) {
+    this._points = updateItem(this._points, updatedPoint);
+    this._pointPresenters.get(updatedPoint.id).init(updatedPoint);
   }
 
   _sortPoints(sortType) {
@@ -77,7 +77,11 @@ export default class BoardPresenter {
   }
 
   _renderPoint(point) {
-    const pointPresenter = new PointPresenter(this._pointsListComponent, this._handleTaskChange, this._handleModeChange);
+    const pointPresenter = new PointPresenter(
+      this._pointsListComponent,
+      this._handlePointChange,
+      this._handleModeChange,
+    );
     pointPresenter.init(point);
     this._pointPresenters.set(point.id, pointPresenter);
   }
