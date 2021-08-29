@@ -23,17 +23,17 @@ const getTypeItemsTemplate = (currentType) => {
     return `
       <div class="event__type-item">
         <input
-          id="event-type-${type}"
+          id="event-type-${type.name}"
           class="event__type-input visually-hidden"
           type="radio"
           name="event-type"
-          value="${type}"
+          value="${type.name}"
           ${isChecked ? 'checked' : ''}
         >
         <label
-          class="event__type-label event__type-label--${type}"
-          for="event-type-${type}"
-        >${type}</label>
+          class="event__type-label event__type-label--${type.name}"
+          for="event-type-${type.name}"
+        >${type.label}</label>
       </div>`;
   });
 
