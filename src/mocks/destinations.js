@@ -38,4 +38,4 @@ const getMockDestination = (name) => {
   return { description, name, pictures };
 };
 
-export const getMockDestinations = () => CITIES.map(getMockDestination);
+export const getMockDestinations = () => new Map(CITIES.map((city) => [city, getMockDestination(city)]));
