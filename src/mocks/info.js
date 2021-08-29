@@ -1,5 +1,5 @@
 export const getInfoState = (points) => {
-  const destinations = points.map((point) => point.destination.title);
+  const destinations = points.map((point) => point.destination.name);
   const dates = points.map((point) => [point.dateFrom, point.dateTo]);
   const cost = points.reduce((mainAcc, point) => {
     const offersPrice = Array.isArray(point.offers)

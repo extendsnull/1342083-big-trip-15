@@ -1,5 +1,6 @@
 import AbstractView from './abstract';
 import {HumanDateFormatPattern, MachineDateFormatPattern} from '../const';
+import { formatLabel } from '../utils/common';
 import {formatDate, getHumanizedDateDifference} from '../utils/date';
 
 const getOffersTemplate = (offers) => {
@@ -7,10 +8,10 @@ const getOffersTemplate = (offers) => {
     const items = offers
       .filter((offer) => offer.isChecked)
       .map((offer) => {
-        const {label, price} = offer;
+        const {title, price} = offer;
         return `
           <li class="event__offer">
-            <span class="event__offer-title">${label}</span>
+            <span class="event__offer-title">${title}</span>
             &plus;&euro;&nbsp;
             <span class="event__offer-price">${price}</span>
           </li>`;
@@ -26,7 +27,7 @@ const getOffersTemplate = (offers) => {
 
 const getPointTemplate = (point) => {
   const {type, destination, dateFrom, dateTo, basePrice, offers, isFavorite} = point;
-  const title = `${type.label} ${destination.title}`;
+  const title = `${formatLabel(type)} ${destination.name}`;
 
   return `
     <li class="trip-events__item">
@@ -42,7 +43,7 @@ const getPointTemplate = (point) => {
             class="event__type-icon"
             width="42"
             height="42"
-            src="img/icons/${type.name}.png"
+            src="img/icons/${type}.png"
             alt="Event type icon"
           >
         </div>

@@ -1,5 +1,6 @@
 import AbstractView from './abstract';
 import {MOCK_CITIES, POINT_TYPES} from '../const';
+import {formatLabel} from '../utils/common';
 import {formatDate} from '../utils/date';
 
 const EMPTY_POINT = {
@@ -22,17 +23,17 @@ const getTypeItemsTemplate = (currentType) => {
     return `
       <div class="event__type-item">
         <input
-          id="event-type-${type.name}-1"
+          id="event-type-${type}-1"
           class="event__type-input visually-hidden"
           type="radio"
           name="event-type"
-          value="${type.name}"
+          value="${type}"
           ${isChecked ? 'checked' : ''}
         >
         <label
-          class="event__type-label event__type-label--${type.name}"
-          for="event-type-${type.name}-1"
-        >${type.label}</label>
+          class="event__type-label event__type-label--${type}"
+          for="event-type-${type}-1"
+        >${type}</label>
       </div>`;
   });
 
@@ -86,13 +87,13 @@ const getDescriptionTemplate = (description) => {
   return '';
 };
 
-const getPhotosTemplate = (photos) => {
-  if (Array.isArray(photos) && photos.length) {
-    const items = photos.map((photo) => `
+const getPicturesTemplate = (pictures) => {
+  if (Array.isArray(pictures) && pictures.length) {
+    const items = pictures.map(({src, description}) => `
       <img
         class="event__photo"
-        src="${photo.src}"
-        alt="${photo.alt}"
+        src="${src}"
+        alt="${description}"
       >`).join('\n');
 
     return `
@@ -107,14 +108,14 @@ const getPhotosTemplate = (photos) => {
 };
 
 const getDestinationTemplate = (destination) => {
-  const {description, photos} = destination;
+  const {description, pictures} = destination;
 
-  if (description || photos) {
+  if (description || pictures) {
     return `
       <section class="event__section event__section--destination">
         <h3 class="event__section-title event__section-title--destination">Destination</h3>
         ${getDescriptionTemplate(description)}
-        ${getPhotosTemplate(photos)}
+        ${getPicturesTemplate(pictures)}
       </section>`;
   }
 
@@ -162,7 +163,7 @@ const getPointFormTemplate = (point, isEdit) => {
                 class="event__type-icon"
                 width="17"
                 height="17"
-                src="img/icons/${type.name}.png"
+                src="img/icons/${type}.png"
                 alt="Event type icon"
               >
             </label>
@@ -185,14 +186,14 @@ const getPointFormTemplate = (point, isEdit) => {
               class="event__label event__type-output"
               for="event-destination-1"
             >
-              ${type.label}
+              ${formatLabel(type)}
             </label>
             <input
               class="event__input event__input--destination"
               id="event-destination-1"
               type="text"
               name="event-destination"
-              value="${destination.title}" list="destination-list-1"
+              value="${destination.name}" list="destination-list-1"
             >
             <datalist id="destination-list-1">
               ${getDestinationItemsTemplate()}
