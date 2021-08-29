@@ -28,13 +28,15 @@ const getRandomDates = (restrict) => {
 const getMockPoint = (destination, mockOffers) => {
   const { type, offers } = getRandomArrayItem(mockOffers);
   const [dateFrom, dateTo] = getRandomDates(dateGap);
-  offers.forEach((offer) => offer.isChecked = getRandomBoolean());
 
   return {
     id: nanoid(),
     type,
     destination,
-    offers,
+    offers: offers.map((offer) => ({
+      ...offer,
+      isChecked: getRandomBoolean(),
+    })),
     basePrice: getRandomIntInclusive(PriceRestrict.MIN, PriceRestrict.MAX),
     dateFrom,
     dateTo,
