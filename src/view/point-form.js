@@ -1,7 +1,7 @@
 import AbstractView from './abstract';
-import {MOCK_CITIES, POINT_TYPES} from '../const';
-import {formatLabel} from '../utils/common';
-import {formatDate} from '../utils/date';
+import { MOCK_CITIES, POINT_TYPES } from '../const';
+import { formatLabel } from '../utils/common';
+import { formatDate } from '../utils/date';
 
 const EMPTY_POINT = {
   type: POINT_TYPES[0],
@@ -23,7 +23,7 @@ const getTypeItemsTemplate = (currentType) => {
     return `
       <div class="event__type-item">
         <input
-          id="event-type-${type}-1"
+          id="event-type-${type}"
           class="event__type-input visually-hidden"
           type="radio"
           name="event-type"
@@ -32,7 +32,7 @@ const getTypeItemsTemplate = (currentType) => {
         >
         <label
           class="event__type-label event__type-label--${type}"
-          for="event-type-${type}-1"
+          for="event-type-${type}"
         >${type}</label>
       </div>`;
   });
@@ -44,22 +44,23 @@ const getDestinationItemsTemplate = () => MOCK_CITIES.map((city) => `<option val
 
 const getOffersTemplate = (offers) => {
   if (Array.isArray(offers) && offers.length) {
-    const template = offers.map((offer) => {
-      const {name, label, price, isChecked} = offer;
+    const template = offers.map((offer, index) => {
+      const { title, price, isChecked } = offer;
       return `
         <div class="event__offer-selector">
           <input
             class="event__offer-checkbox visually-hidden"
-            id="event-offer-${name}-1"
+            id="event-offer-${index}"
             type="checkbox"
-            name="event-offer-${name}"
+            name="event-offer-${index}"
+            value="${title}"
             ${isChecked ? 'checked' : ''}
           >
           <label
             class="event__offer-label"
-            for="event-offer-${name}-1"
+            for="event-offer-${index}"
           >
-            <span class="event__offer-title">${label}</span>
+            <span class="event__offer-title">${title}</span>
             &plus;&euro;&nbsp;
             <span class="event__offer-price">${price}</span>
           </label>
@@ -108,7 +109,7 @@ const getPicturesTemplate = (pictures) => {
 };
 
 const getDestinationTemplate = (destination) => {
-  const {description, pictures} = destination;
+  const { description, pictures } = destination;
 
   if (description || pictures) {
     return `
@@ -143,7 +144,7 @@ const getResetButtonTemplate = () => (`
   </button>`);
 
 const getPointFormTemplate = (point, isEdit) => {
-  const {type, destination, dateFrom, dateTo, basePrice, offers} = point;
+  const { type, destination, dateFrom, dateTo, basePrice, offers } = point;
 
   return `
     <li class="trip-events__item">
@@ -156,7 +157,7 @@ const getPointFormTemplate = (point, isEdit) => {
           <div class="event__type-wrapper">
             <label
               class="event__type event__type-btn"
-              for="event-type-toggle-1"
+              for="event-type-toggle"
             >
               <span class="visually-hidden">Choose event type</span>
               <img
@@ -169,7 +170,7 @@ const getPointFormTemplate = (point, isEdit) => {
             </label>
             <input
               class="event__type-toggle visually-hidden"
-              id="event-type-toggle-1"
+              id="event-type-toggle"
               type="checkbox"
             >
 
@@ -184,18 +185,19 @@ const getPointFormTemplate = (point, isEdit) => {
           <div class="event__field-group event__field-group--destination">
             <label
               class="event__label event__type-output"
-              for="event-destination-1"
+              for="event-destination"
             >
               ${formatLabel(type)}
             </label>
             <input
               class="event__input event__input--destination"
-              id="event-destination-1"
+              id="event-destination"
               type="text"
               name="event-destination"
-              value="${destination.name}" list="destination-list-1"
+              value="${destination.name}"
+              list="destination-list"
             >
-            <datalist id="destination-list-1">
+            <datalist id="destination-list">
               ${getDestinationItemsTemplate()}
             </datalist>
           </div>
@@ -203,11 +205,11 @@ const getPointFormTemplate = (point, isEdit) => {
           <div class="event__field-group event__field-group--time">
             <label
               class="visually-hidden"
-              for="event-start-time-1">From</label
+              for="event-start-time">From</label
             >
             <input
               class="event__input event__input--time"
-              id="event-start-time-1"
+              id="event-start-time"
               type="text"
               name="event-start-time"
               value="${formatDate(dateFrom)}"
@@ -215,11 +217,11 @@ const getPointFormTemplate = (point, isEdit) => {
             &mdash;
             <label
               class="visually-hidden"
-              for="event-end-time-1"
+              for="event-end-time"
             >To</label>
             <input
               class="event__input event__input--time"
-              id="event-end-time-1"
+              id="event-end-time"
               type="text"
               name="event-end-time"
               value="${formatDate(dateTo)}"
@@ -229,14 +231,14 @@ const getPointFormTemplate = (point, isEdit) => {
           <div class="event__field-group event__field-group--price">
             <label
               class="event__label"
-              for="event-price-1"
+              for="event-price"
             >
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
             <input
               class="event__input event__input--price"
-              id="event-price-1"
+              id="event-price"
               type="text"
               name="event-price"
               value="${basePrice}"
