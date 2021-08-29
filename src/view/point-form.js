@@ -4,13 +4,13 @@ import { formatLabel, replaceNotNumberCharacter } from '../utils/common';
 import { formatDate } from '../utils/date';
 
 const CURRENT_DATE = Date.now();
-const MOCK_CITIES = [...mockDestinations.keys()];
+const DESTINATION_CITIES = [...mockDestinations.keys()];
 const POINT_TYPES = [...mockOffers.keys()];
 
 const BLANK_POINT = {
   type: POINT_TYPES[0],
   destination: {
-    name: MOCK_CITIES[0],
+    name: DESTINATION_CITIES[0],
     description: '',
     pictures: [],
   },
@@ -44,7 +44,7 @@ const getTypeItemsTemplate = (currentType) => {
   return template.join('\n');
 };
 
-const getDestinationItemsTemplate = () => MOCK_CITIES.map((city) => `<option value="${city}"></option>`).join('\n');
+const getDestinationItemsTemplate = () => DESTINATION_CITIES.map((city) => `<option value="${city}"></option>`).join('\n');
 
 const getOffersTemplate = (offers) => {
   if (Array.isArray(offers) && offers.length) {
