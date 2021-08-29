@@ -1,27 +1,17 @@
 import AbstractView from './abstract';
+import { mockOffers, mockDestinations } from '../data';
 import { formatLabel } from '../utils/common';
 import { formatDate } from '../utils/date';
 
-const MOCK_CITIES = ['Rome', 'Paris', 'Prague', 'London', 'Istanbul', 'Amsterdam', 'Barcelona', 'Saint Petersburg', 'Dubrovnik', 'Berlin', 'Vienna', 'Athens', 'Lisbon', 'Warsaw', 'Stockholm', 'Tallinn', 'Venice', 'Seville', 'Belgrade', 'Bruges', 'Budapest', 'Brasov', 'Edinburgh', 'Copenhagen', 'Dublin'];
-
-const POINT_TYPES = [
-  { name: 'taxi', label: 'Taxi' },
-  { name: 'bus', label: 'Bus' },
-  { name: 'train', label: 'Train' },
-  { name: 'ship', label: 'Ship' },
-  { name: 'drive', label: 'Drive' },
-  { name: 'flight', label: 'Flight' },
-  { name: 'check-in', label: 'Check-in' },
-  { name: 'sightseeing', label: 'Sightseeing' },
-  { name: 'restaurant', label: 'Restaurant' },
-];
+const MOCK_CITIES = mockDestinations.map((destination) => destination.name);
+const POINT_TYPES = [...mockOffers.keys()];
 
 const EMPTY_POINT = {
   type: POINT_TYPES[0],
   destination: {
-    title: MOCK_CITIES[0],
+    name: MOCK_CITIES[0],
     description: null,
-    photos: null,
+    pictures: null,
   },
   offers: null,
   basePrice: 0,
@@ -36,17 +26,17 @@ const getTypeItemsTemplate = (currentType) => {
     return `
       <div class="event__type-item">
         <input
-          id="event-type-${type.name}"
+          id="event-type-${type}"
           class="event__type-input visually-hidden"
           type="radio"
           name="event-type"
-          value="${type.name}"
+          value="${type}"
           ${isChecked ? 'checked' : ''}
         >
         <label
-          class="event__type-label event__type-label--${type.name}"
-          for="event-type-${type.name}"
-        >${type.label}</label>
+          class="event__type-label event__type-label--${type}"
+          for="event-type-${type}"
+        >${formatLabel(type)}</label>
       </div>`;
   });
 
