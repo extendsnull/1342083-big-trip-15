@@ -1,7 +1,20 @@
 import AbstractView from './abstract';
-import { MOCK_CITIES, POINT_TYPES } from '../const';
 import { formatLabel } from '../utils/common';
 import { formatDate } from '../utils/date';
+
+const MOCK_CITIES = ['Rome', 'Paris', 'Prague', 'London', 'Istanbul', 'Amsterdam', 'Barcelona', 'Saint Petersburg', 'Dubrovnik', 'Berlin', 'Vienna', 'Athens', 'Lisbon', 'Warsaw', 'Stockholm', 'Tallinn', 'Venice', 'Seville', 'Belgrade', 'Bruges', 'Budapest', 'Brasov', 'Edinburgh', 'Copenhagen', 'Dublin'];
+
+const POINT_TYPES = [
+  { name: 'taxi', label: 'Taxi' },
+  { name: 'bus', label: 'Bus' },
+  { name: 'train', label: 'Train' },
+  { name: 'ship', label: 'Ship' },
+  { name: 'drive', label: 'Drive' },
+  { name: 'flight', label: 'Flight' },
+  { name: 'check-in', label: 'Check-in' },
+  { name: 'sightseeing', label: 'Sightseeing' },
+  { name: 'restaurant', label: 'Restaurant' },
+];
 
 const EMPTY_POINT = {
   type: POINT_TYPES[0],
