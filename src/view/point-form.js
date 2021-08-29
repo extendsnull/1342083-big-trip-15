@@ -1,22 +1,23 @@
-import AbstractView from './abstract';
+import SmartView from './smart';
 import { mockOffers, mockDestinations } from '../data';
-import { formatLabel } from '../utils/common';
+import { formatLabel, replaceNotNumberCharacter } from '../utils/common';
 import { formatDate } from '../utils/date';
 
-const MOCK_CITIES = mockDestinations.map((destination) => destination.name);
+const CURRENT_DATE = Date.now();
+const MOCK_CITIES = [...mockDestinations.keys()];
 const POINT_TYPES = [...mockOffers.keys()];
 
-const EMPTY_POINT = {
+const BLANK_POINT = {
   type: POINT_TYPES[0],
   destination: {
     name: MOCK_CITIES[0],
-    description: null,
-    pictures: null,
+    description: '',
+    pictures: [],
   },
-  offers: null,
-  basePrice: 0,
-  dateFrom: Date.now(),
-  dateTo: Date.now(),
+  offers: [],
+  basePrice: 100,
+  dateFrom: CURRENT_DATE,
+  dateTo: CURRENT_DATE,
   isFavorite: false,
 };
 
@@ -146,8 +147,8 @@ const getResetButtonTemplate = () => (`
     <span class="visually-hidden">Close event edit</span>
   </button>`);
 
-const getPointFormTemplate = (point, isEdit) => {
-  const { type, destination, dateFrom, dateTo, basePrice, offers } = point;
+const getPointFormTemplate = (point) => {
+  const { type, destination, dateFrom, dateTo, basePrice, offers, isEditMode } = point;
 
   return `
     <li class="trip-events__item">
@@ -255,27 +256,35 @@ const getPointFormTemplate = (point, isEdit) => {
           <button
             class="event__reset-btn"
             type="reset"
-          >${isEdit ? 'Delete' : 'Cancel'}</button>
-          ${isEdit ? getResetButtonTemplate() : ''}
+          >${isEditMode ? 'Delete' : 'Cancel'}</button>
+          ${isEditMode ? getResetButtonTemplate() : ''}
         </header>
         ${getDetailsTemplate(offers, destination)}
       </form>
     </li>`;
 };
 
-export default class PointForm extends AbstractView {
-  constructor(point = EMPTY_POINT, isEdit) {
+export default class PointForm extends SmartView {
+  constructor(point = BLANK_POINT, isEditMode) {
     super();
-    this._point = point;
-    this._isEdit = isEdit;
-
-    this._deleteClickHandler = this._deleteClickHandler.bind(this);
-    this._resetClickHandler = this._resetClickHandler.bind(this);
-    this._submitHandler = this._submitHandler.bind(this);
+    this._state = PointForm.parsePointToState(point, isEditMode);
+    this._bindContext();
+    this._setInnerHandlers();
   }
 
   _getTemplate() {
-    return getPointFormTemplate(this._point, this._isEdit);
+    return getPointFormTemplate(this._state);
+  }
+
+  _restoreHandlers() {
+    this._setInnerHandlers();
+    this.setDeleteClickHandler(this._callback.deleteClick);
+    this.setResetClickHandler(this._callback.resetClick);
+    this.setSubmitHandler(this._callback.submit);
+  }
+
+  reset(point, isEditMode) {
+    this._updateState(PointForm.parsePointToState(point, isEditMode));
   }
 
   setDeleteClickHandler(callback) {
@@ -293,18 +302,96 @@ export default class PointForm extends AbstractView {
     this.getElement().addEventListener('submit', this._submitHandler);
   }
 
+  _bindContext() {
+    this._deleteClickHandler = this._deleteClickHandler.bind(this);
+    this._destinationChangeHandler = this._destinationChangeHandler.bind(this);
+    this._offerChangeHandler = this._offerChangeHandler.bind(this);
+    this._priceChangeHandler = this._priceChangeHandler.bind(this);
+    this._priceInputHandler = this._priceInputHandler.bind(this);
+    this._resetClickHandler = this._resetClickHandler.bind(this);
+    this._submitHandler = this._submitHandler.bind(this);
+    this._typeChangeHandler = this._typeChangeHandler.bind(this);
+  }
+
   _deleteClickHandler(evt) {
     evt.preventDefault();
     this._callback.deleteClick();
   }
 
-  _submitHandler(evt) {
-    evt.preventDefault();
-    this._callback.submit();
+  _destinationChangeHandler(evt) {
+    const newDestination = mockDestinations.get(evt.target.value);
+    this._updateState({ destination: newDestination });
+  }
+
+  _getElements() {
+    this._destinationField = this.getElement().querySelector('.event__input--destination');
+    this._priceField = this.getElement().querySelector('.event__input--price');
+    this._availableOffers = this.getElement().querySelector('.event__available-offers');
+    this._typeGroup = this.getElement().querySelector('.event__type-group');
   }
 
   _resetClickHandler(evt) {
     evt.preventDefault();
     this._callback.resetClick();
+  }
+
+  _setInnerHandlers() {
+    this._getElements();
+    this._destinationField.addEventListener('change', this._destinationChangeHandler);
+    this._priceField.addEventListener('change', this._priceChangeHandler);
+    this._priceField.addEventListener('input', this._priceInputHandler);
+    this._typeGroup.addEventListener('change', this._typeChangeHandler);
+
+    if (this._availableOffers) {
+      this._availableOffers.addEventListener('change', this._offerChangeHandler);
+    }
+  }
+
+  _submitHandler(evt) {
+    evt.preventDefault();
+    this._callback.submit(PointForm.parseStateToPoint(this._state));
+  }
+
+  _offerChangeHandler(evt) {
+    const updatedOffers = this._state.offers.map((offer) => {
+      if (offer.title === evt.target.value) {
+        return {
+          ...offer,
+          isChecked: !offer.isChecked,
+        };
+      }
+
+      return offer;
+    });
+    this._updateState({ offers: updatedOffers }, true);
+  }
+
+  _priceChangeHandler(evt) {
+    if (Number(evt.target.value) <= 0) {
+      evt.target.value = this._state.basePrice;
+    }
+
+    this._updateState({ basePrice: evt.target.value }, true);
+  }
+
+  _priceInputHandler(evt) {
+    evt.target.value = Number(replaceNotNumberCharacter(evt.target.value));
+  }
+
+  _typeChangeHandler(evt) {
+    evt.preventDefault();
+    const type = evt.target.value;
+    const { offers } = mockOffers.get(type);
+    this._updateState({ type, offers });
+  }
+
+  static parsePointToState(point, isEditMode) {
+    return { ...point, isEditMode };
+  }
+
+  static parseStateToPoint(state) {
+    const newPoint = { ...state };
+    delete newPoint.isEditMode;
+    return newPoint;
   }
 }

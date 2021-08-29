@@ -18,6 +18,8 @@ export const getRandomBoolean = () => Boolean(getRandomIntInclusive());
 
 export const isEscKey = (key) => KeyName.ESC === key;
 
+export const replaceNotNumberCharacter = (value) => String(value).replace(/\D/gi, '');
+
 export const updateItem = (items, update) => {
   const index = items.findIndex((item) => item.id === update.id);
 
