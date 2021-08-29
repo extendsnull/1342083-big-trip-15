@@ -313,26 +313,11 @@ export default class PointForm extends SmartView {
     this._typeChangeHandler = this._typeChangeHandler.bind(this);
   }
 
-  _deleteClickHandler(evt) {
-    evt.preventDefault();
-    this._callback.deleteClick();
-  }
-
-  _destinationChangeHandler(evt) {
-    const newDestination = mockDestinations.get(evt.target.value);
-    this._updateState({ destination: newDestination });
-  }
-
   _getElements() {
     this._destinationField = this.getElement().querySelector('.event__input--destination');
     this._priceField = this.getElement().querySelector('.event__input--price');
     this._availableOffers = this.getElement().querySelector('.event__available-offers');
     this._typeGroup = this.getElement().querySelector('.event__type-group');
-  }
-
-  _resetClickHandler(evt) {
-    evt.preventDefault();
-    this._callback.resetClick();
   }
 
   _setInnerHandlers() {
@@ -345,6 +330,21 @@ export default class PointForm extends SmartView {
     if (this._availableOffers) {
       this._availableOffers.addEventListener('change', this._offerChangeHandler);
     }
+  }
+
+  _deleteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.deleteClick();
+  }
+
+  _destinationChangeHandler(evt) {
+    const newDestination = mockDestinations.get(evt.target.value);
+    this._updateState({ destination: newDestination });
+  }
+
+  _resetClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.resetClick();
   }
 
   _submitHandler(evt) {

@@ -43,6 +43,11 @@ export default class BoardPresenter {
     this._pointPresenters.forEach((presenter) => presenter.resetView());
   }
 
+  _handlePointChange(updatedPoint) {
+    this._points = updateItem(this._points, updatedPoint);
+    this._pointPresenters.get(updatedPoint.id).init(updatedPoint);
+  }
+
   _handleSortTypeChange(sortType) {
     if (this._currentSortType !== sortType) {
       this._sortPoints(sortType);
@@ -51,29 +56,17 @@ export default class BoardPresenter {
     }
   }
 
-  _handlePointChange(updatedPoint) {
-    this._points = updateItem(this._points, updatedPoint);
-    this._pointPresenters.get(updatedPoint.id).init(updatedPoint);
-  }
-
-  _sortPoints(sortType) {
-    switch (sortType) {
-      case SortType.DAY:
-      default: {
-        this._points = this._sourcedPoints.slice();
-        break;
-      }
-      case SortType.TIME: {
-        this._points = sortByDuration(this._points);
-        break;
-      }
-      case SortType.PRICE: {
-        this._points = sortByPrice(this._points);
-        break;
-      }
+  _renderBoard() {
+    if (this._points.every((point) => point.isExpired)) {
+      return this._renderNoPoint();
     }
 
-    this._currentSortType = sortType;
+    this._renderSortForm();
+    this._renderPointsList();
+  }
+
+  _renderNoPoint() {
+    render(this._container, this._noPointsComponent);
   }
 
   _renderPoint(point) {
@@ -99,16 +92,23 @@ export default class BoardPresenter {
     render(this._container, this._sortFormComponent);
   }
 
-  _renderNoPoint() {
-    render(this._container, this._noPointsComponent);
-  }
-
-  _renderBoard() {
-    if (this._points.every((point) => point.isExpired)) {
-      return this._renderNoPoint();
+  _sortPoints(sortType) {
+    switch (sortType) {
+      case SortType.DAY:
+      default: {
+        this._points = this._sourcedPoints.slice();
+        break;
+      }
+      case SortType.TIME: {
+        this._points = sortByDuration(this._points);
+        break;
+      }
+      case SortType.PRICE: {
+        this._points = sortByPrice(this._points);
+        break;
+      }
     }
 
-    this._renderSortForm();
-    this._renderPointsList();
+    this._currentSortType = sortType;
   }
 }

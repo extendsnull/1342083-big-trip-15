@@ -2,7 +2,6 @@ import AbstractView from './abstract';
 import { getArrayFirstItem, getArrayLastItem } from '../utils/array';
 import { formatTitle, formatDates } from '../utils/info';
 
-
 const getMainInfoTemplate = (data) => {
   const {destinations, dates, cost} = data;
   const [dateFrom] = getArrayFirstItem(dates);

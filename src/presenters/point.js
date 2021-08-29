@@ -123,15 +123,15 @@ export default class PointPresenter {
     remove(prevPointFormComponent);
   }
 
+  _replaceFormToPoint() {
+    replace(this._pointComponent, this._pointFormComponent);
+    this._mode = Mode.DEFAULT;
+  }
+
   _replacePointToForm() {
     replace(this._pointFormComponent, this._pointComponent);
     this._changeMode();
     this._mode = Mode.EDITING;
-  }
-
-  _replaceFormToPoint() {
-    replace(this._pointComponent, this._pointFormComponent);
-    this._mode = Mode.DEFAULT;
   }
 
   _reset(isEditMode) {
