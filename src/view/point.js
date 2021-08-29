@@ -1,7 +1,7 @@
 import AbstractView from './abstract';
-import {HumanDateFormatPattern, MachineDateFormatPattern} from '../const';
+import { HumanDateFormatPattern, MachineDateFormatPattern } from '../const';
 import { formatLabel } from '../utils/common';
-import {formatDate, getHumanizedDateDifference} from '../utils/date';
+import { formatDate, getHumanizedDateDifference } from '../utils/date';
 
 const getOffersTemplate = (offers) => {
   if (Array.isArray(offers) && offers.length) {
@@ -26,7 +26,7 @@ const getOffersTemplate = (offers) => {
 };
 
 const getPointTemplate = (point) => {
-  const {type, destination, dateFrom, dateTo, basePrice, offers, isFavorite} = point;
+  const { type, destination, dateFrom, dateTo, basePrice, offers, isFavorite } = point;
   const title = `${formatLabel(type)} ${destination.name}`;
 
   return `
