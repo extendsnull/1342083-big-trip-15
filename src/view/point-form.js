@@ -283,7 +283,6 @@ export default class PointForm extends SmartView {
     this._state = PointForm.parsePointToState(point, isEditMode);
     this._datepickers = null;
 
-    this._getElements();
     this._bindContext();
     this._setInnerHandlers();
   }
@@ -333,6 +332,8 @@ export default class PointForm extends SmartView {
   }
 
   _getElements() {
+    this._dateFromField = this.getElement().querySelector(`#${DateFieldId.FROM}`);
+    this._dateToField = this.getElement().querySelector(`#${DateFieldId.TO}`);
     this._destinationField = this.getElement().querySelector('.event__input--destination');
     this._priceField = this.getElement().querySelector('.event__input--price');
     this._availableOffers = this.getElement().querySelector('.event__available-offers');
@@ -351,21 +352,21 @@ export default class PointForm extends SmartView {
     }
 
     const dateFromPicker = flatpickr(
-      this.getElement().querySelector(`#${DateFieldId.FROM}`),
+      this._dateFromField,
       {
         ...DATEPICKER_BASE_SETTINGS,
-        onChange: this._dateChangeHandler,
         defaultDate: this._state.dateFrom,
         maxDate: this._state.dateTo,
+        onChange: this._dateChangeHandler,
       },
     );
     const dateToPicker = flatpickr(
-      this.getElement().querySelector(`#${DateFieldId.TO}`),
+      this._dateToField,
       {
         ...DATEPICKER_BASE_SETTINGS,
-        onChange: this._dateChangeHandler,
         defaultDate: this._state.dateTo,
         minDate: this._state.dateFrom,
+        onChange: this._dateChangeHandler,
       },
     );
 
@@ -376,6 +377,8 @@ export default class PointForm extends SmartView {
   }
 
   _setInnerHandlers() {
+    this._getElements();
+
     this._destinationField.addEventListener('change', this._destinationChangeHandler);
     this._priceField.addEventListener('change', this._priceChangeHandler);
     this._priceField.addEventListener('input', this._priceInputHandler);
