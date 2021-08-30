@@ -14,4 +14,12 @@ module.exports = {
     contentBase: PUBLIC_PATH,
     watchContentBase: true,
   },
+  module: {
+    rules: [
+      {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader'],
+      },
+    ],
+  },
 };
