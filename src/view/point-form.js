@@ -293,8 +293,6 @@ export default class PointForm extends SmartView {
 
   _restoreHandlers() {
     this._setInnerHandlers();
-    this._setDatepickers();
-
     this.setDeleteClickHandler(this._callback.deleteClick);
     this.setResetClickHandler(this._callback.resetClick);
     this.setSubmitHandler(this._callback.submit);
