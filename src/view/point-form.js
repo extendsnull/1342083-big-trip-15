@@ -24,6 +24,13 @@ const BLANK_POINT = {
   isFavorite: false,
 };
 
+const DATEPICKER_BASE_SETTINGS = {
+  dateFormat: HumanDateFormatPattern.DEFAULT_FLATPICKR,
+  enableTime: true,
+  // eslint-disable-next-line
+  time_24hr: true,
+};
+
 const getTypeItemsTemplate = (currentType) => {
   const template = POINT_TYPES.map((type) => {
     const isChecked = type === currentType;
@@ -278,12 +285,6 @@ export default class PointForm extends SmartView {
     this._getElements();
     this._bindContext();
     this._setInnerHandlers();
-    this._setDatepickers();
-  }
-
-  removeElement() {
-    super.removeElement();
-    this._removeDatepickers();
   }
 
   _getTemplate() {
@@ -292,6 +293,8 @@ export default class PointForm extends SmartView {
 
   _restoreHandlers() {
     this._setInnerHandlers();
+    this._setDatepickers();
+
     this.setDeleteClickHandler(this._callback.deleteClick);
     this.setResetClickHandler(this._callback.resetClick);
     this.setSubmitHandler(this._callback.submit);
@@ -329,8 +332,6 @@ export default class PointForm extends SmartView {
   }
 
   _getElements() {
-    this._dateFromField = this.getElement().querySelector(`#${DateFieldId.FROM}`);
-    this._dateToField = this.getElement().querySelector(`#${DateFieldId.TO}`);
     this._destinationField = this.getElement().querySelector('.event__input--destination');
     this._priceField = this.getElement().querySelector('.event__input--price');
     this._availableOffers = this.getElement().querySelector('.event__available-offers');
@@ -338,32 +339,30 @@ export default class PointForm extends SmartView {
     this._dateFields = this.getElement().querySelectorAll('.event__input--time');
   }
 
-  _removeDatepickers() {
+  _resetDatepickers() {
     Object.values(this._datepickers).forEach((datepicker) => datepicker.destroy());
     this._datepickers = null;
   }
 
   _setDatepickers() {
-    const baseSettings = {
-      dateFormat: HumanDateFormatPattern.DEFAULT_FLATPICKR,
-      enableTime: true,
-      // eslint-disable-next-line
-      time_24hr: true,
-      onChange: this._dateChangeHandler,
-    };
+    if (this._datepickers) {
+      this._resetDatepickers();
+    }
 
     const dateFromPicker = flatpickr(
-      this._dateFromField,
+      this.getElement().querySelector(`#${DateFieldId.FROM}`),
       {
-        ...baseSettings,
+        ...DATEPICKER_BASE_SETTINGS,
+        onChange: this._dateChangeHandler,
         defaultDate: this._state.dateFrom,
         maxDate: this._state.dateTo,
       },
     );
     const dateToPicker = flatpickr(
-      this._dateToField,
+      this.getElement().querySelector(`#${DateFieldId.TO}`),
       {
-        ...baseSettings,
+        ...DATEPICKER_BASE_SETTINGS,
+        onChange: this._dateChangeHandler,
         defaultDate: this._state.dateTo,
         minDate: this._state.dateFrom,
       },
@@ -384,6 +383,8 @@ export default class PointForm extends SmartView {
     if (this._availableOffers) {
       this._availableOffers.addEventListener('change', this._offerChangeHandler);
     }
+
+    this._setDatepickers();
   }
 
   _dateChangeHandler(selectedDates, dateStr, instance) {
