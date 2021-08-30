@@ -1,6 +1,6 @@
 import AbstractView from './abstract';
-import {SortType} from '../const';
-import {formatLabel} from '../utils/common';
+import { SortType } from '../const';
+import { formatLabel } from '../utils/common';
 
 const sortControls = [SortType.DAY, SortType.EVENT, SortType.TIME, SortType.PRICE, SortType.OFFER];
 const checkedControl = SortType.DAY;
@@ -45,8 +45,11 @@ const getSortFormTemplate = () => {
 export default class SortForm extends AbstractView {
   constructor() {
     super();
-
     this._sortTypeChangeHandler = this._sortTypeChangeHandler.bind(this);
+  }
+
+  _getTemplate() {
+    return getSortFormTemplate();
   }
 
   setChangeSortTypeHandler(callback) {
@@ -59,9 +62,5 @@ export default class SortForm extends AbstractView {
       evt.preventDefault();
       this._callback.changeSortType(evt.target.dataset.sortType);
     }
-  }
-
-  _getTemplate() {
-    return getSortFormTemplate();
   }
 }

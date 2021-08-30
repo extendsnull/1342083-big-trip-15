@@ -1,16 +1,17 @@
 import AbstractView from './abstract';
-import {HumanDateFormatPattern, MachineDateFormatPattern} from '../const';
-import {formatDate, getHumanizedDateDifference} from '../utils/date';
+import { HumanDateFormatPattern, MachineDateFormatPattern } from '../const';
+import { formatLabel } from '../utils/common';
+import { formatDate, getHumanizedDateDifference } from '../utils/date';
 
-const getOffersTemplate = (offers) => {
-  if (Array.isArray(offers) && offers.length) {
+const getOffersTemplate = (offers, hasOffers) => {
+  if (hasOffers) {
     const items = offers
       .filter((offer) => offer.isChecked)
       .map((offer) => {
-        const {label, price} = offer;
+        const {title, price} = offer;
         return `
           <li class="event__offer">
-            <span class="event__offer-title">${label}</span>
+            <span class="event__offer-title">${title}</span>
             &plus;&euro;&nbsp;
             <span class="event__offer-price">${price}</span>
           </li>`;
@@ -25,8 +26,10 @@ const getOffersTemplate = (offers) => {
 };
 
 const getPointTemplate = (point) => {
-  const {type, destination, dateFrom, dateTo, basePrice, offers, isFavorite} = point;
-  const title = `${type.label} ${destination.title}`;
+  const { type, destination, dateFrom, dateTo, basePrice, offers, isFavorite } = point;
+  const filteredOffers = offers.filter((offer) => offer.isChecked);
+  const hasOffers = Boolean(filteredOffers.length);
+  const title = `${formatLabel(type)} ${destination.name}`;
 
   return `
     <li class="trip-events__item">
@@ -42,7 +45,7 @@ const getPointTemplate = (point) => {
             class="event__type-icon"
             width="42"
             height="42"
-            src="img/icons/${type.name}.png"
+            src="img/icons/${type}.png"
             alt="Event type icon"
           >
         </div>
@@ -70,7 +73,7 @@ const getPointTemplate = (point) => {
         <p class="event__price">
           &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
         </p>
-        ${getOffersTemplate(offers)}
+        ${getOffersTemplate(filteredOffers, hasOffers)}
         <button
           class="event__favorite-btn${isFavorite ? ' event__favorite-btn--active' : ''}"
           type="button"
@@ -118,13 +121,13 @@ export default class Point extends AbstractView {
     this.getElement().querySelector('.event__favorite-btn').addEventListener('click', this._favoriteClickHandler);
   }
 
-  _favoriteClickHandler(evt) {
-    evt.preventDefault();
-    this._callback.favoriteClick();
-  }
-
   _editClickHandler(evt) {
     evt.preventDefault();
     this._callback.editClick();
+  }
+
+  _favoriteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.favoriteClick();
   }
 }

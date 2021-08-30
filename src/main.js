@@ -2,16 +2,12 @@ import InfoView from './view/info';
 import FilterFormView from './view/filter-form';
 import NavigationView from './view/navigation';
 import BoardPresenter from './presenters/board';
-import {getMockPoints, getInfoState, getFilterState} from './mocks';
-import {render} from './utils/render';
-
-const points = getMockPoints();
-const infoData = getInfoState(points);
-const filterData = getFilterState(points);
+import { mockPoints, infoState, filterState } from './data';
+import { render} from './utils/render';
 
 render(
   document.querySelector('.page-header__container'),
-  new InfoView(infoData),
+  new InfoView(infoState),
 );
 
 render(
@@ -21,10 +17,10 @@ render(
 
 render(
   document.querySelector('.trip-controls__filters'),
-  new FilterFormView(filterData),
+  new FilterFormView(filterState),
 );
 
 new BoardPresenter(
   document.querySelector('.trip-events'),
-  points,
+  mockPoints,
 );

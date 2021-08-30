@@ -2,10 +2,10 @@ import SortFormView from '../view/sort-form';
 import PointsListView from '../view/points-list';
 import NoPointsView from '../view/no-points';
 import PointPresenter from './point';
-import {NoPointsMessage, SortType} from '../const';
-import {updateItem} from '../utils/common';
-import {remove, render} from '../utils/render';
-import {sortByDuration, sortByPrice} from '../utils/sort';
+import { NoPointsMessage, SortType } from '../const';
+import { updateItem } from '../utils/common';
+import { remove, render } from '../utils/render';
+import { sortByDuration, sortByPrice } from '../utils/sort';
 
 export default class BoardPresenter {
   constructor(container, points) {
@@ -26,7 +26,7 @@ export default class BoardPresenter {
   _bindContext() {
     this._handleModeChange = this._handleModeChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
-    this._handleTaskChange = this._handleTaskChange.bind(this);
+    this._handlePointChange = this._handlePointChange.bind(this);
   }
 
   _clearPointsList() {
@@ -43,6 +43,11 @@ export default class BoardPresenter {
     this._pointPresenters.forEach((presenter) => presenter.resetView());
   }
 
+  _handlePointChange(updatedPoint) {
+    this._points = updateItem(this._points, updatedPoint);
+    this._pointPresenters.get(updatedPoint.id).init(updatedPoint);
+  }
+
   _handleSortTypeChange(sortType) {
     if (this._currentSortType !== sortType) {
       this._sortPoints(sortType);
@@ -51,9 +56,40 @@ export default class BoardPresenter {
     }
   }
 
-  _handleTaskChange(updatedTask) {
-    this._points = updateItem(this._points, updatedTask);
-    this._pointPresenters.get(updatedTask.id).init(updatedTask);
+  _renderBoard() {
+    if (this._points.every((point) => point.isExpired)) {
+      return this._renderNoPoint();
+    }
+
+    this._renderSortForm();
+    this._renderPointsList();
+  }
+
+  _renderNoPoint() {
+    render(this._container, this._noPointsComponent);
+  }
+
+  _renderPoint(point) {
+    const pointPresenter = new PointPresenter(
+      this._pointsListComponent,
+      this._handlePointChange,
+      this._handleModeChange,
+    );
+    pointPresenter.init(point);
+    this._pointPresenters.set(point.id, pointPresenter);
+  }
+
+  _renderPointsList() {
+    for (const point of this._points) {
+      this._renderPoint(point);
+    }
+
+    render(this._container, this._pointsListComponent);
+  }
+
+  _renderSortForm() {
+    this._sortFormComponent.setChangeSortTypeHandler(this._handleSortTypeChange);
+    render(this._container, this._sortFormComponent);
   }
 
   _sortPoints(sortType) {
@@ -74,37 +110,5 @@ export default class BoardPresenter {
     }
 
     this._currentSortType = sortType;
-  }
-
-  _renderPoint(point) {
-    const pointPresenter = new PointPresenter(this._pointsListComponent, this._handleTaskChange, this._handleModeChange);
-    pointPresenter.init(point);
-    this._pointPresenters.set(point.id, pointPresenter);
-  }
-
-  _renderPointsList() {
-    for (const point of this._points) {
-      this._renderPoint(point);
-    }
-
-    render(this._container, this._pointsListComponent);
-  }
-
-  _renderSortForm() {
-    this._sortFormComponent.setChangeSortTypeHandler(this._handleSortTypeChange);
-    render(this._container, this._sortFormComponent);
-  }
-
-  _renderNoPoint() {
-    render(this._container, this._noPointsComponent);
-  }
-
-  _renderBoard() {
-    if (this._points.every((point) => point.isExpired)) {
-      return this._renderNoPoint();
-    }
-
-    this._renderSortForm();
-    this._renderPointsList();
   }
 }

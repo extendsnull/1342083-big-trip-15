@@ -1,8 +1,8 @@
-import {createElement} from '../utils/render';
+import { createElement } from '../utils/render';
 
-export default class Abstract {
+export default class AbstractView {
   constructor() {
-    if (new.target === Abstract) {
+    if (new.target === AbstractView) {
       throw new Error('Cannot create an instance of an abstract class.');
     }
 
@@ -23,6 +23,6 @@ export default class Abstract {
   }
 
   _getTemplate() {
-    throw new Error(`Non-abstract class '${this.constructor.name}' does not implement inherited abstract member 'getTemplate' from class 'Abstract'.`);
+    throw new Error(`Non-abstract class '${this.constructor.name}' does not implement inherited abstract member '_getTemplate' from class 'AbstractView'.`);
   }
 }
