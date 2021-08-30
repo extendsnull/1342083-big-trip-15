@@ -54,7 +54,8 @@ const getTypeItemsTemplate = (currentType) => {
   return template.join('\n');
 };
 
-const getDestinationItemsTemplate = () => DESTINATION_CITIES.map((city) => `<option value="${city}"></option>`).join('\n');
+const getDestinationItemsTemplate = () =>
+  DESTINATION_CITIES.map((city) => `<option value="${city}"></option>`).join('\n');
 
 const getResetButtonTemplate = () => (`
   <button
