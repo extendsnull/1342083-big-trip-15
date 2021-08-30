@@ -23,6 +23,8 @@ export const getHumanizedDateDifference = (firstTimestamp, secondTimestamp) => {
   return diff.format(pattern);
 };
 
+export const getTimestamp = (date) => dayjs(date).valueOf();
+
 export const isPastDate = (timestamp) => {
   const now = dayjs();
   return dayjs(timestamp).isBefore(now, 'ms');
