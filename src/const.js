@@ -13,6 +13,7 @@ export const KeyName = {
 
 export const HumanDateFormatPattern = {
   DEFAULT: 'DD/MM/YY HH:mm',
+  DEFAULT_FLATPICKR: 'd/m/y H:i',
   ONLY_DAY: 'DD',
   MONTH_DAY: 'MMM DD',
   ONLY_TIME: 'HH:mm',
