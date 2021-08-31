@@ -1,6 +1,11 @@
 export const MAIN_TITLE_MAX_LENGTH = 3;
 export const RANDOM_SEPARATOR = 0.5;
 
+export const DateFieldId = {
+  FROM: 'event-start-time',
+  TO: 'event-end-time',
+};
+
 export const FilterType = {
   EVERYTHING: 'everything',
   FUTURE: 'future',
@@ -13,6 +18,7 @@ export const KeyName = {
 
 export const HumanDateFormatPattern = {
   DEFAULT: 'DD/MM/YY HH:mm',
+  DEFAULT_FLATPICKR: 'd/m/y H:i',
   ONLY_DAY: 'DD',
   MONTH_DAY: 'MMM DD',
   ONLY_TIME: 'HH:mm',
