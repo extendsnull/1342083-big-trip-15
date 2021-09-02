@@ -1,12 +1,14 @@
 import InfoView from './view/info';
-import FilterFormView from './view/filter-form';
 import NavigationView from './view/navigation';
-import BoardPresenter from './presenters/board';
 import PointsModel from './models/points';
-import { mockPoints, infoState, filterState } from './data';
+import FilterModel from './models/filter';
+import FilterPresenter from './presenters/filter';
+import BoardPresenter from './presenters/board';
+import { mockPoints, infoState } from './data';
 import { render} from './utils/render';
 
 const pointsModel = new PointsModel();
+const filterModel = new FilterModel();
 pointsModel.addPoints(mockPoints);
 
 render(
@@ -19,12 +21,14 @@ render(
   new NavigationView(),
 );
 
-render(
+new FilterPresenter(
   document.querySelector('.trip-controls__filters'),
-  new FilterFormView(filterState),
+  filterModel,
+  pointsModel,
 );
 
 new BoardPresenter(
   document.querySelector('.trip-events'),
   pointsModel,
+  filterModel,
 );

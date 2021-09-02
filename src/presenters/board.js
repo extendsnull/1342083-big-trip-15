@@ -3,20 +3,23 @@ import SortView from '../view/sort';
 import PointPresenter from './point';
 import PointsListView from '../view/points-list';
 import { SortType, UpdateType, UserAction } from '../const';
+import { filter } from '../utils/filter';
 import { remove, render } from '../utils/render';
 import { sortByDateFrom, sortByDuration, sortByPrice } from '../utils/sort';
 
 export default class BoardPresenter {
-  constructor(container, pointsModel) {
+  constructor(container, pointsModel, filterModel) {
     this._container = container;
-    this._pointsModel = pointsModel;
     this._currentSortType = SortType.DAY;
 
-    this._pointPresenters = new Map();
+    this._pointsModel = pointsModel;
+    this._filterModel = filterModel;
 
     this._noPointsComponent = null;
     this._sortComponent = null;
     this._pointsListComponent = null;
+
+    this._pointPresenters = new Map();
 
     this._bindContext();
     this._addObservers();
@@ -24,9 +27,8 @@ export default class BoardPresenter {
   }
 
   _getPoints() {
-    // получить тип фильтра
-    // получить точки и отфильтровать
-    const points = this._pointsModel.getPoints();
+    const filterType = this._filterModel.getFilter();
+    const points = filter[filterType](this._pointsModel.getPoints());
 
     switch (this._currentSortType) {
       case SortType.DAY:
@@ -44,6 +46,7 @@ export default class BoardPresenter {
 
   _addObservers() {
     this._pointsModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
   }
 
   _handleModelEvent(updateType, update) {
