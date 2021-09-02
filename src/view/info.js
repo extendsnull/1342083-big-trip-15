@@ -2,7 +2,7 @@ import AbstractView from './abstract';
 import { getArrayFirstItem, getArrayLastItem } from '../utils/array';
 import { formatTitle, formatDates } from '../utils/info';
 
-const getMainInfoTemplate = (data) => {
+const getInfoTemplate = (data) => {
   const {destinations, dates, cost} = data;
   const [dateFrom] = getArrayFirstItem(dates);
   const [, dateTo] = getArrayLastItem(dates);
@@ -23,26 +23,6 @@ const getMainInfoTemplate = (data) => {
       </p>
     </section>`;
 };
-
-const getInfoTemplate = (data) => (`
-  <div class="trip-main">
-    ${!data.isEmpty ? getMainInfoTemplate(data) : ''}
-
-    <div class="trip-main__trip-controls trip-controls">
-      <div class="trip-controls__navigation">
-        <h2 class="visually-hidden">Switch trip view</h2>
-      </div>
-
-      <div class="trip-controls__filters">
-        <h2 class="visually-hidden">Filter events</h2>
-      </div>
-    </div>
-
-    <button
-      class="trip-main__event-add-btn btn btn--big btn--yellow"
-      type="button"
-    >New event</button>
-  </div>`);
 
 export default class InfoView extends AbstractView {
   constructor(data) {

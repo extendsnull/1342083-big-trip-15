@@ -29,19 +29,22 @@ const getFilterTemplate = (filters, activeFilter) => {
   const controlsTemplate = getControlsTemplate(filters, activeFilter);
 
   return `
-    <form
-      class="trip-filters"
-      action="#"
-      method="get"
-    >
-      ${controlsTemplate}
-      <button
-        class="visually-hidden"
-        type="submit"
+    <div class="trip-controls__filters">
+      <h2 class="visually-hidden">Filter events</h2>
+      <form
+        class="trip-filters"
+        action="#"
+        method="get"
       >
-        Accept filter
-      </button>
-    </form>`;
+        ${controlsTemplate}
+        <button
+          class="visually-hidden"
+          type="submit"
+        >
+          Accept filter
+        </button>
+      </form>
+    </div>`;
 };
 
 export default class FilterView extends AbstractView {
