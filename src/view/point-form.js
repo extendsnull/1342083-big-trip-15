@@ -13,12 +13,12 @@ const POINT_TYPES = [...mockOffers.keys()];
 const BLANK_POINT = {
   type: POINT_TYPES[0],
   destination: {
-    name: DESTINATION_CITIES[0],
+    name: '',
     description: '',
     pictures: [],
   },
   offers: [],
-  basePrice: 100,
+  basePrice: 0,
   dateFrom: CURRENT_DATE,
   dateTo: CURRENT_DATE,
   isFavorite: false,
@@ -27,8 +27,7 @@ const BLANK_POINT = {
 const DATEPICKER_BASE_SETTINGS = {
   dateFormat: HumanDateFormatPattern.DEFAULT_FLATPICKR,
   enableTime: true,
-  // eslint-disable-next-line
-  time_24hr: true,
+  'time_24hr': true,
 };
 
 const getTypeItemsTemplate = (currentType) => {
@@ -144,8 +143,11 @@ const getDestinationTemplate = (destination, hasDescription, hasPictures) => {
     </section>`;
 };
 
-const getDetailsTemplate = (offers, destination, flags) => {
-  const { hasDetails, hasOffers, hasDescription, hasPictures } = flags;
+const getDetailsTemplate = (offers, destination) => {
+  const hasOffers = Boolean(offers.length);
+  const hasDescription = Boolean(destination.description);
+  const hasPictures = Boolean(destination.pictures.length);
+  const hasDetails = hasOffers || hasDescription || hasPictures;
 
   if (hasDetails) {
     return `
@@ -159,7 +161,7 @@ const getDetailsTemplate = (offers, destination, flags) => {
 };
 
 const getPointFormTemplate = (point) => {
-  const { type, destination, dateFrom, dateTo, basePrice, offers, isEditMode, flags } = point;
+  const { type, destination, dateFrom, dateTo, basePrice, offers, isEditMode } = point;
 
   return `
     <li class="trip-events__item">
@@ -272,7 +274,7 @@ const getPointFormTemplate = (point) => {
           </button>
           ${isEditMode ? getResetButtonTemplate() : ''}
         </header>
-        ${getDetailsTemplate(offers, destination, flags)}
+        ${getDetailsTemplate(offers, destination)}
       </form>
     </li>`;
 };
@@ -443,11 +445,13 @@ export default class PointForm extends SmartView {
   }
 
   _priceChangeHandler(evt) {
-    if (Number(evt.target.value) <= 0) {
+    const basePrice = Number(evt.target.value);
+
+    if (basePrice <= 0) {
       evt.target.value = this._state.basePrice;
     }
 
-    this._updateState({ basePrice: evt.target.value }, true);
+    this._updateState({ basePrice }, true);
   }
 
   _priceInputHandler(evt) {
@@ -462,13 +466,7 @@ export default class PointForm extends SmartView {
   }
 
   static parsePointToState(point, isEditMode) {
-    const hasOffers = Boolean(point.offers.length);
-    const hasDescription = Boolean(point.destination.description);
-    const hasPictures = Boolean(point.destination.pictures.length);
-    const hasDetails = hasOffers || hasDescription || hasPictures;
-
-    const flags = { hasOffers, hasDescription, hasPictures, hasDetails };
-    return { ...point, isEditMode, flags };
+    return { ...point, isEditMode };
   }
 
   static parseStateToPoint(state) {

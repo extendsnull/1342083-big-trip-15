@@ -26,5 +26,5 @@ render(
 
 new BoardPresenter(
   document.querySelector('.trip-events'),
-  mockPoints,
+  pointsModel,
 );

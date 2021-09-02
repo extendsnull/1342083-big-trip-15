@@ -2,6 +2,7 @@ import PointView from '../view/point';
 import PointFormView from '../view/point-form';
 import { isEscKey } from '../utils/common';
 import { render, replace, remove } from '../utils/render';
+import { UpdateType, UserAction } from '../const';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -93,10 +94,12 @@ export default class PointPresenter {
   }
 
   _handleFavoriteClick() {
-    this._changeData({
+    const update = {
       ...this._point,
       isFavorite: !this._point.isFavorite,
-    });
+    };
+
+    this._changeData(UserAction.UPDATE_POINT, UpdateType.PATCH, update);
   }
 
   _handleResetClick() {
@@ -104,7 +107,7 @@ export default class PointPresenter {
   }
 
   _handleSubmit(updatedPoint) {
-    this._changeData(updatedPoint);
+    this._changeData(UserAction.UPDATE_POINT, UpdateType.MAJOR, updatedPoint);
     this._replaceFormToPoint();
     document.removeEventListener('keydown', this._escKeyDownHandler);
   }
