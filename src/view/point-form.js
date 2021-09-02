@@ -294,6 +294,11 @@ export default class PointFormView extends SmartView {
     this._setInnerHandlers();
   }
 
+  removeElement() {
+    super.removeElement();
+    this._resetDatepickers();
+  }
+
   _getTemplate() {
     return getPointFormTemplate(this._state, this._isEditMode);
   }
