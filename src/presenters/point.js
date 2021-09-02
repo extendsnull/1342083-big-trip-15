@@ -79,7 +79,7 @@ export default class PointPresenter {
 
   _escKeyDownHandler(evt) {
     if (isEscKey(evt.key)) {
-      this._reset(true);
+      this._reset();
     }
   }
 
@@ -103,7 +103,7 @@ export default class PointPresenter {
   }
 
   _handleResetClick() {
-    this._reset(true);
+    this._reset();
   }
 
   _handleSubmit(updatedPoint) {
@@ -137,8 +137,8 @@ export default class PointPresenter {
     this._mode = Mode.EDITING;
   }
 
-  _reset(isEditMode) {
-    this._pointFormComponent.reset(this._point, isEditMode);
+  _reset() {
+    this._pointFormComponent.reset(this._point);
     this._replaceFormToPoint();
     document.removeEventListener('keydown', this._escKeyDownHandler);
   }
