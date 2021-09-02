@@ -83,7 +83,8 @@ export default class PointPresenter {
     }
   }
 
-  _handleDeleteClick() {
+  _handleDeleteClick(point) {
+    this._changeData(UserAction.DELETE_POINT, UpdateType.MAJOR, point);
     this.destroy();
     document.removeEventListener('keydown', this._escKeyDownHandler);
   }

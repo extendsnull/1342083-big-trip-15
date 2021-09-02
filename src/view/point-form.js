@@ -429,7 +429,7 @@ export default class PointForm extends SmartView {
 
   _deleteClickHandler(evt) {
     evt.preventDefault();
-    this._callback.deleteClick();
+    this._callback.deleteClick(PointForm.parseStateToPoint(this._state));
   }
 
   _destinationChangeHandler(evt) {
