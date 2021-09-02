@@ -22,7 +22,7 @@ export default class FilterPresenter {
     return [FilterType.EVERYTHING, FilterType.FUTURE, FilterType.PAST].map((type) => ({
       type,
       name: formatLabel(type),
-      count: filter[type](points),
+      count: filter[type](points).length,
     }));
   }
 
