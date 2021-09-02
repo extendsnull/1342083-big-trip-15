@@ -19,7 +19,7 @@ const BLANK_DESTINATION = {
 const BLANK_POINT = {
   type: POINT_TYPES[0],
   destination: BLANK_DESTINATION,
-  offers: mockOffers.get(POINT_TYPES[0]),
+  offers: mockOffers.get(POINT_TYPES[0]).offers,
   basePrice: 0,
   dateFrom: CURRENT_DATE,
   dateTo: CURRENT_DATE,
@@ -328,8 +328,12 @@ export default class PointFormView extends SmartView {
   }
 
   setResetClickHandler(callback) {
-    this._callback.resetClick = callback;
-    this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._resetClickHandler);
+    const resetButton = this.getElement().querySelector('.event__rollup-btn');
+
+    if (resetButton) {
+      this._callback.resetClick = callback;
+      resetButton.addEventListener('click', this._resetClickHandler);
+    }
   }
 
   setSubmitHandler(callback) {

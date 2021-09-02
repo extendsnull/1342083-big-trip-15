@@ -1,30 +1,29 @@
 import PointsModel from './models/points';
 import FilterModel from './models/filter';
+import NavigationView from './view/navigation';
 import InfoPresenter from './presenters/info';
+import AddPresenter from './presenters/add';
 import FilterPresenter from './presenters/filter';
 import BoardPresenter from './presenters/board';
-import NavigationView from './view/navigation';
-import AddButtonView from './view/add-button';
 import { mockPoints } from './data';
-import { render} from './utils/render';
+import { render } from './utils/render';
 
 const pointsModel = new PointsModel();
 const filterModel = new FilterModel();
 pointsModel.addPoints(mockPoints);
-
-new InfoPresenter(
-  document.querySelector('.trip-main'),
-  pointsModel,
-);
 
 render(
   document.querySelector('.trip-controls'),
   new NavigationView(),
 );
 
-render(
+const addPresenter = new AddPresenter(
   document.querySelector('.trip-main'),
-  new AddButtonView(),
+);
+
+new InfoPresenter(
+  document.querySelector('.trip-main'),
+  pointsModel,
 );
 
 new FilterPresenter(
@@ -37,4 +36,5 @@ new BoardPresenter(
   document.querySelector('.trip-events'),
   pointsModel,
   filterModel,
+  addPresenter,
 );
