@@ -296,7 +296,10 @@ export default class PointFormView extends SmartView {
 
   removeElement() {
     super.removeElement();
-    this._resetDatepickers();
+
+    if (this._datepickers) {
+      this._resetDatepickers();
+    }
   }
 
   _getTemplate() {
