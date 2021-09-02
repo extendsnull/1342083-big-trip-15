@@ -1,22 +1,20 @@
 import PointsModel from './models/points';
 import FilterModel from './models/filter';
+import InfoPresenter from './presenters/info';
 import FilterPresenter from './presenters/filter';
 import BoardPresenter from './presenters/board';
-import InfoView from './view/info';
 import NavigationView from './view/navigation';
 import AddButtonView from './view/add-button';
-import { mockPoints, infoState } from './data';
-import { RenderPosition } from './const';
+import { mockPoints } from './data';
 import { render} from './utils/render';
 
 const pointsModel = new PointsModel();
 const filterModel = new FilterModel();
 pointsModel.addPoints(mockPoints);
 
-render(
+new InfoPresenter(
   document.querySelector('.trip-main'),
-  new InfoView(infoState),
-  RenderPosition.AFTER_BEGIN,
+  pointsModel,
 );
 
 render(

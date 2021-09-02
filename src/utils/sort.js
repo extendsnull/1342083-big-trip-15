@@ -2,6 +2,8 @@ import { getDatesDiff } from './date';
 
 export const sortByDateFrom = (item1, item2) => item1.dateFrom - item2.dateFrom;
 
+export const sortByDateTo = (item1, item2) => item2.dateTo - item1.dateTo;
+
 export const sortByDuration = (item1, item2) => {
   const diff1 = getDatesDiff(item1.dateFrom, item1.dateTo);
   const diff2 = getDatesDiff(item2.dateFrom, item2.dateTo);
