@@ -136,7 +136,7 @@ export default class BoardPresenter {
       this._noPointsComponent = null;
     }
 
-    this._noPointsComponent = new NoPointsView(); // <== filter type
+    this._noPointsComponent = new NoPointsView(this._filterModel.getFilter());
     render(this._container, this._noPointsComponent);
   }
 
