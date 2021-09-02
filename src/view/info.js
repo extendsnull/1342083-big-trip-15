@@ -44,7 +44,7 @@ const getInfoTemplate = (data) => (`
     >New event</button>
   </div>`);
 
-export default class Info extends AbstractView {
+export default class InfoView extends AbstractView {
   constructor(data) {
     super();
     this._data = data;

@@ -283,10 +283,10 @@ const getPointFormTemplate = (point, isEditMode) => {
     </li>`;
 };
 
-export default class PointForm extends SmartView {
+export default class PointFormView extends SmartView {
   constructor(point = BLANK_POINT, isEditMode = false) {
     super();
-    this._state = PointForm.parsePointToState(point);
+    this._state = PointFormView.parsePointToState(point);
     this._isEditMode = isEditMode;
     this._datepickers = null;
 
@@ -307,11 +307,11 @@ export default class PointForm extends SmartView {
 
   _updateState(stateUpdate, updateStateOnly) {
     super._updateState(stateUpdate, updateStateOnly);
-    this._state = PointForm.parsePointToState(this._state);
+    this._state = PointFormView.parsePointToState(this._state);
   }
 
   reset(point) {
-    this._updateState(PointForm.parsePointToState(point));
+    this._updateState(PointFormView.parsePointToState(point));
   }
 
   setDeleteClickHandler(callback) {
@@ -429,7 +429,7 @@ export default class PointForm extends SmartView {
 
   _deleteClickHandler(evt) {
     evt.preventDefault();
-    this._callback.deleteClick(PointForm.parseStateToPoint(this._state));
+    this._callback.deleteClick(PointFormView.parseStateToPoint(this._state));
   }
 
   _destinationChangeHandler(evt) {
@@ -445,7 +445,7 @@ export default class PointForm extends SmartView {
 
   _submitHandler(evt) {
     evt.preventDefault();
-    this._callback.submit(PointForm.parseStateToPoint(this._state));
+    this._callback.submit(PointFormView.parseStateToPoint(this._state));
   }
 
   _offerChangeHandler(evt) {

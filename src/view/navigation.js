@@ -12,7 +12,7 @@ const getNavigationTemplate = () => (`
     >Stats</a>
   </nav>`);
 
-export default class Navigation extends AbstractView {
+export default class NavigationView extends AbstractView {
   _getTemplate() {
     return getNavigationTemplate();
   }
