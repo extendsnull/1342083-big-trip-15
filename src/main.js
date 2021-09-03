@@ -2,7 +2,7 @@ import PointsModel from './models/points';
 import FilterModel from './models/filter';
 import NavigationView from './view/navigation';
 import InfoPresenter from './presenters/info';
-import AddPresenter from './presenters/add';
+import AddButtonPresenter from './presenters/add-button';
 import FilterPresenter from './presenters/filter';
 import BoardPresenter from './presenters/board';
 import { mockPoints } from './data';
@@ -17,7 +17,7 @@ render(
   new NavigationView(),
 );
 
-const addPresenter = new AddPresenter(
+const addButtonPresenter = new AddButtonPresenter(
   document.querySelector('.trip-main'),
 );
 
@@ -36,5 +36,5 @@ new BoardPresenter(
   document.querySelector('.trip-events'),
   pointsModel,
   filterModel,
-  addPresenter,
+  addButtonPresenter,
 );

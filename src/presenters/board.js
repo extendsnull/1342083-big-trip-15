@@ -9,7 +9,7 @@ import { remove, render } from '../utils/render';
 import { sortByDateFrom, sortByDuration, sortByPrice } from '../utils/sort';
 
 export default class BoardPresenter {
-  constructor(container, pointsModel, filterModel, addPresenter) {
+  constructor(container, pointsModel, filterModel, addButtonPresenter) {
     this._container = container;
     this._currentSortType = SortType.DAY;
 
@@ -20,7 +20,7 @@ export default class BoardPresenter {
     this._sortComponent = null;
     this._pointsListComponent = null;
 
-    this._addPresenter = addPresenter;
+    this._addButtonPresenter = addButtonPresenter;
 
     this._pointPresenters = new Map();
     this._newPointPresenter = null;
@@ -37,7 +37,7 @@ export default class BoardPresenter {
     this._newPointPresenter = new NewPointPresenter(
       this._pointsListComponent,
       this._handleViewAction,
-      this._addPresenter,
+      this._addButtonPresenter,
     );
     this._newPointPresenter.init();
   }
@@ -211,6 +211,6 @@ export default class BoardPresenter {
 
   _init() {
     this._renderBoard();
-    this._addPresenter.setButtonClickHandler(this.createPoint);
+    this._addButtonPresenter.setButtonClickHandler(this.createPoint);
   }
 }

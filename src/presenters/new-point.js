@@ -4,12 +4,12 @@ import { isEscKey } from '../utils/common';
 import { remove, render } from '../utils/render';
 
 export default class NewPointPresenter {
-  constructor(container, changeData, addPresenter) {
+  constructor(container, changeData, addButtonPresenter) {
     this._container = container;
     this._pointFormComponent = null;
     this._changeData = changeData;
 
-    this._addPresenter = addPresenter;
+    this._addButtonPresenter = addButtonPresenter;
     this._bindContext();
   }
 
@@ -25,7 +25,7 @@ export default class NewPointPresenter {
   }
 
   destroy() {
-    this._addPresenter.enableButton();
+    this._addButtonPresenter.enableButton();
     remove(this._pointFormComponent);
     document.removeEventListener('keydown', this._escKeyDownHandler);
   }
