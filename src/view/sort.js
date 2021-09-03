@@ -2,35 +2,34 @@ import AbstractView from './abstract';
 import { SortType } from '../const';
 import { formatLabel } from '../utils/common';
 
-const sortControls = [SortType.DAY, SortType.EVENT, SortType.TIME, SortType.PRICE, SortType.OFFER];
-const checkedControl = SortType.DAY;
-const disabledControls = [SortType.EVENT, SortType.OFFER];
+const SORT_CONTROLS = [SortType.DAY, SortType.EVENT, SortType.TIME, SortType.PRICE, SortType.OFFER];
+const DISABLED_CONTROLS = [SortType.EVENT, SortType.OFFER];
 
-const getSortFormControlTemplate = (type) => {
-  const isChecked = checkedControl === type;
-  const isDisabled = disabledControls.includes(type);
+const getControlTemplate = (sortType, activeSortType) => {
+  const isChecked = sortType === activeSortType;
+  const isDisabled = DISABLED_CONTROLS.includes(sortType);
 
   return `
-    <div class="trip-sort__item trip-sort__item--${type}">
+    <div class="trip-sort__item trip-sort__item--${sortType}">
       <input
-        id="sort-${type}"
+        id="sort-${sortType}"
         class="trip-sort__input visually-hidden"
         type="radio"
         name="trip-sort"
-        value="sort-${type}"
-        data-sort-type="${type}"
+        value="sort-${sortType}"
+        data-sort-type="${sortType}"
         ${isChecked ? 'checked' : ''}
         ${isDisabled ? 'disabled' : ''}
       >
       <label
         class="trip-sort__btn"
-        for="sort-${type}"
-      >${formatLabel(type)}</label>
+        for="sort-${sortType}"
+      >${formatLabel(sortType)}</label>
     </div>`;
 };
 
-const getSortFormTemplate = () => {
-  const controlsTemplate = sortControls.map(getSortFormControlTemplate).join('\n');
+const getSortTemplate = (activeSortType) => {
+  const controlsTemplate = SORT_CONTROLS.map((sortType) => getControlTemplate(sortType, activeSortType)).join('\n');
 
   return `
     <form
@@ -42,14 +41,15 @@ const getSortFormTemplate = () => {
     </form>`;
 };
 
-export default class SortForm extends AbstractView {
-  constructor() {
+export default class SortView extends AbstractView {
+  constructor(activeSortType) {
     super();
+    this._activeSortType = activeSortType;
     this._sortTypeChangeHandler = this._sortTypeChangeHandler.bind(this);
   }
 
   _getTemplate() {
-    return getSortFormTemplate();
+    return getSortTemplate(this._activeSortType);
   }
 
   setChangeSortTypeHandler(callback) {

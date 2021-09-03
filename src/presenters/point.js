@@ -2,6 +2,7 @@ import PointView from '../view/point';
 import PointFormView from '../view/point-form';
 import { isEscKey } from '../utils/common';
 import { render, replace, remove } from '../utils/render';
+import { UpdateType, UserAction } from '../const';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -78,11 +79,12 @@ export default class PointPresenter {
 
   _escKeyDownHandler(evt) {
     if (isEscKey(evt.key)) {
-      this._reset(true);
+      this._reset();
     }
   }
 
-  _handleDeleteClick() {
+  _handleDeleteClick(point) {
+    this._changeData(UserAction.DELETE_POINT, UpdateType.MAJOR, point);
     this.destroy();
     document.removeEventListener('keydown', this._escKeyDownHandler);
   }
@@ -93,18 +95,20 @@ export default class PointPresenter {
   }
 
   _handleFavoriteClick() {
-    this._changeData({
+    const update = {
       ...this._point,
       isFavorite: !this._point.isFavorite,
-    });
+    };
+
+    this._changeData(UserAction.UPDATE_POINT, UpdateType.PATCH, update);
   }
 
   _handleResetClick() {
-    this._reset(true);
+    this._reset();
   }
 
   _handleSubmit(updatedPoint) {
-    this._changeData(updatedPoint);
+    this._changeData(UserAction.UPDATE_POINT, UpdateType.MAJOR, updatedPoint);
     this._replaceFormToPoint();
     document.removeEventListener('keydown', this._escKeyDownHandler);
   }
@@ -134,8 +138,8 @@ export default class PointPresenter {
     this._mode = Mode.EDITING;
   }
 
-  _reset(isEditMode) {
-    this._pointFormComponent.reset(this._point, isEditMode);
+  _reset() {
+    this._pointFormComponent.reset(this._point);
     this._replaceFormToPoint();
     document.removeEventListener('keydown', this._escKeyDownHandler);
   }

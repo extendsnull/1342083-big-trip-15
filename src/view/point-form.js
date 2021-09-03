@@ -10,15 +10,17 @@ const CURRENT_DATE = Date.now();
 const DESTINATION_CITIES = [...mockDestinations.keys()];
 const POINT_TYPES = [...mockOffers.keys()];
 
+const BLANK_DESTINATION = {
+  name: '',
+  description: '',
+  pictures: [],
+};
+
 const BLANK_POINT = {
   type: POINT_TYPES[0],
-  destination: {
-    name: DESTINATION_CITIES[0],
-    description: '',
-    pictures: [],
-  },
-  offers: [],
-  basePrice: 100,
+  destination: BLANK_DESTINATION,
+  offers: mockOffers.get(POINT_TYPES[0]).offers,
+  basePrice: 0,
   dateFrom: CURRENT_DATE,
   dateTo: CURRENT_DATE,
   isFavorite: false,
@@ -27,8 +29,7 @@ const BLANK_POINT = {
 const DATEPICKER_BASE_SETTINGS = {
   dateFormat: HumanDateFormatPattern.DEFAULT_FLATPICKR,
   enableTime: true,
-  // eslint-disable-next-line
-  time_24hr: true,
+  'time_24hr': true,
 };
 
 const getTypeItemsTemplate = (currentType) => {
@@ -144,22 +145,26 @@ const getDestinationTemplate = (destination, hasDescription, hasPictures) => {
     </section>`;
 };
 
-const getDetailsTemplate = (offers, destination, flags) => {
-  const { hasDetails, hasOffers, hasDescription, hasPictures } = flags;
+const getDetailsTemplate = (offers, destination) => {
+  const hasOffers = Boolean(offers.length);
+  const hasDescription = Boolean(destination.description);
+  const hasPictures = Boolean(destination.pictures.length);
+  const hasDetails = hasOffers || hasDescription || hasPictures;
+  const hasDestinationInfo = hasDescription || hasPictures;
 
   if (hasDetails) {
     return `
       <section class="event__details">
         ${getOffersTemplate(offers, hasOffers)}
-        ${getDestinationTemplate(destination, hasDescription, hasPictures)}
+        ${hasDestinationInfo ? getDestinationTemplate(destination, hasDescription, hasPictures) : ''}
       </section>`;
   }
 
   return '';
 };
 
-const getPointFormTemplate = (point) => {
-  const { type, destination, dateFrom, dateTo, basePrice, offers, isEditMode, flags } = point;
+const getPointFormTemplate = (point, isEditMode) => {
+  const { type, destination, dateFrom, dateTo, basePrice, offers, isValid } = point;
 
   return `
     <li class="trip-events__item">
@@ -263,6 +268,7 @@ const getPointFormTemplate = (point) => {
           <button
             class="event__save-btn btn btn--blue"
             type="submit"
+            ${!isValid ? 'disabled' : ''}
           >Save</button>
           <button
             class="event__reset-btn"
@@ -272,23 +278,32 @@ const getPointFormTemplate = (point) => {
           </button>
           ${isEditMode ? getResetButtonTemplate() : ''}
         </header>
-        ${getDetailsTemplate(offers, destination, flags)}
+        ${getDetailsTemplate(offers, destination)}
       </form>
     </li>`;
 };
 
-export default class PointForm extends SmartView {
-  constructor(point = BLANK_POINT, isEditMode) {
+export default class PointFormView extends SmartView {
+  constructor(point = BLANK_POINT, isEditMode = false) {
     super();
-    this._state = PointForm.parsePointToState(point, isEditMode);
+    this._state = PointFormView.parsePointToState(point);
+    this._isEditMode = isEditMode;
     this._datepickers = null;
 
     this._bindContext();
     this._setInnerHandlers();
   }
 
+  removeElement() {
+    super.removeElement();
+
+    if (this._datepickers) {
+      this._resetDatepickers();
+    }
+  }
+
   _getTemplate() {
-    return getPointFormTemplate(this._state);
+    return getPointFormTemplate(this._state, this._isEditMode);
   }
 
   _restoreHandlers() {
@@ -298,8 +313,13 @@ export default class PointForm extends SmartView {
     this.setSubmitHandler(this._callback.submit);
   }
 
-  reset(point, isEditMode) {
-    this._updateState(PointForm.parsePointToState(point, isEditMode));
+  _updateState(stateUpdate, updateStateOnly) {
+    super._updateState(stateUpdate, updateStateOnly);
+    this._state = PointFormView.parsePointToState(this._state);
+  }
+
+  reset(point) {
+    this._updateState(PointFormView.parsePointToState(point));
   }
 
   setDeleteClickHandler(callback) {
@@ -308,8 +328,12 @@ export default class PointForm extends SmartView {
   }
 
   setResetClickHandler(callback) {
-    this._callback.resetClick = callback;
-    this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._resetClickHandler);
+    const resetButton = this.getElement().querySelector('.event__rollup-btn');
+
+    if (resetButton) {
+      this._callback.resetClick = callback;
+      resetButton.addEventListener('click', this._resetClickHandler);
+    }
   }
 
   setSubmitHandler(callback) {
@@ -374,6 +398,11 @@ export default class PointForm extends SmartView {
     };
   }
 
+  _validForm() {
+    const saveButton = this.getElement().querySelector('.event__save-btn');
+    saveButton.disabled = !this._state.isValid;
+  }
+
   _setInnerHandlers() {
     this._getElements();
 
@@ -392,7 +421,7 @@ export default class PointForm extends SmartView {
   _dateChangeHandler(selectedDates, dateStr, instance) {
     const [date] = selectedDates;
     const { id } = instance.element;
-    const value = getTimestamp(date);
+    const value = date ? getTimestamp(date) : 0;
 
     switch (id) {
       case DateFieldId.FROM: {
@@ -406,16 +435,19 @@ export default class PointForm extends SmartView {
         break;
       }
     }
+
+    this._validForm();
   }
 
   _deleteClickHandler(evt) {
     evt.preventDefault();
-    this._callback.deleteClick();
+    this._callback.deleteClick(PointFormView.parseStateToPoint(this._state));
   }
 
   _destinationChangeHandler(evt) {
-    const newDestination = mockDestinations.get(evt.target.value);
+    const newDestination = mockDestinations.get(evt.target.value) || { ...BLANK_DESTINATION };
     this._updateState({ destination: newDestination });
+    this._validForm();
   }
 
   _resetClickHandler(evt) {
@@ -425,7 +457,7 @@ export default class PointForm extends SmartView {
 
   _submitHandler(evt) {
     evt.preventDefault();
-    this._callback.submit(PointForm.parseStateToPoint(this._state));
+    this._callback.submit(PointFormView.parseStateToPoint(this._state));
   }
 
   _offerChangeHandler(evt) {
@@ -439,15 +471,19 @@ export default class PointForm extends SmartView {
 
       return offer;
     });
+
     this._updateState({ offers: updatedOffers }, true);
   }
 
   _priceChangeHandler(evt) {
-    if (Number(evt.target.value) <= 0) {
-      evt.target.value = this._state.basePrice;
+    const basePrice = Number(evt.target.value);
+
+    if (basePrice <= 0) {
+      evt.target.value = 0;
     }
 
-    this._updateState({ basePrice: evt.target.value }, true);
+    this._updateState({ basePrice }, true);
+    this._validForm();
   }
 
   _priceInputHandler(evt) {
@@ -461,20 +497,17 @@ export default class PointForm extends SmartView {
     this._updateState({ type, offers });
   }
 
-  static parsePointToState(point, isEditMode) {
-    const hasOffers = Boolean(point.offers.length);
-    const hasDescription = Boolean(point.destination.description);
-    const hasPictures = Boolean(point.destination.pictures.length);
-    const hasDetails = hasOffers || hasDescription || hasPictures;
-
-    const flags = { hasOffers, hasDescription, hasPictures, hasDetails };
-    return { ...point, isEditMode, flags };
+  static parsePointToState(point) {
+    return {
+      ...point,
+      isValid: Boolean(point.destination.name && point.basePrice && point.dateFrom && point.dateTo),
+    };
   }
 
   static parseStateToPoint(state) {
     const newPoint = { ...state };
     delete newPoint.isEditMode;
-    delete newPoint.flags;
+    delete newPoint.isValid;
     return newPoint;
   }
 }
