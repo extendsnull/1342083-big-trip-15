@@ -32,6 +32,11 @@ export const MachineDateFormatPattern = {
   WITH_HOURS: 'YYYY-MM-DDTHH:mm',
 };
 
+export const NavigationItem = {
+  TABLE: 'table',
+  STATS: 'stats',
+};
+
 export const NoPointsMessage = {
   EVERYTHING: 'Click New Event to create your first point',
   PAST: 'There are no past events now',

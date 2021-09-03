@@ -26,8 +26,17 @@ export default class BoardPresenter {
     this._newPointPresenter = null;
 
     this._bindContext();
+  }
+
+  init() {
     this._addObservers();
-    this._init();
+    this._renderBoard();
+    this._addButtonPresenter.setButtonClickHandler(this.createPoint);
+  }
+
+  destroy() {
+    this._deleteObservers();
+    this._clearBoard(true);
   }
 
   createPoint() {
@@ -63,6 +72,11 @@ export default class BoardPresenter {
   _addObservers() {
     this._pointsModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
+  }
+
+  _deleteObservers() {
+    this._pointsModel.deleteObserver(this._handleModelEvent);
+    this._filterModel.deleteObserver(this._handleModelEvent);
   }
 
   _handleModelEvent(updateType, update) {
@@ -207,10 +221,5 @@ export default class BoardPresenter {
 
     this._renderSortForm();
     this._renderPointsList();
-  }
-
-  _init() {
-    this._renderBoard();
-    this._addButtonPresenter.setButtonClickHandler(this.createPoint);
   }
 }
