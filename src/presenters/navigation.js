@@ -14,7 +14,10 @@ export default class NavigationPresenter {
     this._navigationComponent = null;
 
     this._handleNavigationItemClick = this._handleNavigationItemClick.bind(this);
-    this._init();
+  }
+
+  init() {
+    this._render();
   }
 
   _handleNavigationItemClick(controlType) {
@@ -47,7 +50,4 @@ export default class NavigationPresenter {
     remove(prevNavigationComponent);
   }
 
-  _init() {
-    this._render();
-  }
 }

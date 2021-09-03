@@ -5,7 +5,10 @@ export default class AddButtonPresenter {
   constructor(container) {
     this._container = container;
     this._addButtonComponent = null;
-    this._init();
+  }
+
+  init() {
+    this._renderButton();
   }
 
   enableButton() {
@@ -26,9 +29,5 @@ export default class AddButtonPresenter {
 
     replace(this._addButtonComponent, prevButtonComponent);
     remove(prevButtonComponent);
-  }
-
-  _init() {
-    this._renderButton();
   }
 }

@@ -14,7 +14,10 @@ export default class FilterPresenter {
 
     this._bindContext();
     this._addObservers();
-    this._init();
+  }
+
+  init() {
+    this._renderFilter();
   }
 
   _getFilters() {
@@ -54,16 +57,12 @@ export default class FilterPresenter {
   }
 
   _handleModelEvent() {
-    this._init();
+    this.init();
   }
 
   _handleFilterTypeChange(type) {
     if (this._filterModel.getFilter() !== type) {
       this._filterModel.setFilter(UpdateType.MAJOR, type);
     }
-  }
-
-  _init() {
-    this._renderFilter();
   }
 }

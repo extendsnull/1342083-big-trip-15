@@ -11,12 +11,12 @@ const pointsModel = new PointsModel();
 const filterModel = new FilterModel();
 pointsModel.addPoints(mockPoints);
 
-new InfoPresenter(
+const infoPresenter = new InfoPresenter(
   document.querySelector('.trip-main'),
   pointsModel,
 );
 
-new FilterPresenter(
+const filterPresenter = new FilterPresenter(
   document.querySelector('.trip-controls'),
   filterModel,
   pointsModel,
@@ -33,11 +33,15 @@ const boardPresenter = new BoardPresenter(
   addButtonPresenter,
 );
 
-new NavigationPresenter(
+const navigationPresenter = new NavigationPresenter(
   document.querySelector('.trip-controls'),
   boardPresenter,
   pointsModel,
   filterModel,
 );
 
+infoPresenter.init();
+filterPresenter.init();
+addButtonPresenter.init();
 boardPresenter.init();
+navigationPresenter.init();
