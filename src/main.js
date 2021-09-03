@@ -28,9 +28,9 @@ const addButtonPresenter = new AddButtonPresenter(
 
 const boardPresenter = new BoardPresenter(
   document.querySelector('.trip-events'),
+  addButtonPresenter,
   pointsModel,
   filterModel,
-  addButtonPresenter,
 );
 
 const navigationPresenter = new NavigationPresenter(

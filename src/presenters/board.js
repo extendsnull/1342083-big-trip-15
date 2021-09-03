@@ -9,7 +9,7 @@ import { remove, render } from '../utils/render';
 import { sortByDateFrom, sortByDuration, sortByPrice } from '../utils/sort';
 
 export default class BoardPresenter {
-  constructor(container, pointsModel, filterModel, addButtonPresenter) {
+  constructor(container, addButtonPresenter, pointsModel, filterModel) {
     this._container = container;
     this._currentSortType = SortType.DAY;
 
