@@ -22,15 +22,15 @@ const filterPresenter = new FilterPresenter(
   pointsModel,
 );
 
-const addButtonPresenter = new AddButtonPresenter(
-  document.querySelector('.trip-main'),
-);
-
 const boardPresenter = new BoardPresenter(
   document.querySelector('.trip-events'),
-  addButtonPresenter,
   pointsModel,
   filterModel,
+);
+
+const addButtonPresenter = new AddButtonPresenter(
+  document.querySelector('.trip-main'),
+  boardPresenter,
 );
 
 const navigationPresenter = new NavigationPresenter(
