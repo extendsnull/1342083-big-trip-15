@@ -1,6 +1,7 @@
 import NoPointsView from '../view/no-points';
 import SortView from '../view/sort';
 import PointsListView from '../view/points-list';
+import BoardView from '../view/board';
 import PointPresenter from './point';
 import NewPointPresenter from './new-point';
 import { FilterType, SortType, UpdateType, UserAction } from '../const';
@@ -19,6 +20,7 @@ export default class BoardPresenter {
     this._noPointsComponent = null;
     this._sortComponent = null;
     this._pointsListComponent = null;
+    this._boardComponent = null;
 
     this._bindContext();
 
@@ -28,12 +30,12 @@ export default class BoardPresenter {
 
   init() {
     this._addObservers();
-    this._renderBoard();
+    this._render();
   }
 
   destroy() {
     this._deleteObservers();
-    this._clearBoard(true);
+    this._clear(true);
   }
 
   createPoint() {
@@ -152,13 +154,18 @@ export default class BoardPresenter {
     }
   }
 
-  _clearBoard(resetSortType) {
+  _clearBoard() {
+    remove(this._boardComponent);
+  }
+
+  _clear(resetSortType) {
     if (this._noPointsComponent) {
       this._clearNoPoints();
     }
 
-    this._clearPointsList();
     this._clearSortForm();
+    this._clearPointsList();
+    this._clearBoard();
 
     if (resetSortType) {
       this._currentSortType = SortType.DAY;
@@ -181,7 +188,7 @@ export default class BoardPresenter {
 
     this._sortComponent = new SortView(this._currentSortType);
     this._sortComponent.setChangeSortTypeHandler(this._handleSortTypeChange);
-    render(this._container, this._sortComponent);
+    render(this._boardComponent, this._sortComponent);
   }
 
   _renderPoint(point) {
@@ -205,15 +212,25 @@ export default class BoardPresenter {
       this._renderPoint(point);
     }
 
-    render(this._container, this._pointsListComponent);
+    render(this._boardComponent, this._pointsListComponent);
   }
 
   _renderBoard() {
+    if (this._boardComponent) {
+      this._boardComponent = null;
+    }
+
+    this._boardComponent = new BoardView();
+    render(this._container, this._boardComponent);
+  }
+
+  _render() {
     const points = this._getPoints();
     if (!points.length) {
       return this._renderNoPoints(this._currentSortType);
     }
 
+    this._renderBoard();
     this._renderSortForm();
     this._renderPointsList();
   }
