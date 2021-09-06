@@ -131,8 +131,8 @@ export default class BoardPresenter {
   _handleSortTypeChange(sortType) {
     if (this._currentSortType !== sortType) {
       this._currentSortType = sortType;
-      this._clearBoard();
-      this._renderBoard();
+      this._clear();
+      this._render();
     }
   }
 
