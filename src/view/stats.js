@@ -4,6 +4,7 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { ChartType } from '../const';
 import { humanizeDuration } from '../utils/date';
 
+const CHART_MIN_HEIGHT = 180;
 const BAR_HEIGHT = 55;
 
 const getChartSettings = (title, sortedPoints, formatter) => {
@@ -63,7 +64,7 @@ const getChartSettings = (title, sortedPoints, formatter) => {
             display: false,
             drawBorder: false,
           },
-          minBarLength: 50,
+          minBarLength: 100,
         }],
       },
       legend: {
@@ -110,9 +111,9 @@ export default class StatsView extends AbstractView {
     const typeCtx = this.getElement().querySelector('#type');
     const timeSpendCtx = this.getElement().querySelector('#time-spend');
 
-    moneyCtx.height = BAR_HEIGHT * Object.keys(this._sortedPoints.money).length;
-    typeCtx.height = BAR_HEIGHT * Object.keys(this._sortedPoints.type).length;
-    timeSpendCtx.height = BAR_HEIGHT * Object.keys(this._sortedPoints.timeSpend).length;
+    moneyCtx.height = Math.max(BAR_HEIGHT * Object.keys(this._sortedPoints.money).length, CHART_MIN_HEIGHT);
+    typeCtx.height = Math.max(BAR_HEIGHT * Object.keys(this._sortedPoints.type).length, CHART_MIN_HEIGHT);
+    timeSpendCtx.height = Math.max(BAR_HEIGHT * Object.keys(this._sortedPoints.timeSpend).length, CHART_MIN_HEIGHT);
 
     new Chart(moneyCtx, getChartSettings(
       ChartType.MONEY,
