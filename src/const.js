@@ -1,6 +1,12 @@
 export const MAIN_TITLE_MAX_LENGTH = 3;
 export const RANDOM_SEPARATOR = 0.5;
 
+export const ChartType = {
+  MONEY: 'MONEY',
+  TIME_SPEND: 'TIME-SPEND',
+  TYPE: 'TYPE',
+};
+
 export const DateFieldId = {
   FROM: 'event-start-time',
   TO: 'event-end-time',

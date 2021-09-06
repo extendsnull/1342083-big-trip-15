@@ -5,6 +5,7 @@ import InfoPresenter from './presenters/info';
 import AddButtonPresenter from './presenters/add-button';
 import FilterPresenter from './presenters/filter';
 import BoardPresenter from './presenters/board';
+import StatsPresenter from './presenters/stats';
 import { mockPoints } from './data';
 
 const pointsModel = new PointsModel();
@@ -23,7 +24,7 @@ const filterPresenter = new FilterPresenter(
 );
 
 const boardPresenter = new BoardPresenter(
-  document.querySelector('.trip-events'),
+  document.querySelector('.page-main .page-body__container'),
   pointsModel,
   filterModel,
 );
@@ -33,9 +34,15 @@ const addButtonPresenter = new AddButtonPresenter(
   boardPresenter,
 );
 
+const statsPresenter = new StatsPresenter(
+  document.querySelector('.page-main .page-body__container'),
+  pointsModel,
+);
+
 const navigationPresenter = new NavigationPresenter(
   document.querySelector('.trip-controls'),
   boardPresenter,
+  statsPresenter,
   pointsModel,
   filterModel,
 );
@@ -45,3 +52,22 @@ filterPresenter.init();
 addButtonPresenter.init();
 boardPresenter.init();
 navigationPresenter.init();
+
+document.addEventListener('click', (evt) => {
+  const target = evt.target.closest('.trip-tabs__btn[data-type]');
+
+  if (target) {
+    evt.preventDefault();
+    switch (target.dataset.type) {
+      case 'tabs':
+      default: {
+        document.body.classList.add('page-body--show-events');
+        break;
+      }
+      case 'stats': {
+        document.body.classList.remove('page-body--show-events');
+        break;
+      }
+    }
+  }
+});

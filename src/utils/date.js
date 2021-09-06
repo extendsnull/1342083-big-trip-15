@@ -8,10 +8,14 @@ export const formatDate = (timestamp, pattern = HumanDateFormatPattern.DEFAULT) 
 
 export const getDatesDiff = (lower, upper) => dayjs(upper).diff(dayjs(lower));
 
-export const getHumanizedDateDifference = (firstTimestamp, secondTimestamp) => {
+export const getDuration = (firstTimestamp, secondTimestamp) => {
   const lower = Math.min(firstTimestamp, secondTimestamp);
   const upper = Math.max(firstTimestamp, secondTimestamp);
-  const diff = dayjs.duration(getDatesDiff(lower, upper));
+  return dayjs.duration(getDatesDiff(lower, upper)).asMilliseconds();
+};
+
+export const humanizeDuration = (dur) => {
+  const diff = dayjs.duration(dur);
   let pattern = HumanDateFormatPattern.DURATION_MIN;
 
   if (diff.days()) {
@@ -21,6 +25,11 @@ export const getHumanizedDateDifference = (firstTimestamp, secondTimestamp) => {
   }
 
   return diff.format(pattern);
+};
+
+export const getHumanizedDateDuration = (firstTimestamp, secondTimestamp) => {
+  const diff = getDuration(firstTimestamp, secondTimestamp);
+  return humanizeDuration(diff);
 };
 
 export const getTimestamp = (date) => dayjs(date).valueOf();

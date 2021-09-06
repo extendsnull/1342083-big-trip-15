@@ -83,13 +83,13 @@ export default class BoardPresenter {
         break;
       }
       case UpdateType.MINOR: {
-        this._clearBoard();
-        this._renderBoard();
+        this._clear();
+        this._render();
         break;
       }
       case UpdateType.MAJOR: {
-        this._clearBoard(true);
-        this._renderBoard();
+        this._clear(true);
+        this._render();
         break;
       }
     }

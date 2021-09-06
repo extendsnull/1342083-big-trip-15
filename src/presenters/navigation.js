@@ -3,9 +3,12 @@ import { NavigationItem, RenderPosition } from '../const';
 import { remove, render, replace } from '../utils/render';
 
 export default class NavigationPresenter {
-  constructor(container, boardPresenter, pointsModel, filterModel) {
+  constructor(container, boardPresenter, statsPresenter, pointsModel, filterModel) {
     this._container = container;
+
     this._boardPresenter = boardPresenter;
+    this._statsPresenter = statsPresenter;
+
     this._pointsModel = pointsModel;
     this._filterModel = filterModel;
 
@@ -24,11 +27,13 @@ export default class NavigationPresenter {
     switch (controlType) {
       case NavigationItem.TABLE: {
         this._boardPresenter.init();
+        this._statsPresenter.destroy();
         this._activeNavigationItem = NavigationItem.TABLE;
         break;
       }
       case NavigationItem.STATS: {
         this._boardPresenter.destroy();
+        this._statsPresenter.init();
         this._activeNavigationItem = NavigationItem.STATS;
         break;
       }
