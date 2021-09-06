@@ -37,6 +37,7 @@ const addButtonPresenter = new AddButtonPresenter(
 const statsPresenter = new StatsPresenter(
   document.querySelector('.page-main .page-body__container'),
   pointsModel,
+  filterPresenter,
 );
 
 const navigationPresenter = new NavigationPresenter(

@@ -3,9 +3,10 @@ import { remove, render } from '../utils/render';
 import { sortPointByDuration, sortPointsByMoney, sortPointsByType } from '../utils/stats';
 
 export default class StatsPresenter {
-  constructor(container, pointsModel) {
+  constructor(container, pointsModel, filterPresenter) {
     this._container = container;
     this._pointsModel = pointsModel;
+    this._filterPresenter = filterPresenter;
 
     this._statsComponent = null;
   }
@@ -26,10 +27,12 @@ export default class StatsPresenter {
   init() {
     this._statsComponent = new StatsView(this._getPoints());
     render(this._container, this._statsComponent);
+
+    this._filterPresenter.init(true);
   }
 
   destroy() {
     remove(this._statsComponent);
-    this._statsComponent = null;
+    this._filterPresenter.init();
   }
 }
