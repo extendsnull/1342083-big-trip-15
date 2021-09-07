@@ -86,7 +86,7 @@ main {
   width: 1200px;
   padding: 0 10px;
   margin: 0 auto; }
-  .page-body--show-events .page-body__container::after {
+  .page-body__container::after {
     content: "";
     position: absolute;
     z-index: -1;
@@ -974,7 +974,8 @@ main {
 
 .statistics {
   padding-top: 47px;
-  padding-left: 37px; }
+  padding-left: 37px;
+  background-color: #f2f2f2; }
 
 .statistics__item:not(:last-child) {
   margin-bottom: 78px; }

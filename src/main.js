@@ -24,7 +24,7 @@ const filterPresenter = new FilterPresenter(
 );
 
 const boardPresenter = new BoardPresenter(
-  document.querySelector('.page-main .page-body__container'),
+  document.querySelector('.page-main'),
   pointsModel,
   filterModel,
 );
@@ -35,7 +35,7 @@ const addButtonPresenter = new AddButtonPresenter(
 );
 
 const statsPresenter = new StatsPresenter(
-  document.querySelector('.page-main .page-body__container'),
+  document.querySelector('.page-main'),
   pointsModel,
   filterPresenter,
 );
@@ -53,22 +53,3 @@ filterPresenter.init();
 addButtonPresenter.init();
 boardPresenter.init();
 navigationPresenter.init();
-
-document.addEventListener('click', (evt) => {
-  const target = evt.target.closest('.trip-tabs__btn[data-type]');
-
-  if (target) {
-    evt.preventDefault();
-    switch (target.dataset.type) {
-      case 'tabs':
-      default: {
-        document.body.classList.add('page-body--show-events');
-        break;
-      }
-      case 'stats': {
-        document.body.classList.remove('page-body--show-events');
-        break;
-      }
-    }
-  }
-});

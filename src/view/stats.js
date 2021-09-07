@@ -78,18 +78,20 @@ const getChartSettings = (title, sortedPoints, formatter) => {
 };
 
 const getStatsTemplate = () => (`
-  <section class="statistics">
-    <h2 class="visually-hidden">Trip statistics</h2>
-    <div class="statistics__item">
-      <canvas class="statistics__chart" id="money" width="900"></canvas>
-    </div>
-    <div class="statistics__item">
-      <canvas class="statistics__chart" id="type" width="900"></canvas>
-    </div>
-    <div class="statistics__item">
-      <canvas class="statistics__chart" id="time-spend" width="900"></canvas>
-    </div>
-  </section>`);
+  <div class="page-body__container page-body__container--stats">
+    <section class="statistics">
+      <h2 class="visually-hidden">Trip statistics</h2>
+      <div class="statistics__item">
+        <canvas class="statistics__chart" id="money" width="900"></canvas>
+      </div>
+      <div class="statistics__item">
+        <canvas class="statistics__chart" id="type" width="900"></canvas>
+      </div>
+      <div class="statistics__item">
+        <canvas class="statistics__chart" id="time-spend" width="900"></canvas>
+      </div>
+    </section>
+  </div>`);
 
 export default class StatsView extends AbstractView {
   constructor(poits) {

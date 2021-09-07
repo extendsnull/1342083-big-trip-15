@@ -188,7 +188,10 @@ export default class BoardPresenter {
 
     this._sortComponent = new SortView(this._currentSortType);
     this._sortComponent.setChangeSortTypeHandler(this._handleSortTypeChange);
-    render(this._boardComponent, this._sortComponent);
+    render(
+      this._boardComponent.getElement().querySelector('.trip-events'),
+      this._sortComponent,
+    );
   }
 
   _renderPoint(point) {
@@ -212,7 +215,10 @@ export default class BoardPresenter {
       this._renderPoint(point);
     }
 
-    render(this._boardComponent, this._pointsListComponent);
+    render(
+      this._boardComponent.getElement().querySelector('.trip-events'),
+      this._pointsListComponent,
+    );
   }
 
   _renderBoard() {
