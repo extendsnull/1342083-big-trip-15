@@ -1,6 +1,7 @@
 import NoPointsView from '../view/no-points';
 import SortView from '../view/sort';
 import PointsListView from '../view/points-list';
+import BoardView from '../view/board';
 import PointPresenter from './point';
 import NewPointPresenter from './new-point';
 import { FilterType, SortType, UpdateType, UserAction } from '../const';
@@ -9,7 +10,7 @@ import { remove, render } from '../utils/render';
 import { sortByDateFrom, sortByDuration, sortByPrice } from '../utils/sort';
 
 export default class BoardPresenter {
-  constructor(container, pointsModel, filterModel, addPresenter) {
+  constructor(container, pointsModel, filterModel) {
     this._container = container;
     this._currentSortType = SortType.DAY;
 
@@ -19,27 +20,32 @@ export default class BoardPresenter {
     this._noPointsComponent = null;
     this._sortComponent = null;
     this._pointsListComponent = null;
-
-    this._addPresenter = addPresenter;
-
-    this._pointPresenters = new Map();
-    this._newPointPresenter = null;
+    this._boardComponent = null;
 
     this._bindContext();
+
+    this._pointPresenters = new Map();
+    this._newPointPresenter = new NewPointPresenter(this._handleViewAction);
+  }
+
+  init() {
     this._addObservers();
-    this._init();
+    this._render();
+  }
+
+  destroy() {
+    this._deleteObservers();
+    this._clear(true);
   }
 
   createPoint() {
     this._currentSortType = SortType.DAY;
     this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    this._newPointPresenter.init(this._pointsListComponent);
+  }
 
-    this._newPointPresenter = new NewPointPresenter(
-      this._pointsListComponent,
-      this._handleViewAction,
-      this._addPresenter,
-    );
-    this._newPointPresenter.init();
+  setNewPointFormCloseCallback(callback) {
+    this._newPointPresenter.setFormCloseCallback(callback);
   }
 
   _getPoints() {
@@ -65,6 +71,11 @@ export default class BoardPresenter {
     this._filterModel.addObserver(this._handleModelEvent);
   }
 
+  _deleteObservers() {
+    this._pointsModel.deleteObserver(this._handleModelEvent);
+    this._filterModel.deleteObserver(this._handleModelEvent);
+  }
+
   _handleModelEvent(updateType, update) {
     switch (updateType) {
       case UpdateType.PATCH: {
@@ -72,13 +83,13 @@ export default class BoardPresenter {
         break;
       }
       case UpdateType.MINOR: {
-        this._clearBoard();
-        this._renderBoard();
+        this._clear();
+        this._render();
         break;
       }
       case UpdateType.MAJOR: {
-        this._clearBoard(true);
-        this._renderBoard();
+        this._clear(true);
+        this._render();
         break;
       }
     }
@@ -120,8 +131,8 @@ export default class BoardPresenter {
   _handleSortTypeChange(sortType) {
     if (this._currentSortType !== sortType) {
       this._currentSortType = sortType;
-      this._clearBoard();
-      this._renderBoard();
+      this._clear();
+      this._render();
     }
   }
 
@@ -143,13 +154,18 @@ export default class BoardPresenter {
     }
   }
 
-  _clearBoard(resetSortType) {
+  _clearBoard() {
+    remove(this._boardComponent);
+  }
+
+  _clear(resetSortType) {
     if (this._noPointsComponent) {
       this._clearNoPoints();
     }
 
-    this._clearPointsList();
     this._clearSortForm();
+    this._clearPointsList();
+    this._clearBoard();
 
     if (resetSortType) {
       this._currentSortType = SortType.DAY;
@@ -172,7 +188,7 @@ export default class BoardPresenter {
 
     this._sortComponent = new SortView(this._currentSortType);
     this._sortComponent.setChangeSortTypeHandler(this._handleSortTypeChange);
-    render(this._container, this._sortComponent);
+    render(this._boardComponent, this._sortComponent);
   }
 
   _renderPoint(point) {
@@ -196,21 +212,26 @@ export default class BoardPresenter {
       this._renderPoint(point);
     }
 
-    render(this._container, this._pointsListComponent);
+    render(this._boardComponent, this._pointsListComponent);
   }
 
   _renderBoard() {
+    if (this._boardComponent) {
+      this._boardComponent = null;
+    }
+
+    this._boardComponent = new BoardView();
+    render(this._container, this._boardComponent);
+  }
+
+  _render() {
     const points = this._getPoints();
     if (!points.length) {
       return this._renderNoPoints(this._currentSortType);
     }
 
+    this._renderBoard();
     this._renderSortForm();
     this._renderPointsList();
-  }
-
-  _init() {
-    this._renderBoard();
-    this._addPresenter.setButtonClickHandler(this.createPoint);
   }
 }

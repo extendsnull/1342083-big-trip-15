@@ -4,16 +4,16 @@ import { isEscKey } from '../utils/common';
 import { remove, render } from '../utils/render';
 
 export default class NewPointPresenter {
-  constructor(container, changeData, addPresenter) {
-    this._container = container;
+  constructor(changeData) {
     this._pointFormComponent = null;
     this._changeData = changeData;
 
-    this._addPresenter = addPresenter;
+    this._formCloseCallback = null;
+
     this._bindContext();
   }
 
-  init() {
+  init(container) {
     this._pointFormComponent = new PointFormView(this._point, false);
 
     this._pointFormComponent.setDeleteClickHandler(this._handleDeleteClick);
@@ -21,16 +21,21 @@ export default class NewPointPresenter {
 
     document.addEventListener('keydown', this._escKeyDownHandler);
 
-    render(this._container, this._pointFormComponent, RenderPosition.AFTER_BEGIN);
+    render(container, this._pointFormComponent, RenderPosition.AFTER_BEGIN);
   }
 
   destroy() {
-    this._addPresenter.enableButton();
     remove(this._pointFormComponent);
+    this._formCloseCallback();
     document.removeEventListener('keydown', this._escKeyDownHandler);
   }
 
+  setFormCloseCallback(callback) {
+    this._formCloseCallback = callback;
+  }
+
   _bindContext() {
+    this.setFormCloseCallback = this.setFormCloseCallback.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
     this._handleDeleteClick = this._handleDeleteClick.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
@@ -44,6 +49,8 @@ export default class NewPointPresenter {
     this._changeData(UserAction.ADD_POINT, UpdateType.MAJOR, updatedPoint);
     document.removeEventListener('keydown', this._escKeyDownHandler);
   }
+
+  _handleFormClose() {}
 
   _escKeyDownHandler(evt) {
     if (isEscKey(evt.key)) {

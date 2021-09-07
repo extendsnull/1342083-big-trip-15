@@ -14,7 +14,10 @@ export default class FilterPresenter {
 
     this._bindContext();
     this._addObservers();
-    this._init();
+  }
+
+  init(isDisabled = false) {
+    this._renderFilter(isDisabled);
   }
 
   _getFilters() {
@@ -30,9 +33,9 @@ export default class FilterPresenter {
     remove(this._filterComponent);
   }
 
-  _renderFilter() {
+  _renderFilter(isDisabled) {
     const prevFilterComponent = this._filterComponent;
-    this._filterComponent = new FilterView(this._getFilters(), this._filterModel.getFilter());
+    this._filterComponent = new FilterView(this._getFilters(), this._filterModel.getFilter(), isDisabled);
     this._filterComponent.setFilterTypeChangeHandler(this._handleFilterTypeChange);
 
     if (prevFilterComponent === null) {
@@ -54,16 +57,12 @@ export default class FilterPresenter {
   }
 
   _handleModelEvent() {
-    this._init();
+    this.init();
   }
 
   _handleFilterTypeChange(type) {
     if (this._filterModel.getFilter() !== type) {
       this._filterModel.setFilter(UpdateType.MAJOR, type);
     }
-  }
-
-  _init() {
-    this._renderFilter();
   }
 }

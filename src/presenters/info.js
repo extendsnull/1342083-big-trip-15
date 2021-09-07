@@ -12,7 +12,10 @@ export default class InfoPresenter {
 
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._pointsModel.addObserver(this._handleModelEvent);
-    this._init();
+  }
+
+  init() {
+    this._renderInfo();
   }
 
   _getDetails() {
@@ -20,10 +23,10 @@ export default class InfoPresenter {
   }
 
   _handleModelEvent() {
-    this._init();
+    this.init();
   }
 
-  _init() {
+  _renderInfo() {
     const prevInfoComponent = this._infoComponent;
     this._infoComponent = new InfoView(this._getDetails());
 

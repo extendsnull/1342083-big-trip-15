@@ -1,9 +1,12 @@
 import AbstractView from './abstract';
 
-const getControlsTemplate = (filters, activeFilter) => filters.map((filter) => {
+const getControlsTemplate = (filters, activeFilter, isDisabled) => filters.map((filter) => {
   const { type, name, count } = filter;
   const isChecked = type === activeFilter;
-  const isDisabled = Boolean(!count);
+
+  if (!isDisabled) {
+    isDisabled = Boolean(!count);
+  }
 
   return `
     <div class="trip-filters__filter">
@@ -25,8 +28,8 @@ const getControlsTemplate = (filters, activeFilter) => filters.map((filter) => {
     </div>`;
 }).join('\n');
 
-const getFilterTemplate = (filters, activeFilter) => {
-  const controlsTemplate = getControlsTemplate(filters, activeFilter);
+const getFilterTemplate = (filters, activeFilter, isDisabled) => {
+  const controlsTemplate = getControlsTemplate(filters, activeFilter, isDisabled);
 
   return `
     <div class="trip-controls__filters">
@@ -48,16 +51,17 @@ const getFilterTemplate = (filters, activeFilter) => {
 };
 
 export default class FilterView extends AbstractView {
-  constructor(filters, activeFilter) {
+  constructor(filters, activeFilter, isDisabled) {
     super();
     this._filters = filters;
     this._activeFilter = activeFilter;
+    this._isDisabled = isDisabled;
 
     this._filterTypeChangeHandler = this._filterTypeChangeHandler.bind(this);
   }
 
   _getTemplate() {
-    return getFilterTemplate(this._filters, this._activeFilter);
+    return getFilterTemplate(this._filters, this._activeFilter, this._isDisabled);
   }
 
   setFilterTypeChangeHandler(callback) {
