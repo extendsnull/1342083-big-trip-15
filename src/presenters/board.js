@@ -189,7 +189,7 @@ export default class BoardPresenter {
     this._sortComponent = new SortView(this._currentSortType);
     this._sortComponent.setChangeSortTypeHandler(this._handleSortTypeChange);
     render(
-      this._boardComponent.getElement().querySelector('.trip-events'),
+      this._boardComponent.getElement(),
       this._sortComponent,
     );
   }
@@ -216,7 +216,7 @@ export default class BoardPresenter {
     }
 
     render(
-      this._boardComponent.getElement().querySelector('.trip-events'),
+      this._boardComponent.getElement(),
       this._pointsListComponent,
     );
   }

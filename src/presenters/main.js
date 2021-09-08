@@ -8,9 +8,9 @@ import StatsPresenter from '../presenters/stats';
 const containers = {
   info: document.querySelector('.trip-main'),
   filter: document.querySelector('.trip-controls'),
-  board: document.querySelector('.page-main'),
+  board: document.querySelector('.page-main .page-body__container'),
   addButton: document.querySelector('.trip-main'),
-  stats: document.querySelector('.page-main'),
+  stats: document.querySelector('.page-main .page-body__container'),
   navigation: document.querySelector('.trip-controls'),
 };
 
