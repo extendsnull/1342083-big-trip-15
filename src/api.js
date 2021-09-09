@@ -21,10 +21,19 @@ export default class Api {
   getPoints() {
     return this._load({ url: ServerUrl.GET_POINTS })
       .then(Api.toJSON)
-      .then((points) => points.map(PointsModel.adaptToClient));
+      .then((response) => response.map(PointsModel.adaptToClient));
   }
 
-  updatePoint() {}
+  updatePoint(point) {
+    return this._load({
+      url: `${ServerUrl.UPDATE_POINTS}/${point.id}`,
+      method: Method.PUT,
+      body: JSON.stringify(PointsModel.adaptToServer(point)),
+      headers: new Headers({ 'Content-Type': 'application/json' }),
+    })
+      .then(Api.toJSON)
+      .then(PointsModel.adaptToClient);
+  }
 
   getDestinations() {
     return this._load({ url: ServerUrl.GET_DESTINATIONS }).then(Api.toJSON);
