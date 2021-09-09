@@ -20,8 +20,8 @@ export default class InfoPresenter {
     this._renderInfo();
   }
 
-  _getDetails() {
-    return getTripInfo(this._pointsModel.getPoints());
+  _getDetails(points) {
+    return getTripInfo(points);
   }
 
   _handleModelEvent(updateType) {
@@ -33,12 +33,14 @@ export default class InfoPresenter {
   }
 
   _renderInfo() {
-    if (this._isLoading) {
+    const points = this._pointsModel.getPoints();
+
+    if (this._isLoading || !points.length) {
       return;
     }
 
     const prevInfoComponent = this._infoComponent;
-    this._infoComponent = new InfoView(this._getDetails());
+    this._infoComponent = new InfoView(this._getDetails(points));
 
     if (prevInfoComponent === null) {
       return render(this._container, this._infoComponent, RenderPosition.AFTER_BEGIN);
