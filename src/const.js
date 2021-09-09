@@ -28,14 +28,11 @@ export const HumanDateFormatPattern = {
   ONLY_DAY: 'DD',
   MONTH_DAY: 'MMM DD',
   ONLY_TIME: 'HH:mm',
-  DURATION_MIN: 'mm[M]',
-  DURATION_HOURS: 'HH[H] mm[M]',
-  DURATION_DAYS: 'DD[D] HH[H] mm[M]',
 };
 
 export const MachineDateFormatPattern = {
   DEFAULT: 'YYYY-MM-DD',
-  ISO: 'YYYY-MM-DDTHH:mm:ssZ[Z]',
+  ISO: 'YYYY-MM-DDTHH:mm:ss[Z]',
   WITH_HOURS: 'YYYY-MM-DDTHH:mm',
 };
 
