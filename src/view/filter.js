@@ -1,4 +1,4 @@
-import AbstractView from './abstract';
+import Abstract from './abstract';
 
 const getControlsTemplate = (filters, activeFilter, isDisabled) => filters.map((filter) => {
   const { type, name, count } = filter;
@@ -50,7 +50,7 @@ const getFilterTemplate = (filters, activeFilter, isDisabled) => {
     </div>`;
 };
 
-export default class FilterView extends AbstractView {
+export default class Filter extends Abstract {
   constructor(filters, activeFilter, isDisabled) {
     super();
     this._filters = filters;

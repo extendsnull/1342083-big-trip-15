@@ -1,11 +1,11 @@
-import AbstractView from './abstract';
+import Abstract from './abstract';
 
 const getBoardTemplate = () => (`
   <section class="trip-events">
     <h2 class="visually-hidden">Trip events</h2>
   </section>`);
 
-export default class BoardView extends AbstractView {
+export default class Board extends Abstract {
   _getTemplate() {
     return getBoardTemplate();
   }

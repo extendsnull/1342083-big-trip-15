@@ -1,7 +1,7 @@
 import AddButtonView from '../view/add-button';
 import { remove, render, replace } from '../utils/render';
 
-export default class AddButtonPresenter {
+export default class AddButton {
   constructor(container, boardPresenter) {
     this._container = container;
     this._boardPresenter = boardPresenter;

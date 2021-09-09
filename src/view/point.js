@@ -1,4 +1,4 @@
-import AbstractView from './abstract';
+import Abstract from './abstract';
 import { HumanDateFormatPattern, MachineDateFormatPattern } from '../const';
 import { formatLabel } from '../utils/common';
 import { formatDate, getHumanizedDateDuration } from '../utils/date';
@@ -102,7 +102,7 @@ const getPointTemplate = (point, offers) => {
     </li>`;
 };
 
-export default class PointView extends AbstractView {
+export default class Point extends Abstract {
   constructor(point, offers) {
     super();
     this._point = point;

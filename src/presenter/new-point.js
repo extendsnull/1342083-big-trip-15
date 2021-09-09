@@ -17,7 +17,7 @@ const getBlankPoint = (offers) => {
   };
 };
 
-export default class NewPointPresenter {
+export default class NewPoint {
   constructor(destinationsModel, offersModel, changeData) {
     this._destinationsModel = destinationsModel;
     this._offersModel = offersModel;

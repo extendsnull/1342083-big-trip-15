@@ -2,7 +2,7 @@ import StatsView from '../view/stats';
 import { remove, render } from '../utils/render';
 import { sortPointByDuration, sortPointsByMoney, sortPointsByType } from '../utils/stats';
 
-export default class StatsPresenter {
+export default class Stats {
   constructor(container, pointsModel, filterPresenter) {
     this._container = container;
     this._pointsModel = pointsModel;

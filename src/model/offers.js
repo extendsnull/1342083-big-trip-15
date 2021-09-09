@@ -1,6 +1,6 @@
 import AbstractObserver from '../utils/abstract-observer';
 
-export default class OffersModel extends AbstractObserver {
+export default class Offers extends AbstractObserver {
   constructor() {
     super();
     this._offers = new Map();

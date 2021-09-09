@@ -3,7 +3,7 @@ import { RenderPosition, UpdateType } from '../const';
 import { getTripInfo } from '../utils/info';
 import { remove, render, replace } from '../utils/render';
 
-export default class InfoPresenter {
+export default class Info {
   constructor(container, pointsModel) {
     this._isLoading = true;
 

@@ -2,7 +2,7 @@ import { MachineDateFormatPattern } from '../const';
 import AbstractObserver from '../utils/abstract-observer';
 import { formatDate, getTimestamp } from '../utils/date';
 
-export default class PointsModel extends AbstractObserver {
+export default class Points extends AbstractObserver {
   constructor() {
     super();
     this._points = [];

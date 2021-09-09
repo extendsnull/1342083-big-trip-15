@@ -1,5 +1,5 @@
 import { formatLabel } from '../utils/common';
-import AbstractView from './abstract';
+import Abstract from './abstract';
 
 const getItemTemplate = (type, activeItem) => {
   const isActive = type === activeItem;
@@ -24,7 +24,7 @@ const getNavigationTemplate = (navigationItems, activeItem) => {
     </div>`;
 };
 
-export default class NavigationView extends AbstractView {
+export default class Navigation extends Abstract {
   constructor(navigationItems, activeItem) {
     super();
     this._navigationItems = navigationItems;

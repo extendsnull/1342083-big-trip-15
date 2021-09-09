@@ -1,4 +1,4 @@
-import AbstractView from './abstract';
+import Abstract from './abstract';
 import { SortType } from '../const';
 import { formatLabel } from '../utils/common';
 
@@ -41,7 +41,7 @@ const getSortTemplate = (activeSortType) => {
     </form>`;
 };
 
-export default class SortView extends AbstractView {
+export default class Sort extends Abstract {
   constructor(activeSortType) {
     super();
     this._activeSortType = activeSortType;

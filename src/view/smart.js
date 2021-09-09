@@ -1,14 +1,14 @@
-import AbstractView from './abstract';
+import Abstract from './abstract';
 import { replace } from '../utils/render';
 
-export default class SmartView extends AbstractView {
+export default class Smart extends Abstract {
   constructor() {
     super();
     this._state = {};
   }
 
   _restoreHandlers() {
-    throw new Error(`Non-abstract class '${this.constructor.name}' does not implement inherited abstract member '_restoreHandlers' from class 'SmartView'.`);
+    throw new Error(`Non-abstract class '${this.constructor.name}' does not implement inherited abstract member '_restoreHandlers' from class 'Smart'.`);
   }
 
   _updateElement() {

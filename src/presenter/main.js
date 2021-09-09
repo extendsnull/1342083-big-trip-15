@@ -1,9 +1,9 @@
-import NavigationPresenter from '../presenters/navigation';
-import InfoPresenter from '../presenters/info';
-import AddButtonPresenter from '../presenters/add-button';
-import FilterPresenter from '../presenters/filter';
-import BoardPresenter from '../presenters/board';
-import StatsPresenter from '../presenters/stats';
+import NavigationPresenter from '../presenter/navigation';
+import InfoPresenter from '../presenter/info';
+import AddButtonPresenter from '../presenter/add-button';
+import FilterPresenter from '../presenter/filter';
+import BoardPresenter from '../presenter/board';
+import StatsPresenter from '../presenter/stats';
 import { UpdateType } from '../const';
 
 const containers = {
@@ -15,7 +15,7 @@ const containers = {
   navigation: document.querySelector('.trip-controls'),
 };
 
-export default class MainPresenter {
+export default class Main {
   constructor(api, pointsModel, filterModel, destinationsModel, offersModel) {
     this._api = api;
     this._pointsModel = pointsModel;

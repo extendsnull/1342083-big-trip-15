@@ -1,4 +1,4 @@
-import AbstractView from './abstract';
+import Abstract from './abstract';
 
 const getAddButtonTemplate = () => (`
   <button
@@ -6,7 +6,7 @@ const getAddButtonTemplate = () => (`
     type="button"
   >New event</button>`);
 
-export default class AddButtonView extends AbstractView {
+export default class AddButton extends Abstract {
   constructor() {
     super();
     this.disable = this.disable.bind(this);

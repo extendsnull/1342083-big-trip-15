@@ -1,4 +1,4 @@
-import AbstractView from './abstract';
+import Abstract from './abstract';
 
 const getLoadingTemplate = () => (`
   <section class="trip-events">
@@ -6,7 +6,7 @@ const getLoadingTemplate = () => (`
     <p class="trip-events__msg">Loading...</p>
   </section>`);
 
-export default class LoadingView extends AbstractView {
+export default class Loading extends Abstract {
   _getTemplate() {
     return getLoadingTemplate();
   }

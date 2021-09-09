@@ -10,7 +10,7 @@ import { filter } from '../utils/filter';
 import { remove, render } from '../utils/render';
 import { sortByDateFrom, sortByDuration, sortByPrice } from '../utils/sort';
 
-export default class BoardPresenter {
+export default class Board {
   constructor(container, pointsModel, filterModel, destinationsModel, offersModel, api) {
     this._isLoading = true;
 

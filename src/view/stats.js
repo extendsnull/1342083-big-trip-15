@@ -1,4 +1,4 @@
-import AbstractView from './abstract';
+import Abstract from './abstract';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { ChartType } from '../const';
@@ -91,7 +91,7 @@ const getStatsTemplate = () => (`
     </div>
   </section>`);
 
-export default class StatsView extends AbstractView {
+export default class Stats extends Abstract {
   constructor(poits) {
     super();
     this._sortedPoints = poits;

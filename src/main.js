@@ -1,9 +1,9 @@
 import Api from './api';
-import PointsModel from './models/points';
-import FilterModel from './models/filter';
-import DestinationsModel from './models/destinations';
-import OffersModel from './models/offers';
-import MainPresenter from './presenters/main';
+import PointsModel from './model/points';
+import FilterModel from './model/filter';
+import DestinationsModel from './model/destinations';
+import OffersModel from './model/offers';
+import MainPresenter from './presenter/main';
 
 const BASE_URL = 'https://15.ecmascript.pages.academy/big-trip';
 const AUTHORIZATION = 'Basic 1zVtAYybqMP6XrwlRGtwFDBhBWdbuhn12VuJAI5Dh1';
