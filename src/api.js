@@ -7,7 +7,8 @@ const Method = {
 
 const ServerUrl = {
   GET_POINTS: 'points',
-  UPDATE_POINTS: 'points',
+  ADD_POINT: 'points',
+  UPDATE_POINT: 'points',
   GET_DESTINATIONS: 'destinations',
   GET_OFFERS: 'offers',
 };
@@ -26,7 +27,7 @@ export default class Api {
 
   updatePoint(point) {
     return this._load({
-      url: `${ServerUrl.UPDATE_POINTS}/${point.id}`,
+      url: `${ServerUrl.UPDATE_POINT}/${point.id}`,
       method: Method.PUT,
       body: JSON.stringify(PointsModel.adaptToServer(point)),
       headers: new Headers({ 'Content-Type': 'application/json' }),
