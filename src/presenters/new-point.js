@@ -1,5 +1,5 @@
 import PointFormView from '../view/point-form';
-import { BLANK_DESTINATION, PointDefault, RenderPosition, UpdateType, UserAction } from '../const';
+import { BLANK_POINT, RenderPosition, UpdateType, UserAction } from '../const';
 import { getRandomId, isEscKey } from '../utils/common';
 import { getArrayFirstItem } from '../utils/array';
 import { remove, render } from '../utils/render';
@@ -9,13 +9,10 @@ const getBlankPoint = (offers) => {
   const type = getArrayFirstItem(Array.from(offers.keys()));
 
   return {
+    ...BLANK_POINT,
     id: getRandomId(),
-    basePrice: PointDefault.BASE_PRICE,
-    destination: { ...BLANK_DESTINATION },
     dateFrom: currentDate,
     dateTo: currentDate,
-    isFavorite: PointDefault.IS_FAVORITE,
-    offers: [ ...PointDefault.OFFERS],
     type,
   };
 };
