@@ -55,6 +55,13 @@ export default class Board {
   createPoint() {
     this._currentSortType = SortType.DAY;
     this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+
+    if (!this._getPoints().length) {
+      this._clear();
+      this._renderBoard();
+      this._renderPointsList();
+    }
+
     this._newPointPresenter.init(this._pointsListComponent);
   }
 
