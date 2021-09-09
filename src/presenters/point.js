@@ -10,8 +10,12 @@ const Mode = {
 };
 
 export default class PointPresenter {
-  constructor(container, changeData, changeMode) {
+  constructor(container, destinationsModel, offersModel, changeData, changeMode) {
     this._container = container;
+
+    this._destinationsModel = destinationsModel;
+    this._offersModel = offersModel;
+
     this._mode = Mode.DEFAULT;
     this._pointComponent = null;
     this._pointFormComponent = null;
@@ -67,8 +71,16 @@ export default class PointPresenter {
   }
 
   _create() {
-    this._pointComponent = new PointView(this._point);
-    this._pointFormComponent = new PointFormView(this._point, true);
+    this._pointComponent = new PointView(
+      this._point,
+      this._offersModel.getOffers(),
+    );
+    this._pointFormComponent = new PointFormView(
+      this._point,
+      this._destinationsModel.getDestinations(),
+      this._offersModel.getOffers(this._point.type),
+      true,
+    );
 
     this._pointComponent.setEditClickHandler(this._handleEditClick);
     this._pointComponent.setFavoriteClickHandler(this._handleFavoriteClick);
@@ -108,7 +120,7 @@ export default class PointPresenter {
   }
 
   _handleSubmit(updatedPoint) {
-    this._changeData(UserAction.UPDATE_POINT, UpdateType.MAJOR, updatedPoint);
+    this._changeData(UserAction.UPDATE_POINT, UpdateType.PATCH, updatedPoint);
     this._replaceFormToPoint();
     document.removeEventListener('keydown', this._escKeyDownHandler);
   }

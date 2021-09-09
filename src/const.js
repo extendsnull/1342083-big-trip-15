@@ -1,3 +1,9 @@
+export const BLANK_DESTINATION = {
+  name: '',
+  description: '',
+  pictures: [],
+};
+
 export const MAIN_TITLE_MAX_LENGTH = 3;
 export const RANDOM_SEPARATOR = 0.5;
 
@@ -45,6 +51,12 @@ export const NoPointsMessage = {
   EVERYTHING: 'Click New Event to create your first point',
   PAST: 'There are no past events now',
   FUTURE: 'There are no future events now',
+};
+
+export const PointDefault = {
+  BASE_PRICE: 0,
+  OFFERS: [],
+  IS_FAVORITE: false,
 };
 
 export const RenderPosition = {

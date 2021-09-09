@@ -6,7 +6,6 @@ import { formatDate, getHumanizedDateDuration } from '../utils/date';
 const getOffersTemplate = (offers, hasOffers) => {
   if (hasOffers) {
     const items = offers
-      .filter((offer) => offer.isChecked)
       .map((offer) => {
         const {title, price} = offer;
         return `
@@ -25,10 +24,15 @@ const getOffersTemplate = (offers, hasOffers) => {
   return '';
 };
 
-const getPointTemplate = (point) => {
-  const { type, destination, dateFrom, dateTo, basePrice, offers, isFavorite } = point;
-  const filteredOffers = offers.filter((offer) => offer.isChecked);
-  const hasOffers = Boolean(filteredOffers.length);
+const getPointTemplate = (point, offers) => {
+  const { type, destination, dateFrom, dateTo, basePrice, isFavorite } = point;
+
+  const selectedOffers = offers
+    .get(type)
+    .slice()
+    .filter((offer) => point.offers.find((item) => item.title === offer.title));
+
+  const hasOffers = Boolean(selectedOffers.length);
   const title = `${formatLabel(type)} ${destination.name}`;
 
   return `
@@ -73,7 +77,7 @@ const getPointTemplate = (point) => {
         <p class="event__price">
           &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
         </p>
-        ${getOffersTemplate(filteredOffers, hasOffers)}
+        ${getOffersTemplate(selectedOffers, hasOffers)}
         <button
           class="event__favorite-btn${isFavorite ? ' event__favorite-btn--active' : ''}"
           type="button"
@@ -99,16 +103,17 @@ const getPointTemplate = (point) => {
 };
 
 export default class PointView extends AbstractView {
-  constructor(point) {
+  constructor(point, offers) {
     super();
     this._point = point;
+    this._offers = offers;
 
     this._editClickHandler = this._editClickHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
   }
 
   _getTemplate() {
-    return getPointTemplate(this._point);
+    return getPointTemplate(this._point, this._offers);
   }
 
   setEditClickHandler(callback) {

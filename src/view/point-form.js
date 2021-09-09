@@ -1,30 +1,9 @@
 import SmartView from './smart';
-import { mockOffers, mockDestinations } from '../data';
-import { DateFieldId, HumanDateFormatPattern } from '../const';
+import { BLANK_DESTINATION, DateFieldId, HumanDateFormatPattern } from '../const';
 import { formatLabel, replaceNotNumberCharacter } from '../utils/common';
 import { formatDate, getTimestamp } from '../utils/date';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
-
-const CURRENT_DATE = Date.now();
-const DESTINATION_CITIES = [...mockDestinations.keys()];
-const POINT_TYPES = [...mockOffers.keys()];
-
-const BLANK_DESTINATION = {
-  name: '',
-  description: '',
-  pictures: [],
-};
-
-const BLANK_POINT = {
-  type: POINT_TYPES[0],
-  destination: BLANK_DESTINATION,
-  offers: mockOffers.get(POINT_TYPES[0]).offers,
-  basePrice: 0,
-  dateFrom: CURRENT_DATE,
-  dateTo: CURRENT_DATE,
-  isFavorite: false,
-};
 
 const DATEPICKER_BASE_SETTINGS = {
   dateFormat: HumanDateFormatPattern.DEFAULT_FLATPICKR,
@@ -32,8 +11,8 @@ const DATEPICKER_BASE_SETTINGS = {
   'time_24hr': true,
 };
 
-const getTypeItemsTemplate = (currentType) => {
-  const template = POINT_TYPES.map((type) => {
+const getTypeItemsTemplate = (types, currentType) => {
+  const template = types.map((type) => {
     const isChecked = type === currentType;
     return `
       <div class="event__type-item">
@@ -55,8 +34,7 @@ const getTypeItemsTemplate = (currentType) => {
   return template.join('\n');
 };
 
-const getDestinationItemsTemplate = () =>
-  DESTINATION_CITIES.map((city) => `<option value="${city}"></option>`).join('\n');
+const getDestinationItemsTemplate = (cities) => cities.map((city) => `<option value="${city}"></option>`).join('\n');
 
 const getResetButtonTemplate = () => (`
   <button
@@ -69,7 +47,7 @@ const getResetButtonTemplate = () => (`
 const getOffersTemplate = (offers, hasOffers) => {
   if (hasOffers) {
     const template = offers.map((offer, index) => {
-      const { title, price, isChecked } = offer;
+      const { title, price, isSelected } = offer;
       return `
         <div class="event__offer-selector">
           <input
@@ -78,7 +56,7 @@ const getOffersTemplate = (offers, hasOffers) => {
             type="checkbox"
             name="event-offer-${index}"
             value="${title}"
-            ${isChecked ? 'checked' : ''}
+            ${isSelected ? 'checked' : ''}
           >
           <label
             class="event__offer-label"
@@ -135,36 +113,53 @@ const getPicturesTemplate = (pictures, hasPictures) => {
 };
 
 const getDestinationTemplate = (destination, hasDescription, hasPictures) => {
-  const { description, pictures } = destination;
-
-  return `
-    <section class="event__section event__section--destination">
-      <h3 class="event__section-title event__section-title--destination">Destination</h3>
-      ${getDescriptionTemplate(description, hasDescription)}
-      ${getPicturesTemplate(pictures, hasPictures)}
-    </section>`;
-};
-
-const getDetailsTemplate = (offers, destination) => {
-  const hasOffers = Boolean(offers.length);
-  const hasDescription = Boolean(destination.description);
-  const hasPictures = Boolean(destination.pictures.length);
-  const hasDetails = hasOffers || hasDescription || hasPictures;
   const hasDestinationInfo = hasDescription || hasPictures;
 
-  if (hasDetails) {
+  if (hasDestinationInfo) {
+    const { description, pictures } = destination;
+
     return `
-      <section class="event__details">
-        ${getOffersTemplate(offers, hasOffers)}
-        ${hasDestinationInfo ? getDestinationTemplate(destination, hasDescription, hasPictures) : ''}
+      <section class="event__section event__section--destination">
+        <h3 class="event__section-title event__section-title--destination">Destination</h3>
+        ${getDescriptionTemplate(description, hasDescription)}
+        ${getPicturesTemplate(pictures, hasPictures)}
       </section>`;
   }
 
   return '';
 };
 
-const getPointFormTemplate = (point, isEditMode) => {
-  const { type, destination, dateFrom, dateTo, basePrice, offers, isValid } = point;
+const getDetailsTemplate = (point, availableOffers) => {
+  const { type, destination } = point;
+  const offers = availableOffers
+    .get(type)
+    .map((offer) => ({
+      ...offer,
+      isSelected: Boolean(point.offers.find((pointOffer) => pointOffer.title === offer.title)),
+    }));
+
+  const hasOffers = Boolean(offers.length);
+  const hasDescription = Boolean(destination.description);
+  const hasPictures = Boolean(destination.pictures.length);
+
+  const hasDetails = hasOffers || hasDescription || hasPictures;
+
+  if (hasDetails) {
+    return `
+      <section class="event__details">
+        ${getOffersTemplate(offers, hasOffers)}
+        ${getDestinationTemplate(destination, hasDescription, hasPictures)}
+      </section>`;
+  }
+
+  return '';
+};
+
+const getPointFormTemplate = (point, destinations, offers, isEditMode) => {
+  const { type, destination, dateFrom, dateTo, basePrice, isValid } = point;
+
+  const types = Array.from(offers.keys());
+  const cities = Array.from(destinations.keys());
 
   return `
     <li class="trip-events__item">
@@ -197,7 +192,7 @@ const getPointFormTemplate = (point, isEditMode) => {
             <div class="event__type-list">
               <fieldset class="event__type-group">
                 <legend class="visually-hidden">Event type</legend>
-                ${getTypeItemsTemplate(type)}
+                ${getTypeItemsTemplate(types, type)}
               </fieldset>
             </div>
           </div>
@@ -218,7 +213,7 @@ const getPointFormTemplate = (point, isEditMode) => {
               list="destination-list"
             >
             <datalist id="destination-list">
-              ${getDestinationItemsTemplate()}
+              ${getDestinationItemsTemplate(cities)}
             </datalist>
           </div>
 
@@ -278,15 +273,19 @@ const getPointFormTemplate = (point, isEditMode) => {
           </button>
           ${isEditMode ? getResetButtonTemplate() : ''}
         </header>
-        ${getDetailsTemplate(offers, destination)}
+        ${getDetailsTemplate(point, offers)}
       </form>
     </li>`;
 };
 
 export default class PointFormView extends SmartView {
-  constructor(point = BLANK_POINT, isEditMode = false) {
+  constructor(point, destinations, offers, isEditMode = false) {
     super();
     this._state = PointFormView.parsePointToState(point);
+
+    this._destinations = destinations;
+    this._offers = offers;
+
     this._isEditMode = isEditMode;
     this._datepickers = null;
 
@@ -303,7 +302,7 @@ export default class PointFormView extends SmartView {
   }
 
   _getTemplate() {
-    return getPointFormTemplate(this._state, this._isEditMode);
+    return getPointFormTemplate(this._state, this._destinations, this._offers, this._isEditMode);
   }
 
   _restoreHandlers() {
@@ -346,7 +345,6 @@ export default class PointFormView extends SmartView {
     this._deleteClickHandler = this._deleteClickHandler.bind(this);
     this._destinationChangeHandler = this._destinationChangeHandler.bind(this);
     this._offerChangeHandler = this._offerChangeHandler.bind(this);
-    this._priceChangeHandler = this._priceChangeHandler.bind(this);
     this._priceInputHandler = this._priceInputHandler.bind(this);
     this._resetClickHandler = this._resetClickHandler.bind(this);
     this._submitHandler = this._submitHandler.bind(this);
@@ -407,7 +405,6 @@ export default class PointFormView extends SmartView {
     this._getElements();
 
     this._destinationField.addEventListener('change', this._destinationChangeHandler);
-    this._priceField.addEventListener('change', this._priceChangeHandler);
     this._priceField.addEventListener('input', this._priceInputHandler);
     this._typeGroup.addEventListener('change', this._typeChangeHandler);
 
@@ -445,8 +442,8 @@ export default class PointFormView extends SmartView {
   }
 
   _destinationChangeHandler(evt) {
-    const newDestination = mockDestinations.get(evt.target.value) || { ...BLANK_DESTINATION };
-    this._updateState({ destination: newDestination });
+    const destination = this._destinations.get(evt.target.value) || { ...BLANK_DESTINATION };
+    this._updateState({ destination });
     this._validForm();
   }
 
@@ -461,18 +458,9 @@ export default class PointFormView extends SmartView {
   }
 
   _offerChangeHandler(evt) {
-    const updatedOffers = this._state.offers.map((offer) => {
-      if (offer.title === evt.target.value) {
-        return {
-          ...offer,
-          isChecked: !offer.isChecked,
-        };
-      }
-
-      return offer;
-    });
-
-    this._updateState({ offers: updatedOffers }, true);
+    const update = this._offers.get(this._state.type).find((offer) => offer.title === evt.target.value);
+    const offers = PointFormView.updateOffers(this._state.offers, update);
+    this._updateState({ offers }, true);
   }
 
   _priceChangeHandler(evt) {
@@ -487,14 +475,17 @@ export default class PointFormView extends SmartView {
   }
 
   _priceInputHandler(evt) {
-    evt.target.value = Number(replaceNotNumberCharacter(evt.target.value));
+    const basePrice = Number(replaceNotNumberCharacter(evt.target.value));
+    evt.target.value = basePrice;
+
+    this._updateState({ basePrice }, true);
+    this._validForm();
   }
 
   _typeChangeHandler(evt) {
     evt.preventDefault();
     const type = evt.target.value;
-    const { offers } = mockOffers.get(type);
-    this._updateState({ type, offers });
+    this._updateState({ type, offers: [] });
   }
 
   static parsePointToState(point) {
@@ -509,5 +500,18 @@ export default class PointFormView extends SmartView {
     delete newPoint.isEditMode;
     delete newPoint.isValid;
     return newPoint;
+  }
+
+  static updateOffers(offers, update) {
+    const updateIndex = offers.findIndex((offer) => offer.title === update.title);
+
+    if (updateIndex === -1) {
+      return [...offers, update];
+    }
+
+    return [
+      ...offers.slice(0, updateIndex),
+      ...offers.slice(updateIndex + 1),
+    ];
   }
 }

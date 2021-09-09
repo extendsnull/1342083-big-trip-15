@@ -3,15 +3,15 @@ import AbstractObserver from '../utils/abstract-observer';
 export default class DestinationsModel extends AbstractObserver {
   constructor() {
     super();
-    this._destinations = [];
+    this._destinations = new Map();
   }
 
   setDestinations(updateType, destinations) {
-    this._destinations = destinations;
-    this._notify(updateType, destinations);
+    destinations.forEach((destination) => this._destinations.set(destination.name, destination));
+    this._notify(updateType, this._destinations);
   }
 
   getDestinations() {
-    return this._destinations.slice();
+    return this._destinations;
   }
 }

@@ -16,15 +16,11 @@ export const getDuration = (firstTimestamp, secondTimestamp) => {
 
 export const humanizeDuration = (dur) => {
   const diff = dayjs.duration(dur);
-  let pattern = HumanDateFormatPattern.DURATION_MIN;
+  const days = String(Math.floor(diff.asDays())).padStart(2, '0');
+  const hours = String(diff.hours()).padStart(2, '0');
+  const minutes = String(diff.minutes()).padStart(2, '0');
 
-  if (diff.days()) {
-    pattern = HumanDateFormatPattern.DURATION_DAYS;
-  } else if (diff.hours()) {
-    pattern = HumanDateFormatPattern.DURATION_HOURS;
-  }
-
-  return diff.format(pattern);
+  return `${days}D ${hours}H ${minutes}M`;
 };
 
 export const getHumanizedDateDuration = (firstTimestamp, secondTimestamp) => {

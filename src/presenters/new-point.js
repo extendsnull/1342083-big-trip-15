@@ -1,10 +1,30 @@
 import PointFormView from '../view/point-form';
-import { RenderPosition, UpdateType, UserAction } from '../const';
-import { isEscKey } from '../utils/common';
+import { BLANK_DESTINATION, PointDefault, RenderPosition, UpdateType, UserAction } from '../const';
+import { getRandomId, isEscKey } from '../utils/common';
+import { getArrayFirstItem } from '../utils/array';
 import { remove, render } from '../utils/render';
 
+const getBlankPoint = (offers) => {
+  const currentDate = Date.now();
+  const type = getArrayFirstItem(Array.from(offers.keys()));
+
+  return {
+    id: getRandomId(),
+    basePrice: PointDefault.BASE_PRICE,
+    destination: { ...BLANK_DESTINATION },
+    dateFrom: currentDate,
+    dateTo: currentDate,
+    isFavorite: PointDefault.IS_FAVORITE,
+    offers: [ ...PointDefault.OFFERS],
+    type,
+  };
+};
+
 export default class NewPointPresenter {
-  constructor(changeData) {
+  constructor(destinationsModel, offersModel, changeData) {
+    this._destinationsModel = destinationsModel;
+    this._offersModel = offersModel;
+
     this._pointFormComponent = null;
     this._changeData = changeData;
 
@@ -14,7 +34,14 @@ export default class NewPointPresenter {
   }
 
   init(container) {
-    this._pointFormComponent = new PointFormView(this._point, false);
+    this._point = getBlankPoint(this._offersModel.getOffers());
+
+    this._pointFormComponent = new PointFormView(
+      this._point,
+      this._destinationsModel.getDestinations(),
+      this._offersModel.getOffers(this._point.type),
+      false,
+    );
 
     this._pointFormComponent.setDeleteClickHandler(this._handleDeleteClick);
     this._pointFormComponent.setSubmitHandler(this._handleSubmit);
@@ -49,8 +76,6 @@ export default class NewPointPresenter {
     this._changeData(UserAction.ADD_POINT, UpdateType.MAJOR, updatedPoint);
     document.removeEventListener('keydown', this._escKeyDownHandler);
   }
-
-  _handleFormClose() {}
 
   _escKeyDownHandler(evt) {
     if (isEscKey(evt.key)) {

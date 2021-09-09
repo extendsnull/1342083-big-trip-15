@@ -1,10 +1,12 @@
 import InfoView from '../view/info';
-import { RenderPosition } from '../const';
+import { RenderPosition, UpdateType } from '../const';
 import { getTripInfo } from '../utils/info';
 import { remove, render, replace } from '../utils/render';
 
 export default class InfoPresenter {
   constructor(container, pointsModel) {
+    this._isLoading = true;
+
     this._container = container;
     this._pointsModel = pointsModel;
 
@@ -22,11 +24,19 @@ export default class InfoPresenter {
     return getTripInfo(this._pointsModel.getPoints());
   }
 
-  _handleModelEvent() {
-    this.init();
+  _handleModelEvent(updateType) {
+    if (updateType === UpdateType.INIT) {
+      this._isLoading = false;
+    }
+
+    this._renderInfo();
   }
 
   _renderInfo() {
+    if (this._isLoading) {
+      return;
+    }
+
     const prevInfoComponent = this._infoComponent;
     this._infoComponent = new InfoView(this._getDetails());
 

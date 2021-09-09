@@ -67,11 +67,10 @@ export default class PointsModel extends AbstractObserver {
         dateFrom: getTimestamp(point['date_from']),
         dateTo: getTimestamp(point['date_to']),
         isFavorite: point['is_favorite'],
-        selectedOffers: point['offers'],
       },
     );
 
-    ['base_price', 'date_from', 'date_to', 'is_favorite', 'offers'].forEach((key) => delete adaptedPoint[key]);
+    ['base_price', 'date_from', 'date_to', 'is_favorite'].forEach((key) => delete adaptedPoint[key]);
 
     return adaptedPoint;
   }
@@ -85,11 +84,10 @@ export default class PointsModel extends AbstractObserver {
         'date_from': formatDate(point.dateFrom, MachineDateFormatPattern.ISO),
         'date_to': formatDate(point.dateTo, MachineDateFormatPattern.ISO),
         'is_favorite': point.isFavorite,
-        'offers': point.selectedOffers,
       },
     );
 
-    ['basePrice', 'dateFrom', 'dateTo', 'isFavorite', 'selectedOffers'].forEach((key) => delete adaptedPoint[key]);
+    ['basePrice', 'dateFrom', 'dateTo', 'isFavorite'].forEach((key) => delete adaptedPoint[key]);
 
     return adaptedPoint;
   }
