@@ -35,6 +35,7 @@ export const HumanDateFormatPattern = {
 
 export const MachineDateFormatPattern = {
   DEFAULT: 'YYYY-MM-DD',
+  ISO: 'YYYY-MM-DDTHH:mm:ssZ[Z]',
   WITH_HOURS: 'YYYY-MM-DDTHH:mm',
 };
 
@@ -71,6 +72,7 @@ export const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
+  INIT : 'INIT',
 };
 
 export const UserAction = {
