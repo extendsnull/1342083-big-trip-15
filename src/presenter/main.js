@@ -38,7 +38,6 @@ export default class Main {
         this._destinationsModel.setDestinations(UpdateType.INIT, destinations);
         this._offersModel.setOffers(UpdateType.INIT, offers);
         this._pointsModel.setPoints(UpdateType.INIT, points);
-
       })
       .catch(() => {
         this._pointsModel.setPoints(UpdateType.INIT, []);

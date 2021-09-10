@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import { HumanDateFormatPattern } from '../const';
+import { addLeadZero } from './common';
 
 dayjs.extend(duration);
 
@@ -16,11 +17,20 @@ export const getDuration = (firstTimestamp, secondTimestamp) => {
 
 export const humanizeDuration = (dur) => {
   const diff = dayjs.duration(dur);
-  const days = String(Math.floor(diff.asDays())).padStart(2, '0');
-  const hours = String(diff.hours()).padStart(2, '0');
-  const minutes = String(diff.minutes()).padStart(2, '0');
+  const days = Math.floor(diff.asDays());
+  const hours = diff.hours();
+  const minutes = diff.minutes();
+  let humanizesDuration = `${addLeadZero(minutes)}M`;
 
-  return `${days}D ${hours}H ${minutes}M`;
+  if (hours) {
+    humanizesDuration = `${addLeadZero(hours)}H ${humanizesDuration}`;
+  }
+
+  if (days) {
+    humanizesDuration = `${addLeadZero(days)}D ${humanizesDuration}`;
+  }
+
+  return humanizesDuration;
 };
 
 export const getHumanizedDateDuration = (firstTimestamp, secondTimestamp) => {

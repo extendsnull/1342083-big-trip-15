@@ -1,6 +1,8 @@
 import { nanoid } from 'nanoid';
 import { KeyName } from '../const';
 
+export const addLeadZero = (value) => String(value).padStart(2, '0');
+
 export const formatLabel = (type) => {
   const [firstLetter, ...restLetters] = type;
   restLetters.unshift(firstLetter.toUpperCase());
