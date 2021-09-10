@@ -129,7 +129,9 @@ export default class Board {
         break;
       }
       case UserAction.DELETE_POINT: {
+        this._api.deletePoint(point).then(() => {
         this._pointsModel.deletePoint(updateType, point);
+        });
         break;
       }
       case UserAction.UPDATE_POINT: {
