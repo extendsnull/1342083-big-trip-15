@@ -30,7 +30,7 @@ export default class Api {
       url: ApiUrl.POINTS,
       method: Method.POST,
       body: JSON.stringify(PointsModel.adaptToServer(point)),
-      headers: Api.getJSONContentHeader,
+      headers: Api.getJSONContentHeader(),
     })
       .then(Api.toJSON)
       .then(PointsModel.adaptToClient);
@@ -41,7 +41,7 @@ export default class Api {
       url: `${ApiUrl.POINTS}/${point.id}`,
       method: Method.PUT,
       body: JSON.stringify(PointsModel.adaptToServer(point)),
-      headers: Api.getJSONContentHeader,
+      headers: Api.getJSONContentHeader(),
     })
       .then(Api.toJSON)
       .then(PointsModel.adaptToClient);
