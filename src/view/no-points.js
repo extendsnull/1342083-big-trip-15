@@ -1,4 +1,4 @@
-import AbstractView from './abstract';
+import Abstract from './abstract';
 import { FilterType, NoPointsMessage } from '../const';
 
 const MESSAGES = {
@@ -9,7 +9,7 @@ const MESSAGES = {
 
 const getNoPointTemplate = (message) => `<p class="trip-events__msg">${message}</p>`;
 
-export default class NoPointsView extends AbstractView {
+export default class NoPoints extends Abstract {
   constructor(filterType = FilterType.EVERYTHING) {
     super();
     this._message = MESSAGES[filterType];

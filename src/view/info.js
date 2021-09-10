@@ -1,4 +1,4 @@
-import AbstractView from './abstract';
+import Abstract from './abstract';
 
 const getInfoTemplate = (details) => {
   const { title, terms, totalCost } = details;
@@ -20,7 +20,7 @@ const getInfoTemplate = (details) => {
     </section>`;
 };
 
-export default class InfoView extends AbstractView {
+export default class Info extends Abstract {
   constructor(details) {
     super();
     this._details = details;

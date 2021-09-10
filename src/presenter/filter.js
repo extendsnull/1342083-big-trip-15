@@ -4,7 +4,7 @@ import { formatLabel } from '../utils/common';
 import { filter } from '../utils/filter';
 import { remove, render, replace } from '../utils/render';
 
-export default class FilterPresenter {
+export default class Filter {
   constructor(container, filterModel, pointsModel) {
     this._container = container;
     this._filterModel = filterModel;

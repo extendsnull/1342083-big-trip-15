@@ -2,7 +2,7 @@ import NavigationView from '../view/navigation';
 import { NavigationItem, RenderPosition } from '../const';
 import { remove, render, replace } from '../utils/render';
 
-export default class NavigationPresenter {
+export default class Navigation {
   constructor(container, boardPresenter, statsPresenter, pointsModel, filterModel) {
     this._container = container;
 

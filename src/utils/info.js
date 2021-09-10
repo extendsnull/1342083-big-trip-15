@@ -41,7 +41,8 @@ const getTripTerms = (points) => {
 };
 
 const getTotalCost = (points) => points.reduce((acc, point) => {
-  const offersPrice = point.offers.reduce((offerAcc, offer) => offer.isChecked ? offerAcc + offer.price : offerAcc, 0);
+  const offersPrice =
+    point.offers.reduce((offerAcc, offer) => offerAcc + offer.price, 0);
   return acc + point.basePrice + offersPrice;
 }, 0);
 

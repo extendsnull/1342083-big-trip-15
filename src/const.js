@@ -1,3 +1,16 @@
+export const BLANK_DESTINATION = {
+  name: '',
+  description: '',
+  pictures: [],
+};
+
+export const BLANK_POINT = {
+  basePrice: 0,
+  destination: { ...BLANK_DESTINATION },
+  isFavorite: false,
+  offers: [],
+};
+
 export const MAIN_TITLE_MAX_LENGTH = 3;
 export const RANDOM_SEPARATOR = 0.5;
 
@@ -28,13 +41,11 @@ export const HumanDateFormatPattern = {
   ONLY_DAY: 'DD',
   MONTH_DAY: 'MMM DD',
   ONLY_TIME: 'HH:mm',
-  DURATION_MIN: 'mm[M]',
-  DURATION_HOURS: 'HH[H] mm[M]',
-  DURATION_DAYS: 'DD[D] HH[H] mm[M]',
 };
 
 export const MachineDateFormatPattern = {
   DEFAULT: 'YYYY-MM-DD',
+  ISO: 'YYYY-MM-DDTHH:mm:ss[Z]',
   WITH_HOURS: 'YYYY-MM-DDTHH:mm',
 };
 
@@ -71,6 +82,7 @@ export const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
+  INIT : 'INIT',
 };
 
 export const UserAction = {
