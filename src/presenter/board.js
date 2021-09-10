@@ -125,12 +125,14 @@ export default class Board {
   _handleViewAction(actionType, updateType, point) {
     switch (actionType) {
       case UserAction.ADD_POINT: {
-        this._pointsModel.addPoint(updateType, point);
+        this._api.addPoint(point).then((response) => {
+          this._pointsModel.addPoint(updateType, response);
+        });
         break;
       }
       case UserAction.DELETE_POINT: {
         this._api.deletePoint(point).then(() => {
-        this._pointsModel.deletePoint(updateType, point);
+          this._pointsModel.deletePoint(updateType, point);
         });
         break;
       }
