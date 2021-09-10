@@ -57,11 +57,31 @@ export default class NewPoint {
     this._formCloseCallback = callback;
   }
 
+  setAborting() {
+    this._pointFormComponent.shake(this._resetPointFormState);
+  }
+
+  setSaving() {
+    this._pointFormComponent.updateState({
+      isDisabled: true,
+      isSaving: true,
+    });
+  }
+
   _bindContext() {
     this.setFormCloseCallback = this.setFormCloseCallback.bind(this);
+    this._resetPointFormState = this._resetPointFormState.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
     this._handleDeleteClick = this._handleDeleteClick.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
+  }
+
+  _resetPointFormState() {
+    this._pointFormComponent.updateState({
+      isDeleting: false,
+      isDisabled: false,
+      isSaving: false,
+    });
   }
 
   _handleDeleteClick() {

@@ -36,15 +36,33 @@ const getTypeItemsTemplate = (types, currentType) => {
 
 const getDestinationItemsTemplate = (cities) => cities.map((city) => `<option value="${city}"></option>`).join('\n');
 
-const getResetButtonTemplate = () => (`
+const getResetButtonTemplate = (isDisabled, isDeleting, isEditMode) => {
+  let buttonText = isEditMode ? 'Delete' : 'Cancel';
+
+  if (isDeleting) {
+    buttonText =  'Deleting...';
+  }
+
+  return `
+    <button
+      class="event__reset-btn"
+      type="reset"
+      ${isDisabled ? 'disabled' : ''}
+    >
+      ${buttonText}
+    </button>`;
+};
+
+const getRollupButtonTemplate = (isDisabled) => (`
   <button
     class="event__rollup-btn"
     type="button"
+    ${isDisabled ? 'disabled' : ''}
   >
     <span class="visually-hidden">Close event edit</span>
   </button>`);
 
-const getOffersTemplate = (offers, hasOffers) => {
+const getOffersTemplate = (offers, hasOffers, isDisabled) => {
   if (hasOffers) {
     const template = offers.map((offer, index) => {
       const { title, price, isSelected } = offer;
@@ -57,6 +75,7 @@ const getOffersTemplate = (offers, hasOffers) => {
             name="event-offer-${index}"
             value="${title}"
             ${isSelected ? 'checked' : ''}
+            ${isDisabled ? 'disabled' : ''}
           >
           <label
             class="event__offer-label"
@@ -129,7 +148,7 @@ const getDestinationTemplate = (destination, hasDescription, hasPictures) => {
   return '';
 };
 
-const getDetailsTemplate = (point, availableOffers) => {
+const getDetailsTemplate = (point, availableOffers, isDisabled) => {
   const { type, destination } = point;
   const offers = availableOffers
     .get(type)
@@ -147,7 +166,7 @@ const getDetailsTemplate = (point, availableOffers) => {
   if (hasDetails) {
     return `
       <section class="event__details">
-        ${getOffersTemplate(offers, hasOffers)}
+        ${getOffersTemplate(offers, hasOffers, isDisabled)}
         ${getDestinationTemplate(destination, hasDescription, hasPictures)}
       </section>`;
   }
@@ -156,7 +175,7 @@ const getDetailsTemplate = (point, availableOffers) => {
 };
 
 const getPointFormTemplate = (point, destinations, offers, isEditMode) => {
-  const { type, destination, dateFrom, dateTo, basePrice, isValid } = point;
+  const { type, destination, dateFrom, dateTo, basePrice, isValid, isDisabled, isSaving, isDeleting } = point;
 
   const types = Array.from(offers.keys());
   const cities = Array.from(destinations.keys());
@@ -187,6 +206,7 @@ const getPointFormTemplate = (point, destinations, offers, isEditMode) => {
               class="event__type-toggle visually-hidden"
               id="event-type-toggle"
               type="checkbox"
+              ${isDisabled ? 'disabled' : ''}
             >
 
             <div class="event__type-list">
@@ -211,6 +231,7 @@ const getPointFormTemplate = (point, destinations, offers, isEditMode) => {
               name="event-destination"
               value="${destination.name}"
               list="destination-list"
+              ${isDisabled ? 'disabled' : ''}
             >
             <datalist id="destination-list">
               ${getDestinationItemsTemplate(cities)}
@@ -228,6 +249,7 @@ const getPointFormTemplate = (point, destinations, offers, isEditMode) => {
               type="text"
               name="event-start-time"
               value="${formatDate(dateFrom)}"
+              ${isDisabled ? 'disabled' : ''}
             >
             &mdash;
             <label
@@ -240,6 +262,7 @@ const getPointFormTemplate = (point, destinations, offers, isEditMode) => {
               type="text"
               name="event-end-time"
               value="${formatDate(dateTo)}"
+              ${isDisabled ? 'disabled' : ''}
             >
           </div>
 
@@ -257,23 +280,21 @@ const getPointFormTemplate = (point, destinations, offers, isEditMode) => {
               type="text"
               name="event-price"
               value="${basePrice}"
+              ${isDisabled ? 'disabled' : ''}
             >
           </div>
 
           <button
             class="event__save-btn btn btn--blue"
             type="submit"
-            ${!isValid ? 'disabled' : ''}
-          >Save</button>
-          <button
-            class="event__reset-btn"
-            type="reset"
+            ${isDisabled || !isValid ? 'disabled' : ''}
           >
-            ${isEditMode ? 'Delete' : 'Cancel'}
+            ${isSaving ? 'Saving...' : 'Save'}
           </button>
-          ${isEditMode ? getResetButtonTemplate() : ''}
+          ${getResetButtonTemplate(isDisabled, isDeleting, isEditMode)}
+          ${isEditMode ? getRollupButtonTemplate(isDisabled) : ''}
         </header>
-        ${getDetailsTemplate(point, offers)}
+        ${getDetailsTemplate(point, offers, isDisabled)}
       </form>
     </li>`;
 };
@@ -312,13 +333,13 @@ export default class PointForm extends Smart {
     this.setSubmitHandler(this._callback.submit);
   }
 
-  _updateState(stateUpdate, updateStateOnly) {
-    super._updateState(stateUpdate, updateStateOnly);
+  updateState(stateUpdate, updateStateOnly) {
+    super.updateState(stateUpdate, updateStateOnly);
     this._state = PointForm.parsePointToState(this._state);
   }
 
   reset(point) {
-    this._updateState(PointForm.parsePointToState(point));
+    this.updateState(PointForm.parsePointToState(point));
   }
 
   setDeleteClickHandler(callback) {
@@ -422,12 +443,12 @@ export default class PointForm extends Smart {
 
     switch (id) {
       case DateFieldId.FROM: {
-        this._updateState({ dateFrom: value }, true);
+        this.updateState({ dateFrom: value }, true);
         this._datepickers.to.set('minDate', value);
         break;
       }
       case DateFieldId.TO: {
-        this._updateState({ dateTo: value }, true);
+        this.updateState({ dateTo: value }, true);
         this._datepickers.from.set('maxDate', value);
         break;
       }
@@ -443,7 +464,7 @@ export default class PointForm extends Smart {
 
   _destinationChangeHandler(evt) {
     const destination = this._destinations.get(evt.target.value) || { ...BLANK_DESTINATION };
-    this._updateState({ destination });
+    this.updateState({ destination });
     this._validForm();
   }
 
@@ -460,7 +481,7 @@ export default class PointForm extends Smart {
   _offerChangeHandler(evt) {
     const update = this._offers.get(this._state.type).find((offer) => offer.title === evt.target.value);
     const offers = PointForm.updateOffers(this._state.offers, update);
-    this._updateState({ offers }, true);
+    this.updateState({ offers }, true);
   }
 
   _priceChangeHandler(evt) {
@@ -470,7 +491,7 @@ export default class PointForm extends Smart {
       evt.target.value = 0;
     }
 
-    this._updateState({ basePrice }, true);
+    this.updateState({ basePrice }, true);
     this._validForm();
   }
 
@@ -478,27 +499,29 @@ export default class PointForm extends Smart {
     const basePrice = Number(replaceNotNumberCharacter(evt.target.value));
     evt.target.value = basePrice;
 
-    this._updateState({ basePrice }, true);
+    this.updateState({ basePrice }, true);
     this._validForm();
   }
 
   _typeChangeHandler(evt) {
     evt.preventDefault();
     const type = evt.target.value;
-    this._updateState({ type, offers: [] });
+    this.updateState({ type, offers: [] });
   }
 
   static parsePointToState(point) {
     return {
       ...point,
       isValid: Boolean(point.destination.name && point.basePrice && point.dateFrom && point.dateTo),
+      isDisabled: false,
+      isSaving: false,
+      isDeleting: false,
     };
   }
 
   static parseStateToPoint(state) {
     const newPoint = { ...state };
-    delete newPoint.isEditMode;
-    delete newPoint.isValid;
+    ['isValid', 'isDisabled', 'isSaving', 'isDeleting'].forEach((key) => delete newPoint[key]);
     return newPoint;
   }
 

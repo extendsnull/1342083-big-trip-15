@@ -1,13 +1,8 @@
 import PointView from '../view/point';
 import PointFormView from '../view/point-form';
+import { Mode, State, UpdateType, UserAction } from '../const';
 import { isEscKey } from '../utils/common';
 import { render, replace, remove } from '../utils/render';
-import { UpdateType, UserAction } from '../const';
-
-const Mode = {
-  DEFAULT: 'DEFAULT',
-  EDITING: 'EDITING',
-};
 
 export default class Point {
   constructor(container, destinationsModel, offersModel, changeData, changeMode) {
@@ -35,24 +30,49 @@ export default class Point {
     this._create();
 
     if (prevPointComponent === null || prevPointFormComponent === null) {
-      return this._render();
+      return render(this._container, this._pointComponent);
     }
 
-    const prevPointIsRendered = this._container.getElement().contains(prevPointComponent.getElement());
-    const prevPointFormIsRendered = this._container.getElement().contains(prevPointFormComponent.getElement());
-
-    if (prevPointIsRendered) {
-      this._reinitPoint(prevPointComponent);
+    if (this._mode === Mode.DEFAULT) {
+      replace(this._pointComponent, prevPointComponent);
     }
 
-    if (prevPointFormIsRendered) {
-      this._reinitPointForm(prevPointFormComponent);
+    if (this._mode === Mode.EDITING) {
+      replace(this._pointComponent, prevPointFormComponent);
+      this._mode = Mode.DEFAULT;
     }
+
+    remove(prevPointComponent);
+    remove(prevPointFormComponent);
   }
 
   destroy() {
     remove(this._pointComponent);
     remove(this._pointFormComponent);
+  }
+
+  setViewState(state) {
+    switch (state) {
+      case State.SAVING: {
+        this._pointFormComponent.updateState({
+          isDisabled: true,
+          isSaving: true,
+        });
+        break;
+      }
+      case State.DELETING: {
+        this._pointFormComponent.updateState({
+          isDisabled: true,
+          isDeleting: true,
+        });
+        break;
+      }
+      case State.ABORTING: {
+        this._pointComponent.shake();
+        this._pointFormComponent.shake(this._resetPointFormState);
+        break;
+      }
+    }
   }
 
   resetView() {
@@ -68,6 +88,7 @@ export default class Point {
     this._handleResetClick = this._handleResetClick.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
+    this._resetPointFormState = this._resetPointFormState.bind(this);
   }
 
   _create() {
@@ -89,15 +110,8 @@ export default class Point {
     this._pointFormComponent.setSubmitHandler(this._handleSubmit);
   }
 
-  _escKeyDownHandler(evt) {
-    if (isEscKey(evt.key)) {
-      this._reset();
-    }
-  }
-
   _handleDeleteClick(point) {
     this._changeData(UserAction.DELETE_POINT, UpdateType.MAJOR, point);
-    this.destroy();
     document.removeEventListener('keydown', this._escKeyDownHandler);
   }
 
@@ -121,22 +135,7 @@ export default class Point {
 
   _handleSubmit(updatedPoint) {
     this._changeData(UserAction.UPDATE_POINT, UpdateType.PATCH, updatedPoint);
-    this._replaceFormToPoint();
     document.removeEventListener('keydown', this._escKeyDownHandler);
-  }
-
-  _render() {
-    render(this._container, this._pointComponent);
-  }
-
-  _reinitPoint(prevPointComponent) {
-    replace(this._pointComponent, prevPointComponent);
-    remove(prevPointComponent);
-  }
-
-  _reinitPointForm(prevPointFormComponent) {
-    replace(this._pointFormComponent, prevPointFormComponent);
-    remove(prevPointFormComponent);
   }
 
   _replaceFormToPoint() {
@@ -151,9 +150,23 @@ export default class Point {
     this._mode = Mode.EDITING;
   }
 
+  _resetPointFormState() {
+    this._pointFormComponent.updateState({
+      isDeleting: false,
+      isDisabled: false,
+      isSaving: false,
+    });
+  }
+
   _reset() {
     this._pointFormComponent.reset(this._point);
     this._replaceFormToPoint();
     document.removeEventListener('keydown', this._escKeyDownHandler);
+  }
+
+  _escKeyDownHandler(evt) {
+    if (isEscKey(evt.key)) {
+      this._reset();
+    }
   }
 }

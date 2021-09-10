@@ -31,10 +31,6 @@ export const FilterType = {
   PAST: 'past',
 };
 
-export const KeyName = {
-  ESC: 'Escape',
-};
-
 export const HumanDateFormatPattern = {
   DEFAULT: 'DD/MM/YY HH:mm',
   DEFAULT_FLATPICKR: 'd/m/y H:i',
@@ -47,6 +43,15 @@ export const MachineDateFormatPattern = {
   DEFAULT: 'YYYY-MM-DD',
   ISO: 'YYYY-MM-DDTHH:mm:ss[Z]',
   WITH_HOURS: 'YYYY-MM-DDTHH:mm',
+};
+
+export const KeyName = {
+  ESC: 'Escape',
+};
+
+export const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING',
 };
 
 export const NavigationItem = {
@@ -71,6 +76,12 @@ export const SortType = {
   TIME: 'time',
   PRICE: 'price',
   OFFER: 'offer',
+};
+
+export const State = {
+  ABORTING: 'ABORTING',
+  DELETING: 'DELETING',
+  SAVING: 'SAVING',
 };
 
 export const TextSeparator = {
