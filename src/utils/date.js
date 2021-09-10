@@ -5,21 +5,17 @@ import { addLeadZero } from './common';
 
 dayjs.extend(duration);
 
-export const formatDate = (timestamp, pattern = HumanDateFormatPattern.DEFAULT) => dayjs(timestamp).format(pattern);
+export const formatDate = (date, pattern = HumanDateFormatPattern.DEFAULT) => dayjs(date).format(pattern);
 
-export const getDatesDiff = (lower, upper) => dayjs(upper).diff(dayjs(lower));
+export const getDatesDiff = (from, to) => dayjs(to).diff(dayjs(from));
 
-export const getDuration = (firstTimestamp, secondTimestamp) => {
-  const lower = Math.min(firstTimestamp, secondTimestamp);
-  const upper = Math.max(firstTimestamp, secondTimestamp);
-  return dayjs.duration(getDatesDiff(lower, upper)).asMilliseconds();
-};
+export const getDuration = (from, to) => dayjs.duration(getDatesDiff(from, to));
 
-export const humanizeDuration = (dur) => {
-  const diff = dayjs.duration(dur);
-  const days = Math.floor(diff.asDays());
-  const hours = diff.hours();
-  const minutes = diff.minutes();
+export const humanizeDuration = (from, to) => {
+  const durationValue = getDuration(from, to);
+  const days = Math.floor(durationValue.asDays());
+  const hours = durationValue.hours();
+  const minutes = durationValue.minutes();
   let humanizesDuration = `${addLeadZero(minutes)}M`;
 
   if (hours) {
@@ -33,22 +29,20 @@ export const humanizeDuration = (dur) => {
   return humanizesDuration;
 };
 
-export const getHumanizedDateDuration = (firstTimestamp, secondTimestamp) => {
-  const diff = getDuration(firstTimestamp, secondTimestamp);
-  return humanizeDuration(diff);
-};
+export const getHumanizedDuration = (from, to) => humanizeDuration(from, to);
+
+export const getISOString = (date) => dayjs(date).toISOString();
 
 export const getTimestamp = (date) => dayjs(date).valueOf();
 
-export const isPastDate = (timestamp) => {
+export const isPastDate = (date) => {
   const now = dayjs();
-  return dayjs(timestamp).isBefore(now, 'ms');
+  return dayjs(date).isBefore(now, 'ms');
 };
 
-export const isFutureDate = (timestamp) => {
+export const isFutureDate = (date) => {
   const now = dayjs();
-  return dayjs(now).isBefore(timestamp, 'ms');
+  return dayjs(now).isBefore(date, 'ms');
 };
 
-export const isOneMonthDates = (firstTimestamp, secondTimestamp) =>
-  dayjs(firstTimestamp).month() === dayjs(secondTimestamp).month();
+export const isOneMonthDates = (firstDate, secondDate) => dayjs(firstDate).month() === dayjs(secondDate).month();

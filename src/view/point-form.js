@@ -1,7 +1,7 @@
 import Smart from './smart';
 import { BLANK_DESTINATION, DateFieldId, HumanDateFormatPattern } from '../const';
 import { formatLabel, replaceNotNumberCharacter } from '../utils/common';
-import { formatDate, getTimestamp } from '../utils/date';
+import { formatDate, getISOString } from '../utils/date';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
@@ -439,7 +439,7 @@ export default class PointForm extends Smart {
   _dateChangeHandler(selectedDates, dateStr, instance) {
     const [date] = selectedDates;
     const { id } = instance.element;
-    const value = date ? getTimestamp(date) : 0;
+    const value = getISOString(date);
 
     switch (id) {
       case DateFieldId.FROM: {

@@ -1,6 +1,5 @@
-import { MachineDateFormatPattern } from '../const';
 import AbstractObserver from '../utils/abstract-observer';
-import { formatDate, getTimestamp } from '../utils/date';
+import { getISOString } from '../utils/date';
 
 export default class Points extends AbstractObserver {
   constructor() {
@@ -64,8 +63,8 @@ export default class Points extends AbstractObserver {
       point,
       {
         basePrice: point['base_price'],
-        dateFrom: getTimestamp(point['date_from']),
-        dateTo: getTimestamp(point['date_to']),
+        dateFrom: getISOString(point['date_from']),
+        dateTo: getISOString(point['date_from']),
         isFavorite: point['is_favorite'],
       },
     );
@@ -81,14 +80,13 @@ export default class Points extends AbstractObserver {
       point,
       {
         'base_price': point.basePrice,
-        'date_from': formatDate(point.dateFrom, MachineDateFormatPattern.ISO),
-        'date_to': formatDate(point.dateTo, MachineDateFormatPattern.ISO),
+        'date_from': getISOString(point.dateFrom),
+        'date_to': getISOString(point.dateTo),
         'is_favorite': point.isFavorite,
       },
     );
 
     ['basePrice', 'dateFrom', 'dateTo', 'isFavorite'].forEach((key) => delete adaptedPoint[key]);
-
     return adaptedPoint;
   }
 }

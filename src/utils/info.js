@@ -3,8 +3,7 @@ import { getArrayFirstItem, getArrayLastItem } from './array';
 import { formatDate, isOneMonthDates } from './date';
 import { sortByDateFrom, sortByDateTo } from './sort';
 
-const getTripDestinations = (points) =>
-  points.slice().sort(sortByDateFrom).map((point) => point.destination.name);
+const getTripDestinations = (points) => points.slice().sort(sortByDateFrom).map((point) => point.destination.name);
 
 const formatTitle = (destinations) => {
   if (destinations.length > MAIN_TITLE_MAX_LENGTH) {
