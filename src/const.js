@@ -41,7 +41,7 @@ export const HumanDateFormatPattern = {
 
 export const MachineDateFormatPattern = {
   DEFAULT: 'YYYY-MM-DD',
-  ISO: 'YYYY-MM-DDTHH:mm:ss[Z]',
+  ISO: 'YYYY-MM-DDTHH:mm:ss.SSS[Z]',
   WITH_HOURS: 'YYYY-MM-DDTHH:mm',
 };
 
