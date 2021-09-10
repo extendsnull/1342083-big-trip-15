@@ -1,6 +1,6 @@
 import PointFormView from '../view/point-form';
 import { BLANK_POINT, RenderPosition, UpdateType, UserAction } from '../const';
-import { getRandomId, isEscKey } from '../utils/common';
+import { isEscKey } from '../utils/common';
 import { getArrayFirstItem } from '../utils/array';
 import { remove, render } from '../utils/render';
 
@@ -10,7 +10,6 @@ const getBlankPoint = (offers) => {
 
   return {
     ...BLANK_POINT,
-    id: getRandomId(),
     dateFrom: currentDate,
     dateTo: currentDate,
     type,

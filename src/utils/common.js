@@ -1,4 +1,3 @@
-import { nanoid } from 'nanoid';
 import { KeyName } from '../const';
 
 export const addLeadZero = (value) => String(value).padStart(2, '0');
@@ -8,8 +7,6 @@ export const formatLabel = (type) => {
   restLetters.unshift(firstLetter.toUpperCase());
   return restLetters.join('');
 };
-
-export const getRandomId = (length = 6) => nanoid(length);
 
 export const getRandomIntInclusive = (min = 0, max = 1) => {
   const restrict = {
