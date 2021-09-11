@@ -5,6 +5,14 @@ import { formatDate, getISOString } from '../utils/date';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
+const ButtonText = {
+  CANCEL: 'Cancel',
+  DELETE: 'Delete',
+  DELETING: 'Deleting...',
+  SAVE: 'Save',
+  SAVING: 'Saving...',
+};
+
 const DATEPICKER_BASE_SETTINGS = {
   dateFormat: HumanDateFormatPattern.DEFAULT_FLATPICKR,
   enableTime: true,
@@ -37,10 +45,10 @@ const getTypeItemsTemplate = (types, currentType) => {
 const getDestinationItemsTemplate = (cities) => cities.map((city) => `<option value="${city}"></option>`).join('\n');
 
 const getResetButtonTemplate = (isDisabled, isDeleting, isEditMode) => {
-  let buttonText = isEditMode ? 'Delete' : 'Cancel';
+  let buttonText = isEditMode ? ButtonText.DELETE : ButtonText.CANCEL;
 
   if (isDeleting) {
-    buttonText =  'Deleting...';
+    buttonText =  ButtonText.DELETING;
   }
 
   return `
@@ -289,7 +297,7 @@ const getPointFormTemplate = (point, destinations, offers, isEditMode) => {
             type="submit"
             ${isDisabled || !isValid ? 'disabled' : ''}
           >
-            ${isSaving ? 'Saving...' : 'Save'}
+            ${isSaving ? ButtonText.SAVING : ButtonText.SAVE}
           </button>
           ${getResetButtonTemplate(isDisabled, isDeleting, isEditMode)}
           ${isEditMode ? getRollupButtonTemplate(isDisabled) : ''}
