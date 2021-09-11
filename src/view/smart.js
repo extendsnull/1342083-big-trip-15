@@ -1,5 +1,4 @@
 import Abstract from './abstract';
-import { replace } from '../utils/render';
 
 export default class Smart extends Abstract {
   constructor() {
@@ -28,9 +27,14 @@ export default class Smart extends Abstract {
 
   _updateElement() {
     const oldElement = this.getElement();
-    this.removeElement();
-    const newElement = this.getElement();
-    replace(newElement, oldElement);
-    this._restoreHandlers();
+    const parent = oldElement.parentElement;
+
+    if (parent) {
+      this.removeElement();
+
+      const newElement = this.getElement();
+      parent.replaceChild(newElement, oldElement);
+      this._restoreHandlers();
+    }
   }
 }
