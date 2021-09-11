@@ -64,7 +64,7 @@ export default class Points extends AbstractObserver {
       {
         basePrice: point['base_price'],
         dateFrom: getISOString(point['date_from']),
-        dateTo: getISOString(point['date_from']),
+        dateTo: getISOString(point['date_to']),
         isFavorite: point['is_favorite'],
       },
     );
