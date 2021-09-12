@@ -5,7 +5,7 @@ import PointsListView from '../view/points-list';
 import BoardView from '../view/board';
 import PointPresenter from './point';
 import NewPointPresenter from './new-point';
-import { FilterType, SortType, UpdateType, UserAction } from '../const';
+import { FilterType, SortType, State, UpdateType, UserAction } from '../const';
 import { filter } from '../utils/filter';
 import { remove, render } from '../utils/render';
 import { sortByDateFrom, sortByDuration, sortByPrice } from '../utils/sort';
@@ -125,17 +125,36 @@ export default class Board {
   _handleViewAction(actionType, updateType, point) {
     switch (actionType) {
       case UserAction.ADD_POINT: {
-        this._pointsModel.addPoint(updateType, point);
+        this._newPointPresenter.setSaving();
+        this._api.addPoint(point)
+          .then((response) => {
+            this._pointsModel.addPoint(updateType, response);
+          })
+          .catch(() => {
+            this._newPointPresenter.setAborting();
+          });
         break;
       }
       case UserAction.DELETE_POINT: {
-        this._pointsModel.deletePoint(updateType, point);
+        this._pointPresenters.get(point.id).setViewState(State.DELETING);
+        this._api.deletePoint(point)
+          .then(() => {
+            this._pointsModel.deletePoint(updateType, point);
+          })
+          .catch(() => {
+            this._pointPresenters.get(point.id).setViewState(State.ABORTING);
+          });
         break;
       }
       case UserAction.UPDATE_POINT: {
-        this._api.updatePoint(point).then((response) => {
-          this._pointsModel.updatePoint(updateType, response);
-        });
+        this._pointPresenters.get(point.id).setViewState(State.SAVING);
+        this._api.updatePoint(point)
+          .then((response) => {
+            this._pointsModel.updatePoint(updateType, response);
+          })
+          .catch(() => {
+            this._pointPresenters.get(point.id).setViewState(State.ABORTING);
+          });
         break;
       }
     }

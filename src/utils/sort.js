@@ -1,13 +1,13 @@
-import { getDatesDiff } from './date';
+import { getDatesDiff, getTimestamp } from './date';
 
-export const sortByDateFrom = (item1, item2) => item1.dateFrom - item2.dateFrom;
+export const sortByDateFrom = (point1, point2) => getTimestamp(point1.dateFrom) - getTimestamp(point2.dateFrom);
 
-export const sortByDateTo = (item1, item2) => item2.dateTo - item1.dateTo;
+export const sortByDateTo = (point1, point2) => getTimestamp(point2.dateTo) - getTimestamp(point1.dateTo);
 
-export const sortByDuration = (item1, item2) => {
-  const diff1 = getDatesDiff(item1.dateFrom, item1.dateTo);
-  const diff2 = getDatesDiff(item2.dateFrom, item2.dateTo);
+export const sortByDuration = (point1, point2) => {
+  const diff1 = getDatesDiff(point1.dateFrom, point1.dateTo);
+  const diff2 = getDatesDiff(point2.dateFrom, point2.dateTo);
   return diff2 - diff1;
 };
 
-export const sortByPrice = (item1, item2) => item2.basePrice - item1.basePrice;
+export const sortByPrice = (point1, point2) => point2.basePrice - point1.basePrice;

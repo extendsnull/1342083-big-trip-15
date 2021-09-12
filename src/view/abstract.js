@@ -1,5 +1,7 @@
 import { createElement } from '../utils/render';
 
+const SHAKE_ANIMATION_CLASSNAME = 'shake';
+
 export default class Abstract {
   constructor() {
     if (new.target === Abstract) {
@@ -20,6 +22,17 @@ export default class Abstract {
 
   removeElement() {
     this._element = null;
+  }
+
+  shake(callback = () => {}) {
+    const element = this.getElement();
+
+    element.addEventListener('animationend', () => {
+      element.classList.remove(SHAKE_ANIMATION_CLASSNAME);
+      callback();
+    });
+
+    element.classList.add(SHAKE_ANIMATION_CLASSNAME);
   }
 
   _getTemplate() {

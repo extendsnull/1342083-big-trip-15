@@ -1,7 +1,7 @@
 import Abstract from './abstract';
 import { HumanDateFormatPattern, MachineDateFormatPattern } from '../const';
 import { formatLabel } from '../utils/common';
-import { formatDate, getHumanizedDateDuration } from '../utils/date';
+import { formatDate, getHumanizedDuration } from '../utils/date';
 
 const getOffersTemplate = (offers, hasOffers) => {
   if (hasOffers) {
@@ -71,7 +71,7 @@ const getPointTemplate = (point, offers) => {
             </time>
           </p>
           <p class="event__duration">
-            ${getHumanizedDateDuration(dateFrom, dateTo)}
+            ${getHumanizedDuration(dateFrom, dateTo)}
           </p>
         </div>
         <p class="event__price">

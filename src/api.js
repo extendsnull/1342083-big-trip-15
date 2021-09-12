@@ -1,16 +1,16 @@
 import PointsModel from './model/points';
 
-const Method = {
-  GET: 'GET',
-  PUT: 'PUT',
+const ApiUrl = {
+  POINTS: 'points',
+  DESTINATIONS: 'destinations',
+  OFFERS: 'offers',
 };
 
-const ServerUrl = {
-  GET_POINTS: 'points',
-  ADD_POINT: 'points',
-  UPDATE_POINT: 'points',
-  GET_DESTINATIONS: 'destinations',
-  GET_OFFERS: 'offers',
+const Method = {
+  DELETE: 'DELETE',
+  GET: 'GET',
+  POST: 'POST',
+  PUT: 'PUT',
 };
 
 export default class Api {
@@ -20,28 +20,46 @@ export default class Api {
   }
 
   getPoints() {
-    return this._load({ url: ServerUrl.GET_POINTS })
+    return this._load({ url: ApiUrl.POINTS })
       .then(Api.toJSON)
       .then((response) => response.map(PointsModel.adaptToClient));
   }
 
-  updatePoint(point) {
+  addPoint(point) {
     return this._load({
-      url: `${ServerUrl.UPDATE_POINT}/${point.id}`,
-      method: Method.PUT,
+      url: ApiUrl.POINTS,
+      method: Method.POST,
       body: JSON.stringify(PointsModel.adaptToServer(point)),
-      headers: new Headers({ 'Content-Type': 'application/json' }),
+      headers: Api.getJSONContentHeader(),
     })
       .then(Api.toJSON)
       .then(PointsModel.adaptToClient);
   }
 
+  updatePoint(point) {
+    return this._load({
+      url: `${ApiUrl.POINTS}/${point.id}`,
+      method: Method.PUT,
+      body: JSON.stringify(PointsModel.adaptToServer(point)),
+      headers: Api.getJSONContentHeader(),
+    })
+      .then(Api.toJSON)
+      .then(PointsModel.adaptToClient);
+  }
+
+  deletePoint(point) {
+    return this._load({
+      url: `${ApiUrl.POINTS}/${point.id}`,
+      method: Method.DELETE,
+    });
+  }
+
   getDestinations() {
-    return this._load({ url: ServerUrl.GET_DESTINATIONS }).then(Api.toJSON);
+    return this._load({ url: ApiUrl.DESTINATIONS }).then(Api.toJSON);
   }
 
   getOffers() {
-    return this._load({ url: ServerUrl.GET_OFFERS }).then(Api.toJSON);
+    return this._load({ url: ApiUrl.OFFERS }).then(Api.toJSON);
   }
 
   async _load(settings) {
@@ -57,6 +75,10 @@ export default class Api {
     }
   }
 
+  static catchError(err) {
+    throw err;
+  }
+
   static checkStatus(response) {
     if (!response.ok) {
       throw new Error(`${response.status}: ${response.statusText}`);
@@ -65,11 +87,11 @@ export default class Api {
     return response;
   }
 
-  static toJSON(response) {
-    return response.json();
+  static getJSONContentHeader() {
+    return new Headers({ 'Content-Type': 'application/json' });
   }
 
-  static catchError(err) {
-    throw err;
+  static toJSON(response) {
+    return response.json();
   }
 }
