@@ -40,6 +40,8 @@ export default class Main {
         this._pointsModel.setPoints(UpdateType.INIT, points);
       })
       .catch(() => {
+        this._destinationsModel.setDestinations(UpdateType.INIT, []);
+        this._offersModel.setOffers(UpdateType.INIT, []);
         this._pointsModel.setPoints(UpdateType.INIT, []);
       })
       .finally(() => {
@@ -62,18 +64,18 @@ export default class Main {
   }
 
   _createPresenters() {
-    this._presenters.info= new InfoPresenter(
+    this._presenters.info = new InfoPresenter(
       containers.info,
       this._pointsModel,
     );
 
-    this._presenters.filter= new FilterPresenter(
+    this._presenters.filter = new FilterPresenter(
       containers.filter,
       this._filterModel,
       this._pointsModel,
     );
 
-    this._presenters.board= new BoardPresenter(
+    this._presenters.board = new BoardPresenter(
       containers.board,
       this._pointsModel,
       this._filterModel,
@@ -82,18 +84,18 @@ export default class Main {
       this._api,
     );
 
-    this._presenters.addButton= new AddButtonPresenter(
+    this._presenters.addButton = new AddButtonPresenter(
       containers.addButton,
       this._presenters.board,
     );
 
-    this._presenters.stats= new StatsPresenter(
+    this._presenters.stats = new StatsPresenter(
       containers.stats,
       this._pointsModel,
       this._presenters.filter,
     );
 
-    this._presenters.navigation= new NavigationPresenter(
+    this._presenters.navigation = new NavigationPresenter(
       containers.navigation,
       this._presenters.board,
       this._presenters.stats,
