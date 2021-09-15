@@ -495,7 +495,7 @@ export default class PointForm extends Smart {
   }
 
   _priceChangeHandler(evt) {
-    const basePrice = Number(evt.target.value);
+    const basePrice = parseInt(evt.target.value, 10);
 
     if (basePrice <= 0) {
       evt.target.value = 0;
@@ -506,7 +506,7 @@ export default class PointForm extends Smart {
   }
 
   _priceInputHandler(evt) {
-    const basePrice = Number(replaceNotNumberCharacter(evt.target.value));
+    const basePrice = parseInt(replaceNotNumberCharacter(evt.target.value), 10);
     evt.target.value = basePrice;
 
     this.updateState({ basePrice }, true);
