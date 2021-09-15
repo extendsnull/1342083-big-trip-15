@@ -20,4 +20,6 @@ export const getRandomBoolean = () => Boolean(getRandomIntInclusive());
 
 export const isEscKey = (key) => KeyName.ESC === key;
 
+export const isOnline = () => window.navigator.onLine;
+
 export const replaceNotNumberCharacter = (value) => String(value).replace(/\D/gi, '');
