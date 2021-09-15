@@ -1,8 +1,9 @@
 import PointView from '../view/point';
 import PointFormView from '../view/point-form';
-import { Mode, State, UpdateType, UserAction } from '../const';
-import { isEscKey } from '../utils/common';
+import { Mode, State, ToastMessage, UpdateType, UserAction } from '../const';
+import { isEscKey, isOnline } from '../utils/common';
 import { render, replace, remove } from '../utils/render';
+import { toast } from '../utils/toast';
 
 export default class Point {
   constructor(container, destinationsModel, offersModel, changeData, changeMode) {
@@ -111,11 +112,19 @@ export default class Point {
   }
 
   _handleDeleteClick(point) {
+    if (!isOnline()) {
+      return toast(ToastMessage.DELETE);
+    }
+
     this._changeData(UserAction.DELETE_POINT, UpdateType.MAJOR, point);
     document.removeEventListener('keydown', this._escKeyDownHandler);
   }
 
   _handleEditClick() {
+    if (!isOnline()) {
+      return toast(ToastMessage.EDIT);
+    }
+
     this._replacePointToForm();
     document.addEventListener('keydown', this._escKeyDownHandler);
   }
@@ -134,6 +143,10 @@ export default class Point {
   }
 
   _handleSubmit(updatedPoint) {
+    if (!isOnline()) {
+      return toast(ToastMessage.SAVE);
+    }
+
     this._changeData(UserAction.UPDATE_POINT, UpdateType.PATCH, updatedPoint);
     document.removeEventListener('keydown', this._escKeyDownHandler);
   }

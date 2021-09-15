@@ -1,5 +1,8 @@
 import AddButtonView from '../view/add-button';
+import { ToastMessage } from '../const';
+import { isOnline } from '../utils/common';
 import { remove, render, replace } from '../utils/render';
+import { toast } from '../utils/toast';
 
 export default class AddButton {
   constructor(container, boardPresenter) {
@@ -10,6 +13,7 @@ export default class AddButton {
     this.enableButton = this.enableButton.bind(this);
     this.disableButton = this.disableButton.bind(this);
     this._createPoint = this._createPoint.bind(this);
+    this._handleAddButtonClick = this._handleAddButtonClick.bind(this);
   }
 
   init() {
@@ -29,10 +33,19 @@ export default class AddButton {
     this._boardPresenter.createPoint();
   }
 
+  _handleAddButtonClick() {
+    if (!isOnline()) {
+      return toast(ToastMessage.ADD);
+    }
+
+    this._createPoint();
+    this.disableButton();
+  }
+
   _renderButton() {
     const prevButtonComponent = this._addButtonComponent;
     this._addButtonComponent = new AddButtonView();
-    this._addButtonComponent.setButtonClickHandler(this._createPoint);
+    this._addButtonComponent.setButtonClickHandler(this._handleAddButtonClick);
     this._boardPresenter.setNewPointFormCloseCallback(this.enableButton);
 
     if (prevButtonComponent === null) {
