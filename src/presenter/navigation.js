@@ -16,30 +16,47 @@ export default class Navigation {
     this._activeNavigationItem = NavigationItem.TABLE;
     this._navigationComponent = null;
 
+    this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleNavigationItemClick = this._handleNavigationItemClick.bind(this);
+
+    this._filterModel.addObserver(this._handleModelEvent);
   }
 
   init() {
     this._render();
   }
 
+  _renderTable() {
+    this._boardPresenter.init();
+    this._statsPresenter.destroy();
+    this._activeNavigationItem = NavigationItem.TABLE;
+    this._render();
+  }
+
+  _renderStats() {
+    this._boardPresenter.destroy();
+    this._statsPresenter.init();
+    this._activeNavigationItem = NavigationItem.STATS;
+    this._render();
+  }
+
+  _handleModelEvent() {
+    if (this._activeNavigationItem === NavigationItem.STATS) {
+      this._renderTable();
+    }
+  }
+
   _handleNavigationItemClick(controlType) {
     switch (controlType) {
       case NavigationItem.TABLE: {
-        this._boardPresenter.init();
-        this._statsPresenter.destroy();
-        this._activeNavigationItem = NavigationItem.TABLE;
+        this._renderTable();
         break;
       }
       case NavigationItem.STATS: {
-        this._boardPresenter.destroy();
-        this._statsPresenter.init();
-        this._activeNavigationItem = NavigationItem.STATS;
+        this._renderStats();
         break;
       }
     }
-
-    this._render();
   }
 
   _render() {
