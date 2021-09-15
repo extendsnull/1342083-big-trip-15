@@ -34,6 +34,5 @@ export default class AddButton extends Abstract {
   _buttonClickHandler(evt) {
     evt.preventDefault();
     this._callback.buttonClickHandler();
-    this.disable();
   }
 }
