@@ -158,12 +158,14 @@ const getDestinationTemplate = (destination, hasDescription, hasPictures) => {
 
 const getDetailsTemplate = (point, availableOffers, isDisabled) => {
   const { type, destination } = point;
-  const offers = availableOffers
-    .get(type)
-    .map((offer) => ({
-      ...offer,
-      isSelected: Boolean(point.offers.find((pointOffer) => pointOffer.title === offer.title)),
-    }));
+  const offers = availableOffers.size
+    ? availableOffers
+      .get(type)
+      .map((offer) => ({
+        ...offer,
+        isSelected: Boolean(point.offers.find((pointOffer) => pointOffer.title === offer.title)),
+      }))
+    : [];
 
   const hasOffers = Boolean(offers.length);
   const hasDescription = Boolean(destination.description);

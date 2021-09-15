@@ -27,10 +27,9 @@ const getOffersTemplate = (offers, hasOffers) => {
 const getPointTemplate = (point, offers) => {
   const { type, destination, dateFrom, dateTo, basePrice, isFavorite } = point;
 
-  const selectedOffers = offers
-    .get(type)
-    .slice()
-    .filter((offer) => point.offers.find((item) => item.title === offer.title));
+  const selectedOffers = offers.size
+    ? offers.get(type).slice().filter((offer) => point.offers.find((item) => item.title === offer.title))
+    : [];
 
   const hasOffers = Boolean(selectedOffers.length);
   const title = `${formatLabel(type)} ${destination.name}`;
