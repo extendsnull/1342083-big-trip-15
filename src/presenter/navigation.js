@@ -16,10 +16,12 @@ export default class Navigation {
     this._activeNavigationItem = NavigationItem.TABLE;
     this._navigationComponent = null;
 
-    this._handleModelEvent = this._handleModelEvent.bind(this);
+    this._handlePointsModelEvent = this._handlePointsModelEvent.bind(this);
+    this._handleFilterModelEvent = this._handleFilterModelEvent.bind(this);
     this._handleNavigationItemClick = this._handleNavigationItemClick.bind(this);
 
-    this._filterModel.addObserver(this._handleModelEvent);
+    this._pointsModel.addObserver(this._handlePointsModelEvent);
+    this._filterModel.addObserver(this._handleFilterModelEvent);
   }
 
   init() {
@@ -40,7 +42,12 @@ export default class Navigation {
     this._render();
   }
 
-  _handleModelEvent() {
+  _handlePointsModelEvent() {
+    const isDisabled = !this._pointsModel.getPoints().length;
+    this._render(isDisabled);
+  }
+
+  _handleFilterModelEvent() {
     if (this._activeNavigationItem === NavigationItem.STATS) {
       this._renderTable();
     }
@@ -59,9 +66,9 @@ export default class Navigation {
     }
   }
 
-  _render() {
+  _render(isDisabled = false) {
     const prevNavigationComponent = this._navigationComponent;
-    this._navigationComponent = new NavigationView(this._navigationItems, this._activeNavigationItem);
+    this._navigationComponent = new NavigationView(this._navigationItems, this._activeNavigationItem, isDisabled);
     this._navigationComponent.setItemClickHandler(this._handleNavigationItemClick);
 
     if (prevNavigationComponent === null) {

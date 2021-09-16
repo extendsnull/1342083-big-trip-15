@@ -280,12 +280,15 @@ main {
   transition: opacity 0.2s; }
   .trip-tabs__btn:not(:last-of-type) {
     margin-right: 26px; }
-  .trip-tabs__btn:hover {
+  a.trip-tabs__btn:hover {
     opacity: 1; }
-  .trip-tabs__btn:active {
+  a.trip-tabs__btn:active {
     opacity: 0.6; }
-  .trip-tabs__btn--active, .trip-tabs__btn--active:hover, .trip-tabs__btn--active:active {
+  a.trip-tabs__btn--active, a.trip-tabs__btn--active:hover, a.trip-tabs__btn--active:active {
     opacity: 1;
+    cursor: default; }
+  .trip-tabs__btn--disabled {
+    opacity: 0.4;
     cursor: default; }
 
 .trip-filters {

@@ -1,7 +1,13 @@
 import { formatLabel } from '../utils/common';
 import Abstract from './abstract';
 
-const getItemTemplate = (type, activeItem) => {
+const getItemTemplate = (type, activeItem, isDisabled) => {
+  const label = formatLabel(type);
+
+  if (isDisabled) {
+    return `<span class="trip-tabs__btn trip-tabs__btn--disabled">${label}</span>`;
+  }
+
   const isActive = type === activeItem;
 
   return `
@@ -9,11 +15,11 @@ const getItemTemplate = (type, activeItem) => {
       class="trip-tabs__btn${isActive ? ' trip-tabs__btn--active' : ''}"
       data-type="${type}"
       href="#"
-    >${formatLabel(type)}</a>`;
+    >${label}</a>`;
 };
 
-const getNavigationTemplate = (navigationItems, activeItem) => {
-  const itemsTemplate = navigationItems.map((item) => getItemTemplate(item, activeItem)).join('\n');
+const getNavigationTemplate = (navigationItems, activeItem, isDisabled) => {
+  const itemsTemplate = navigationItems.map((item) => getItemTemplate(item, activeItem, isDisabled)).join('\n');
 
   return `
     <div class="trip-controls__navigation">
@@ -25,16 +31,17 @@ const getNavigationTemplate = (navigationItems, activeItem) => {
 };
 
 export default class Navigation extends Abstract {
-  constructor(navigationItems, activeItem) {
+  constructor(navigationItems, activeItem, isDisabled) {
     super();
     this._navigationItems = navigationItems;
     this._activeItem = activeItem;
+    this._isDisabled = isDisabled;
 
     this._itemClickHandler = this._itemClickHandler.bind(this);
   }
 
   _getTemplate() {
-    return getNavigationTemplate(this._navigationItems, this._activeItem);
+    return getNavigationTemplate(this._navigationItems, this._activeItem, this._isDisabled);
   }
 
   setItemClickHandler(callback) {
@@ -43,14 +50,15 @@ export default class Navigation extends Abstract {
   }
 
   _itemClickHandler(evt) {
-    if (evt.target.tagName !== 'A') {
+    evt.preventDefault();
+
+    if (this._isDisabled || evt.target.tagName !== 'A') {
       return;
     }
 
     const { type } = evt.target.dataset;
 
     if (type !== this._activeItem) {
-      evt.preventDefault();
       this._callback.itemClickHandler(type);
     }
   }
