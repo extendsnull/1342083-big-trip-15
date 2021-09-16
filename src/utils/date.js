@@ -12,7 +12,7 @@ export const getDatesDiff = (from, to) => dayjs(to).diff(dayjs(from));
 export const getDuration = (from, to) => dayjs.duration(getDatesDiff(from, to));
 
 export const humanizeDuration = (from, to) => {
-  const durationValue = getDuration(from, to);
+  const durationValue = to ? getDuration(from, to) : dayjs.duration(from);
   const days = Math.floor(durationValue.asDays());
   const hours = durationValue.hours();
   const minutes = durationValue.minutes();
