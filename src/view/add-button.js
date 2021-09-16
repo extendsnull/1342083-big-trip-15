@@ -1,34 +1,26 @@
 import Abstract from './abstract';
 
-const getAddButtonTemplate = () => (`
+const getAddButtonTemplate = (isDisabled) => (`
   <button
     class="trip-main__event-add-btn btn btn--big btn--yellow"
     type="button"
+    ${isDisabled ? 'disabled' : ''}
   >New event</button>`);
 
 export default class AddButton extends Abstract {
-  constructor() {
+  constructor(isDisabled) {
     super();
-    this.disable = this.disable.bind(this);
-    this.enable = this.enable.bind(this);
+    this._isDisabled = isDisabled;
     this._buttonClickHandler = this._buttonClickHandler.bind(this);
   }
 
   _getTemplate() {
-    return getAddButtonTemplate();
+    return getAddButtonTemplate(this._isDisabled);
   }
 
   setButtonClickHandler(callback) {
     this._callback.buttonClickHandler = callback;
     this.getElement().addEventListener('click', this._buttonClickHandler);
-  }
-
-  disable() {
-    this.getElement().disabled = true;
-  }
-
-  enable() {
-    this.getElement().disabled = false;
   }
 
   _buttonClickHandler(evt) {

@@ -1,6 +1,5 @@
 import NavigationPresenter from '../presenter/navigation';
 import InfoPresenter from '../presenter/info';
-import AddButtonPresenter from '../presenter/add-button';
 import FilterPresenter from '../presenter/filter';
 import BoardPresenter from '../presenter/board';
 import StatsPresenter from '../presenter/stats';
@@ -10,7 +9,6 @@ const containers = {
   info: document.querySelector('.trip-main'),
   filter: document.querySelector('.trip-controls'),
   board: document.querySelector('.page-main .page-body__container'),
-  addButton: document.querySelector('.trip-main'),
   stats: document.querySelector('.page-main .page-body__container'),
   navigation: document.querySelector('.trip-controls'),
 };
@@ -43,9 +41,6 @@ export default class Main {
         this._destinationsModel.setDestinations(UpdateType.INIT, []);
         this._offersModel.setOffers(UpdateType.INIT, []);
         this._pointsModel.setPoints(UpdateType.INIT, []);
-      })
-      .finally(() => {
-        this._presenters.addButton.enableButton();
       });
   }
 
@@ -59,7 +54,6 @@ export default class Main {
     this._presenters.info.init();
     this._presenters.navigation.init();
     this._presenters.filter.init();
-    this._presenters.addButton.init();
     this._presenters.board.init();
   }
 
@@ -82,11 +76,6 @@ export default class Main {
       this._destinationsModel,
       this._offersModel,
       this._api,
-    );
-
-    this._presenters.addButton = new AddButtonPresenter(
-      containers.addButton,
-      this._presenters.board,
     );
 
     this._presenters.stats = new StatsPresenter(

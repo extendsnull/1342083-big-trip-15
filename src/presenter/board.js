@@ -5,10 +5,13 @@ import PointsListView from '../view/points-list';
 import BoardView from '../view/board';
 import PointPresenter from './point';
 import NewPointPresenter from './new-point';
+import AddButtonPresenter from './add-button';
 import { FilterType, SortType, State, UpdateType, UserAction } from '../const';
 import { filter } from '../utils/filter';
 import { remove, render } from '../utils/render';
 import { sortByDateFrom, sortByDuration, sortByPrice } from '../utils/sort';
+
+const ADD_BUTTON_CONTAINER = document.querySelector('.trip-main');
 
 export default class Board {
   constructor(container, pointsModel, filterModel, destinationsModel, offersModel, api) {
@@ -31,13 +34,7 @@ export default class Board {
     this._boardComponent = null;
 
     this._bindContext();
-
-    this._pointPresenters = new Map();
-    this._newPointPresenter = new NewPointPresenter(
-      this._destinationsModel,
-      this._offersModel,
-      this._handleViewAction,
-    );
+    this._initInnerPresenters();
 
     this._pointTypes = null;
   }
@@ -52,7 +49,7 @@ export default class Board {
     this._clear(true);
   }
 
-  createPoint() {
+  _createPoint() {
     this._currentSortType = SortType.DAY;
     this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
 
@@ -63,10 +60,6 @@ export default class Board {
     }
 
     this._newPointPresenter.init(this._pointsListComponent);
-  }
-
-  setNewPointFormCloseCallback(callback) {
-    this._newPointPresenter.setFormCloseCallback(callback);
   }
 
   _getPoints() {
@@ -161,11 +154,38 @@ export default class Board {
   }
 
   _bindContext() {
-    this.createPoint = this.createPoint.bind(this);
+    this._createPoint = this._createPoint.bind(this);
+    this._handleAddButtonClick = this._handleAddButtonClick.bind(this);
+    this._handleFormClose = this._handleFormClose.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handlePointsModeChange = this._handlePointsModeChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
+  }
+
+  _initInnerPresenters() {
+    this._pointPresenters = new Map();
+
+    this._addButtonPresenter = new AddButtonPresenter(ADD_BUTTON_CONTAINER);
+    this._addButtonPresenter.setAddButtonClickHandler(this._handleAddButtonClick);
+    this._addButtonPresenter.init();
+
+    this._newPointPresenter = new NewPointPresenter(
+      this._destinationsModel,
+      this._offersModel,
+      this._handleViewAction,
+    );
+    this._newPointPresenter.setFormCloseCallback(this._handleFormClose);
+  }
+
+  _handleAddButtonClick() {
+    const buttonIsDisabled = true;
+    this._createPoint();
+    this._addButtonPresenter.init(buttonIsDisabled);
+  }
+
+  _handleFormClose() {
+    this._addButtonPresenter.init(false);
   }
 
   _handlePointsModeChange() {

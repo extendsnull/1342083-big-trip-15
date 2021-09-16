@@ -5,32 +5,19 @@ import { remove, render, replace } from '../utils/render';
 import { toast } from '../utils/toast';
 
 export default class AddButton {
-  constructor(container, boardPresenter) {
+  constructor(container) {
     this._container = container;
-    this._boardPresenter = boardPresenter;
 
     this._addButtonComponent = null;
-    this.enableButton = this.enableButton.bind(this);
-    this.disableButton = this.disableButton.bind(this);
-    this._createPoint = this._createPoint.bind(this);
     this._handleAddButtonClick = this._handleAddButtonClick.bind(this);
   }
 
-  init() {
-    this._renderButton();
-    this.disableButton();
+  init(disabled = false) {
+    this._renderButton(disabled);
   }
 
-  enableButton() {
-    this._addButtonComponent.enable();
-  }
-
-  disableButton() {
-    this._addButtonComponent.disable();
-  }
-
-  _createPoint() {
-    this._boardPresenter.createPoint();
+  setAddButtonClickHandler(callback) {
+    this._addButtonClickHandler = callback;
   }
 
   _handleAddButtonClick() {
@@ -38,15 +25,13 @@ export default class AddButton {
       return toast(ToastMessage.ADD);
     }
 
-    this._createPoint();
-    this.disableButton();
+    this._addButtonClickHandler();
   }
 
-  _renderButton() {
+  _renderButton(disabled) {
     const prevButtonComponent = this._addButtonComponent;
-    this._addButtonComponent = new AddButtonView();
+    this._addButtonComponent = new AddButtonView(disabled);
     this._addButtonComponent.setButtonClickHandler(this._handleAddButtonClick);
-    this._boardPresenter.setNewPointFormCloseCallback(this.enableButton);
 
     if (prevButtonComponent === null) {
       return render(this._container, this._addButtonComponent);
