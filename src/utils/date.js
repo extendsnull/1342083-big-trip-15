@@ -45,4 +45,8 @@ export const isFutureDate = (date) => {
   return dayjs(now).isBefore(date, 'ms');
 };
 
+export const isOneYearDates = (firstDate, secondDate) => dayjs(firstDate).year() === dayjs(secondDate).year();
+
 export const isOneMonthDates = (firstDate, secondDate) => dayjs(firstDate).month() === dayjs(secondDate).month();
+
+export const isOneDayDates = (firstDate, secondDate) => dayjs(firstDate).day() === dayjs(secondDate).day();
