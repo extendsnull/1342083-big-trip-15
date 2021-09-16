@@ -4,10 +4,6 @@ const getControlsTemplate = (filters, activeFilter, isDisabled) => filters.map((
   const { type, name, count } = filter;
   const isChecked = type === activeFilter;
 
-  if (!isDisabled) {
-    isDisabled = Boolean(!count);
-  }
-
   return `
     <div class="trip-filters__filter">
       <input
@@ -17,7 +13,7 @@ const getControlsTemplate = (filters, activeFilter, isDisabled) => filters.map((
         name="trip-filter"
         value="${type}"
         ${isChecked ? 'checked' : ''}
-        ${isDisabled ? 'disabled' : ''}
+        ${isDisabled || count === 0 ? 'disabled' : ''}
       >
       <label
         class="trip-filters__filter-label"
