@@ -1,6 +1,6 @@
 import Smart from './smart';
 import { BLANK_DESTINATION, DateFieldId, HumanDateFormatPattern } from '../const';
-import { formatLabel, replaceNotNumberCharacter } from '../utils/common';
+import { formatLabel } from '../utils/common';
 import { formatDate, getISOString } from '../utils/date';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
@@ -287,7 +287,7 @@ const getPointFormTemplate = (point, destinations, offers, isEditMode) => {
             <input
               class="event__input event__input--price"
               id="event-price"
-              type="text"
+              type="number"
               name="event-price"
               value="${basePrice}"
               ${isDisabled ? 'disabled' : ''}
@@ -427,6 +427,18 @@ export default class PointForm extends Smart {
     };
   }
 
+  _validPriceValue(input) {
+    let basePrice = parseInt(input.value, 10);
+
+    if (basePrice <= 0) {
+      basePrice = 0;
+      input.value = basePrice;
+    }
+
+    this.updateState({ basePrice }, true);
+    this._validForm();
+  }
+
   _validForm() {
     const saveButton = this.getElement().querySelector('.event__save-btn');
     saveButton.disabled = !this._state.isValid;
@@ -495,22 +507,11 @@ export default class PointForm extends Smart {
   }
 
   _priceChangeHandler(evt) {
-    const basePrice = parseInt(evt.target.value, 10);
-
-    if (basePrice <= 0) {
-      evt.target.value = 0;
-    }
-
-    this.updateState({ basePrice }, true);
-    this._validForm();
+    this._validPriceValue(evt.target);
   }
 
   _priceInputHandler(evt) {
-    const basePrice = parseInt(replaceNotNumberCharacter(evt.target.value), 10);
-    evt.target.value = basePrice;
-
-    this.updateState({ basePrice }, true);
-    this._validForm();
+    this._validPriceValue(evt.target);
   }
 
   _typeChangeHandler(evt) {
