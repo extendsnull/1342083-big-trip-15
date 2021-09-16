@@ -1,4 +1,4 @@
-import PointsModel from './model/points';
+import PointsModel from '../model/points';
 
 const ApiUrl = {
   POINTS: 'points',
@@ -60,6 +60,16 @@ export default class Api {
 
   getOffers() {
     return this._load({ url: ApiUrl.OFFERS }).then(Api.toJSON);
+  }
+
+  sync(data) {
+    return this._load({
+      url: `${ApiUrl.POINTS}/sync`,
+      method: Method.POST,
+      body: JSON.stringify(data),
+      headers: Api.getJSONContentHeader(),
+    })
+      .then(Api.toJSON);
   }
 
   async _load(settings) {

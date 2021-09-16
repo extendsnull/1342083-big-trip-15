@@ -42,8 +42,7 @@ export const sortPointByDuration = (points) => {
       acc[type] = 0;
     }
 
-    acc[type] += getDuration(point.dateFrom, point.dateTo);
-
+    acc[type] += getDuration(point.dateFrom, point.dateTo).asMilliseconds();
     return acc;
   }, {});
 

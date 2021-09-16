@@ -36,7 +36,8 @@ export default class Info {
     const points = this._pointsModel.getPoints();
 
     if (this._isLoading || !points.length) {
-      return remove(this._infoComponent);
+      remove(this._infoComponent);
+      return this._infoComponent = null;
     }
 
     const prevInfoComponent = this._infoComponent;

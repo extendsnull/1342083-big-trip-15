@@ -12,7 +12,7 @@ export const getDatesDiff = (from, to) => dayjs(to).diff(dayjs(from));
 export const getDuration = (from, to) => dayjs.duration(getDatesDiff(from, to));
 
 export const humanizeDuration = (from, to) => {
-  const durationValue = getDuration(from, to);
+  const durationValue = to ? getDuration(from, to) : dayjs.duration(from);
   const days = Math.floor(durationValue.asDays());
   const hours = durationValue.hours();
   const minutes = durationValue.minutes();
@@ -45,4 +45,8 @@ export const isFutureDate = (date) => {
   return dayjs(now).isBefore(date, 'ms');
 };
 
+export const isOneYearDates = (firstDate, secondDate) => dayjs(firstDate).year() === dayjs(secondDate).year();
+
 export const isOneMonthDates = (firstDate, secondDate) => dayjs(firstDate).month() === dayjs(secondDate).month();
+
+export const isOneDayDates = (firstDate, secondDate) => dayjs(firstDate).day() === dayjs(secondDate).day();

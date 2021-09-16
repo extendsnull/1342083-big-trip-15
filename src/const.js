@@ -83,6 +83,13 @@ export const State = {
   SAVING: 'SAVING',
 };
 
+export const ToastMessage = {
+  ADD: 'You can\'t create new point offline',
+  DELETE: 'You can\'t delete point offline',
+  EDIT: 'You can\'t edit point offline',
+  SAVE: 'You can\'t save point offline',
+};
+
 export const TextSeparator = {
   TITLE: ' &mdash; ',
   DATES: '&nbsp;&mdash;&nbsp;',

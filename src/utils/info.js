@@ -1,6 +1,6 @@
 import { MAIN_TITLE_MAX_LENGTH, HumanDateFormatPattern, TextSeparator } from '../const';
 import { getArrayFirstItem, getArrayLastItem } from './array';
-import { formatDate, isOneMonthDates } from './date';
+import { formatDate, isOneDayDates, isOneMonthDates, isOneYearDates } from './date';
 import { sortByDateFrom, sortByDateTo } from './sort';
 
 const getTripDestinations = (points) => points.slice().sort(sortByDateFrom).map((point) => point.destination.name);
@@ -21,14 +21,23 @@ const formatTitle = (destinations) => {
 };
 
 const formatDates = (dateFrom, dateTo) => {
-  const secondDateFormatPattern =
-    isOneMonthDates(dateFrom, dateTo)
-      ? HumanDateFormatPattern.ONLY_DAY
-      : HumanDateFormatPattern.MONTH_DAY;
+  const isOneMonth = isOneYearDates(dateFrom, dateTo) && isOneMonthDates(dateFrom, dateTo);
+  const isOneDay = isOneMonth && isOneDayDates(dateFrom, dateTo);
+
+  if (isOneDay) {
+    return formatDate(dateFrom, HumanDateFormatPattern.MONTH_DAY);
+  }
+
+  if (isOneMonth) {
+    return [
+      formatDate(dateFrom, HumanDateFormatPattern.MONTH_DAY),
+      formatDate(dateTo, HumanDateFormatPattern.ONLY_DAY),
+    ].join(TextSeparator.DATES);
+  }
 
   return [
     formatDate(dateFrom, HumanDateFormatPattern.MONTH_DAY),
-    formatDate(dateTo, secondDateFormatPattern),
+    formatDate(dateTo, HumanDateFormatPattern.MONTH_DAY),
   ].join(TextSeparator.DATES);
 };
 

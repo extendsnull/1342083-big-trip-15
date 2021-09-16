@@ -1,6 +1,6 @@
 import Smart from './smart';
 import { BLANK_DESTINATION, DateFieldId, HumanDateFormatPattern } from '../const';
-import { formatLabel, replaceNotNumberCharacter } from '../utils/common';
+import { formatLabel } from '../utils/common';
 import { formatDate, getISOString } from '../utils/date';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
@@ -158,12 +158,14 @@ const getDestinationTemplate = (destination, hasDescription, hasPictures) => {
 
 const getDetailsTemplate = (point, availableOffers, isDisabled) => {
   const { type, destination } = point;
-  const offers = availableOffers
-    .get(type)
-    .map((offer) => ({
-      ...offer,
-      isSelected: Boolean(point.offers.find((pointOffer) => pointOffer.title === offer.title)),
-    }));
+  const offers = availableOffers.size
+    ? availableOffers
+      .get(type)
+      .map((offer) => ({
+        ...offer,
+        isSelected: Boolean(point.offers.find((pointOffer) => pointOffer.title === offer.title)),
+      }))
+    : [];
 
   const hasOffers = Boolean(offers.length);
   const hasDescription = Boolean(destination.description);
@@ -285,7 +287,7 @@ const getPointFormTemplate = (point, destinations, offers, isEditMode) => {
             <input
               class="event__input event__input--price"
               id="event-price"
-              type="text"
+              type="number"
               name="event-price"
               value="${basePrice}"
               ${isDisabled ? 'disabled' : ''}
@@ -425,6 +427,18 @@ export default class PointForm extends Smart {
     };
   }
 
+  _validPriceValue(input) {
+    let basePrice = parseInt(input.value, 10);
+
+    if (basePrice <= 0) {
+      basePrice = 0;
+      input.value = basePrice;
+    }
+
+    this.updateState({ basePrice }, true);
+    this._validForm();
+  }
+
   _validForm() {
     const saveButton = this.getElement().querySelector('.event__save-btn');
     saveButton.disabled = !this._state.isValid;
@@ -493,22 +507,11 @@ export default class PointForm extends Smart {
   }
 
   _priceChangeHandler(evt) {
-    const basePrice = Number(evt.target.value);
-
-    if (basePrice <= 0) {
-      evt.target.value = 0;
-    }
-
-    this.updateState({ basePrice }, true);
-    this._validForm();
+    this._validPriceValue(evt.target);
   }
 
   _priceInputHandler(evt) {
-    const basePrice = Number(replaceNotNumberCharacter(evt.target.value));
-    evt.target.value = basePrice;
-
-    this.updateState({ basePrice }, true);
-    this._validForm();
+    this._validPriceValue(evt.target);
   }
 
   _typeChangeHandler(evt) {
