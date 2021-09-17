@@ -7,6 +7,7 @@ const RESPONSE_SAFE_TYPE = 'basic';
 const APP_FILES = [
   '/',
   '/index.html',
+  '/favicon.ico',
   '/bundle.js',
   '/css/style.css',
   '/fonts/Montserrat-Bold.woff2',
