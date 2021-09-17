@@ -1,14 +1,3 @@
-import {getRandomIntInclusive} from './common';
-
-const RANDOM_SEPARATOR = 0.5;
-
-export const getRandomArrayItem = (array) => {
-  const randomIndex = getRandomIntInclusive(0, array.length - 1);
-  return array[randomIndex];
-};
-
-export const shuffleArray = (array) => array.slice().sort(() => Math.random() - RANDOM_SEPARATOR);
-
 export const getArrayFirstItem = (array) => {
   if (!Array.isArray(array)) {
     return null;

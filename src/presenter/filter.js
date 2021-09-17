@@ -39,10 +39,6 @@ export default class Filter {
     }));
   }
 
-  _clearFilter() {
-    remove(this._filterComponent);
-  }
-
   _renderFilter(isDisabled) {
     const prevFilterComponent = this._filterComponent;
     this._filterComponent = new FilterView(this._getFilters(), this._filterModel.getFilter(), isDisabled);
