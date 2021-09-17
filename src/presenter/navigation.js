@@ -1,42 +1,51 @@
 import NavigationView from '../view/navigation';
-import { NavigationItem, RenderPosition } from '../const';
-import { remove, render, replace } from '../utils/render';
+import {RenderPosition} from '../const';
+import {remove, render, replace} from '../utils/render';
+
+const NavigationItem = {
+  TABLE: 'table',
+  STATS: 'stats',
+};
 
 export default class Navigation {
   constructor(container, boardPresenter, statsPresenter, pointsModel, filterModel) {
     this._container = container;
-
     this._boardPresenter = boardPresenter;
     this._statsPresenter = statsPresenter;
-
     this._pointsModel = pointsModel;
     this._filterModel = filterModel;
 
-    this._navigationItems = [NavigationItem.TABLE, NavigationItem.STATS];
-    this._activeNavigationItem = NavigationItem.TABLE;
     this._navigationComponent = null;
 
-    this._handlePointsModelEvent = this._handlePointsModelEvent.bind(this);
-    this._handleFilterModelEvent = this._handleFilterModelEvent.bind(this);
-    this._handleNavigationItemClick = this._handleNavigationItemClick.bind(this);
+    this._navigationItems = [NavigationItem.TABLE, NavigationItem.STATS];
+    this._activeNavigationItem = NavigationItem.TABLE;
 
-    this._pointsModel.addObserver(this._handlePointsModelEvent);
-    this._filterModel.addObserver(this._handleFilterModelEvent);
+    this._bindContext();
+    this._addObservers();
   }
 
   init() {
     this._render();
   }
 
-  _renderTable() {
+  _bindContext() {
+    this._handlePointsModelEvent = this._handlePointsModelEvent.bind(this);
+    this._handleFilterModelEvent = this._handleFilterModelEvent.bind(this);
+    this._handleNavigationItemClick = this._handleNavigationItemClick.bind(this);
+  }
+
+  _addObservers() {
+    this._pointsModel.addObserver(this._handlePointsModelEvent);
+    this._filterModel.addObserver(this._handleFilterModelEvent);
+  }
+
+  _renderBoard() {
     this._boardPresenter.init();
-    this._statsPresenter.destroy();
     this._activeNavigationItem = NavigationItem.TABLE;
     this._render();
   }
 
   _renderStats() {
-    this._boardPresenter.destroy();
     this._statsPresenter.init();
     this._activeNavigationItem = NavigationItem.STATS;
     this._render();
@@ -49,17 +58,19 @@ export default class Navigation {
 
   _handleFilterModelEvent() {
     if (this._activeNavigationItem === NavigationItem.STATS) {
-      this._renderTable();
+      this._renderBoard();
     }
   }
 
   _handleNavigationItemClick(controlType) {
     switch (controlType) {
       case NavigationItem.TABLE: {
-        this._renderTable();
+        this._statsPresenter.destroy();
+        this._renderBoard();
         break;
       }
       case NavigationItem.STATS: {
+        this._boardPresenter.destroy();
         this._renderStats();
         break;
       }
@@ -78,5 +89,4 @@ export default class Navigation {
     replace(this._navigationComponent, prevNavigationComponent);
     remove(prevNavigationComponent);
   }
-
 }

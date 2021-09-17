@@ -20,7 +20,7 @@ export default class Api {
   }
 
   getPoints() {
-    return this._load({ url: ApiUrl.POINTS })
+    return this._load({url: ApiUrl.POINTS})
       .then(Api.toJSON)
       .then((response) => response.map(PointsModel.adaptToClient));
   }
@@ -55,11 +55,11 @@ export default class Api {
   }
 
   getDestinations() {
-    return this._load({ url: ApiUrl.DESTINATIONS }).then(Api.toJSON);
+    return this._load({url: ApiUrl.DESTINATIONS}).then(Api.toJSON);
   }
 
   getOffers() {
-    return this._load({ url: ApiUrl.OFFERS }).then(Api.toJSON);
+    return this._load({url: ApiUrl.OFFERS}).then(Api.toJSON);
   }
 
   sync(data) {
@@ -73,11 +73,11 @@ export default class Api {
   }
 
   async _load(settings) {
-    const { url, method = Method.GET, body = null, headers = new Headers() } = settings;
+    const {url, method = Method.GET, body = null, headers = new Headers()} = settings;
     headers.append('Authorization', this._authorization);
 
     try {
-      const response = await fetch(`${this._baseUrl}/${url}`, { method, body, headers });
+      const response = await fetch(`${this._baseUrl}/${url}`, {method, body, headers});
       Api.checkStatus(response);
       return response;
     } catch (err) {
@@ -98,7 +98,7 @@ export default class Api {
   }
 
   static getJSONContentHeader() {
-    return new Headers({ 'Content-Type': 'application/json' });
+    return new Headers({'Content-Type': 'application/json'});
   }
 
   static toJSON(response) {

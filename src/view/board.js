@@ -6,7 +6,7 @@ const getBoardTemplate = () => (`
   </section>`);
 
 export default class Board extends Abstract {
-  _getTemplate() {
+  getTemplate() {
     return getBoardTemplate();
   }
 }

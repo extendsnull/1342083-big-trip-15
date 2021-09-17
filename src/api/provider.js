@@ -1,5 +1,5 @@
 import PointsModel from '../model/points';
-import { isOnline } from '../utils/common';
+import {isOnline} from '../utils/common';
 
 const FailedMessage = {
   ADD_POINT: 'Add point failed',
@@ -9,12 +9,13 @@ const FailedMessage = {
   GET_OFFERS: 'Get offers failed',
 };
 
-const getSyncedPoints = (items) => items.filter(({ success }) => success).map(({ payload }) => payload.point);
+const getSyncedPoints = (items) => items.filter(({success}) => success).map(({payload}) => payload.point);
 
 const createStoreStructure = (items) => items
-  .reduce((acc, current) => Object.assign({}, acc, {
-    [current.id]: current,
-  }), {});
+  .reduce((acc, current) => {
+    const newItem = {[current.id]: current};
+    return {...acc, ...newItem};
+  }, {});
 
 export default class Provider {
   constructor(api, store) {

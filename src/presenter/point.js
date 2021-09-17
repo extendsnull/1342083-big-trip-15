@@ -1,23 +1,27 @@
 import PointView from '../view/point';
 import PointFormView from '../view/point-form';
-import { Mode, State, ToastMessage, UpdateType, UserAction } from '../const';
-import { isEscKey, isOnline } from '../utils/common';
-import { render, replace, remove } from '../utils/render';
-import { toast } from '../utils/toast';
+import {State, ToastMessage, UpdateType, UserAction} from '../const';
+import {isEscKey, isOnline} from '../utils/common';
+import {render, replace, remove} from '../utils/render';
+import {toast} from '../utils/toast';
+
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING',
+};
 
 export default class Point {
   constructor(container, destinationsModel, offersModel, changeData, changeMode) {
     this._container = container;
-
     this._destinationsModel = destinationsModel;
     this._offersModel = offersModel;
+    this._changeData = changeData;
+    this._changeMode = changeMode;
 
-    this._mode = Mode.DEFAULT;
     this._pointComponent = null;
     this._pointFormComponent = null;
 
-    this._changeData = changeData;
-    this._changeMode = changeMode;
+    this._mode = Mode.DEFAULT;
 
     this._bindContext();
   }
@@ -83,13 +87,13 @@ export default class Point {
   }
 
   _bindContext() {
-    this._handleDeleteClick = this._handleDeleteClick.bind(this);
     this._handleEditClick = this._handleEditClick.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
+    this._handleDeleteClick = this._handleDeleteClick.bind(this);
     this._handleResetClick = this._handleResetClick.bind(this);
-    this._handleSubmit = this._handleSubmit.bind(this);
-    this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
+    this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._resetPointFormState = this._resetPointFormState.bind(this);
+    this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
 
   _create() {
@@ -97,27 +101,18 @@ export default class Point {
       this._point,
       this._offersModel.getOffers(),
     );
+    this._pointComponent.setEditClickHandler(this._handleEditClick);
+    this._pointComponent.setFavoriteClickHandler(this._handleFavoriteClick);
+
     this._pointFormComponent = new PointFormView(
       this._point,
       this._destinationsModel.getDestinations(),
       this._offersModel.getOffers(this._point.type),
       true,
     );
-
-    this._pointComponent.setEditClickHandler(this._handleEditClick);
-    this._pointComponent.setFavoriteClickHandler(this._handleFavoriteClick);
     this._pointFormComponent.setDeleteClickHandler(this._handleDeleteClick);
     this._pointFormComponent.setResetClickHandler(this._handleResetClick);
-    this._pointFormComponent.setSubmitHandler(this._handleSubmit);
-  }
-
-  _handleDeleteClick(point) {
-    if (!isOnline()) {
-      return toast(ToastMessage.DELETE);
-    }
-
-    this._changeData(UserAction.DELETE_POINT, UpdateType.MAJOR, point);
-    document.removeEventListener('keydown', this._escKeyDownHandler);
+    this._pointFormComponent.setSubmitHandler(this._handleFormSubmit);
   }
 
   _handleEditClick() {
@@ -138,11 +133,20 @@ export default class Point {
     this._changeData(UserAction.UPDATE_POINT, UpdateType.PATCH, update);
   }
 
+  _handleDeleteClick(point) {
+    if (!isOnline()) {
+      return toast(ToastMessage.DELETE);
+    }
+
+    this._changeData(UserAction.DELETE_POINT, UpdateType.MAJOR, point);
+    document.removeEventListener('keydown', this._escKeyDownHandler);
+  }
+
   _handleResetClick() {
     this._reset();
   }
 
-  _handleSubmit(updatedPoint) {
+  _handleFormSubmit(updatedPoint) {
     if (!isOnline()) {
       return toast(ToastMessage.SAVE);
     }

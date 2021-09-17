@@ -1,11 +1,16 @@
 import Abstract from './abstract';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import { ChartType } from '../const';
-import { humanizeDuration } from '../utils/date';
+import {humanizeDuration} from '../utils/date';
 
 const CHART_MIN_HEIGHT = 180;
 const BAR_HEIGHT = 55;
+
+const ChartType = {
+  MONEY: 'MONEY',
+  TIME_SPEND: 'TIME-SPEND',
+  TYPE: 'TYPE',
+};
 
 const getChartSettings = (title, sortedPoints, formatter) => {
   const labels = Object.keys(sortedPoints).map((type) => type.toUpperCase());
@@ -26,9 +31,7 @@ const getChartSettings = (title, sortedPoints, formatter) => {
     options: {
       plugins: {
         datalabels: {
-          font: {
-            size: 13,
-          },
+          font: {size: 13},
           color: '#000000',
           anchor: 'end',
           align: 'start',
@@ -98,7 +101,7 @@ export default class Stats extends Abstract {
     this._init();
   }
 
-  _getTemplate() {
+  getTemplate() {
     return getStatsTemplate();
   }
 

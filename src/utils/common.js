@@ -1,4 +1,4 @@
-import { KeyName } from '../const';
+const ESC_KEYNAME = 'Escape';
 
 export const addLeadZero = (value) => String(value).padStart(2, '0');
 
@@ -18,6 +18,6 @@ export const getRandomIntInclusive = (min = 0, max = 1) => {
 
 export const getRandomBoolean = () => Boolean(getRandomIntInclusive());
 
-export const isEscKey = (key) => KeyName.ESC === key;
+export const isEscKey = (key) => key === ESC_KEYNAME;
 
 export const isOnline = () => window.navigator.onLine;

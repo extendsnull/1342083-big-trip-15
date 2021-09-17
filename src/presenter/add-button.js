@@ -1,8 +1,8 @@
 import AddButtonView from '../view/add-button';
-import { ToastMessage } from '../const';
-import { isOnline } from '../utils/common';
-import { remove, render, replace } from '../utils/render';
-import { toast } from '../utils/toast';
+import {ToastMessage} from '../const';
+import {isOnline} from '../utils/common';
+import {remove, render, replace} from '../utils/render';
+import {toast} from '../utils/toast';
 
 export default class AddButton {
   constructor(container) {

@@ -1,5 +1,5 @@
-import { formatLabel } from '../utils/common';
 import Abstract from './abstract';
+import {formatLabel} from '../utils/common';
 
 const getItemTemplate = (type, activeItem, isDisabled) => {
   const label = formatLabel(type);
@@ -40,7 +40,7 @@ export default class Navigation extends Abstract {
     this._itemClickHandler = this._itemClickHandler.bind(this);
   }
 
-  _getTemplate() {
+  getTemplate() {
     return getNavigationTemplate(this._navigationItems, this._activeItem, this._isDisabled);
   }
 
@@ -56,7 +56,7 @@ export default class Navigation extends Abstract {
       return;
     }
 
-    const { type } = evt.target.dataset;
+    const {type} = evt.target.dataset;
 
     if (type !== this._activeItem) {
       this._callback.itemClickHandler(type);

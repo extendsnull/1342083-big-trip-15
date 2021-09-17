@@ -1,5 +1,24 @@
 import AbstractObserver from '../utils/abstract-observer';
-import { getISOString } from '../utils/date';
+import {getISOString} from '../utils/date';
+
+const ErrorMessage = {
+  DELETE: 'Can\'t delete unexisting point',
+  UPDATE: 'Can\'t update unexisting point',
+};
+
+const ClientKey = {
+  BASE_PRICE: 'basePrice',
+  DATE_FROM: 'dateFrom',
+  DATE_TO: 'dateTo',
+  IS_FAVORITE: 'isFavorite',
+};
+
+const ServerKey = {
+  BASE_PRICE: 'base_price',
+  DATE_FROM: 'date_from',
+  DATE_TO: 'date_to',
+  IS_FAVORITE: 'is_favorite',
+};
 
 export default class Points extends AbstractObserver {
   constructor() {
@@ -8,10 +27,7 @@ export default class Points extends AbstractObserver {
   }
 
   addPoint(updateType, update) {
-    this._points = [
-      update,
-      ...this._points,
-    ];
+    this._points = [update, ...this._points];
     this._notify(updateType, update);
   }
 
@@ -19,7 +35,7 @@ export default class Points extends AbstractObserver {
     const targetIndex = this._getPointIndex(update);
 
     if (targetIndex === -1) {
-      throw new Error('Can\'t delete unexisting point');
+      throw new Error(ErrorMessage.DELETE);
     }
 
     this._points = [
@@ -33,7 +49,7 @@ export default class Points extends AbstractObserver {
     const targetIndex = this._getPointIndex(update);
 
     if (targetIndex === -1) {
-      throw new Error('Can\'t update unexisting point');
+      throw new Error(ErrorMessage.UPDATE);
     }
 
     this._points = [
@@ -58,35 +74,40 @@ export default class Points extends AbstractObserver {
   }
 
   static adaptToClient(point) {
-    const adaptedPoint = Object.assign(
-      {},
-      point,
-      {
-        basePrice: point['base_price'],
-        dateFrom: getISOString(point['date_from']),
-        dateTo: getISOString(point['date_to']),
-        isFavorite: point['is_favorite'],
-      },
-    );
+    const adaptedData = {
+      [ClientKey.BASE_PRICE]: point[ServerKey.BASE_PRICE],
+      [ClientKey.DATE_FROM]: getISOString(point[ServerKey.DATE_FROM]),
+      [ClientKey.DATE_TO]: getISOString(point[ServerKey.DATE_TO]),
+      [ClientKey.IS_FAVORITE]: point[ServerKey.IS_FAVORITE],
+    };
 
-    ['base_price', 'date_from', 'date_to', 'is_favorite'].forEach((key) => delete adaptedPoint[key]);
+    const adaptedPoint = {...point, ...adaptedData};
+    [
+      ServerKey.BASE_PRICE,
+      ServerKey.DATE_FROM,
+      ServerKey.DATE_TO,
+      ServerKey.IS_FAVORITE,
+    ].forEach((key) => delete adaptedPoint[key]);
 
     return adaptedPoint;
   }
 
   static adaptToServer(point) {
-    const adaptedPoint = Object.assign(
-      {},
-      point,
-      {
-        'base_price': point.basePrice,
-        'date_from': getISOString(point.dateFrom),
-        'date_to': getISOString(point.dateTo),
-        'is_favorite': point.isFavorite,
-      },
-    );
+    const adaptedData = {
+      [ServerKey.BASE_PRICE]: point[ClientKey.BASE_PRICE],
+      [ServerKey.DATE_FROM]: getISOString(point[ClientKey.DATE_FROM]),
+      [ServerKey.DATE_TO]: getISOString(point[ClientKey.DATE_TO]),
+      [ServerKey.IS_FAVORITE]: point[ClientKey.IS_FAVORITE],
+    };
 
-    ['basePrice', 'dateFrom', 'dateTo', 'isFavorite'].forEach((key) => delete adaptedPoint[key]);
+    const adaptedPoint = {...point, ...adaptedData};
+    [
+      ClientKey.BASE_PRICE,
+      ClientKey.DATE_FROM,
+      ClientKey.DATE_TO,
+      ClientKey.IS_FAVORITE,
+    ].forEach((key) => delete adaptedPoint[key]);
+
     return adaptedPoint;
   }
 }

@@ -1,7 +1,7 @@
 import Abstract from './abstract';
 
 const getControlsTemplate = (filters, activeFilter, isDisabled) => filters.map((filter) => {
-  const { type, name, count } = filter;
+  const {type, name, count} = filter;
   const isChecked = type === activeFilter;
 
   return `
@@ -56,7 +56,7 @@ export default class Filter extends Abstract {
     this._filterTypeChangeHandler = this._filterTypeChangeHandler.bind(this);
   }
 
-  _getTemplate() {
+  getTemplate() {
     return getFilterTemplate(this._filters, this._activeFilter, this._isDisabled);
   }
 

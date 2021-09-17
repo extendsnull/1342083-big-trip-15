@@ -1,5 +1,6 @@
-import { RANDOM_SEPARATOR } from '../const';
-import { getRandomIntInclusive } from './common';
+import {getRandomIntInclusive} from './common';
+
+const RANDOM_SEPARATOR = 0.5;
 
 export const getRandomArrayItem = (array) => {
   const randomIndex = getRandomIntInclusive(0, array.length - 1);

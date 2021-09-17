@@ -14,7 +14,7 @@ export default class AddButton extends Abstract {
     this._buttonClickHandler = this._buttonClickHandler.bind(this);
   }
 
-  _getTemplate() {
+  getTemplate() {
     return getAddButtonTemplate(this._isDisabled);
   }
 
