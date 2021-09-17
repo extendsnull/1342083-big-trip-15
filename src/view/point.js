@@ -1,7 +1,12 @@
 import Abstract from './abstract';
-import { HumanDateFormatPattern, MachineDateFormatPattern } from '../const';
-import { formatLabel } from '../utils/common';
-import { formatDate, getHumanizedDuration } from '../utils/date';
+import {HumanDateFormatPattern} from '../const';
+import {formatLabel} from '../utils/common';
+import {formatDate, getHumanizedDuration} from '../utils/date';
+
+const MachineDateFormatPattern = {
+  DEFAULT: 'YYYY-MM-DD',
+  WITH_HOURS: 'YYYY-MM-DDTHH:mm',
+};
 
 const getOffersTemplate = (offers, hasOffers) => {
   if (hasOffers) {
@@ -25,7 +30,7 @@ const getOffersTemplate = (offers, hasOffers) => {
 };
 
 const getPointTemplate = (point, offers) => {
-  const { type, destination, dateFrom, dateTo, basePrice, isFavorite } = point;
+  const {type, destination, dateFrom, dateTo, basePrice, isFavorite} = point;
 
   const selectedOffers = offers.size
     ? offers.get(type).slice().filter((offer) => point.offers.find((item) => item.title === offer.title))
@@ -111,7 +116,7 @@ export default class Point extends Abstract {
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
   }
 
-  _getTemplate() {
+  getTemplate() {
     return getPointTemplate(this._point, this._offers);
   }
 

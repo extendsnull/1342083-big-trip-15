@@ -1,4 +1,4 @@
-import { createElement } from '../utils/render';
+import {createElement} from '../utils/render';
 
 const SHAKE_ANIMATION_CLASSNAME = 'shake';
 
@@ -14,7 +14,7 @@ export default class Abstract {
 
   getElement() {
     if (!this._element) {
-      this._element = createElement(this._getTemplate());
+      this._element = createElement(this.getTemplate());
     }
 
     return this._element;
@@ -22,6 +22,10 @@ export default class Abstract {
 
   removeElement() {
     this._element = null;
+  }
+
+  getTemplate() {
+    throw new Error(`Non-abstract class '${this.constructor.name}' does not implement inherited abstract member 'getTemplate' from class 'Abstract'.`);
   }
 
   shake(callback = () => {}) {
@@ -33,9 +37,5 @@ export default class Abstract {
     });
 
     element.classList.add(SHAKE_ANIMATION_CLASSNAME);
-  }
-
-  _getTemplate() {
-    throw new Error(`Non-abstract class '${this.constructor.name}' does not implement inherited abstract member '_getTemplate' from class 'Abstract'.`);
   }
 }

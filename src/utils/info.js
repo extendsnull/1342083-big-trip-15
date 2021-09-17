@@ -1,7 +1,14 @@
-import { MAIN_TITLE_MAX_LENGTH, HumanDateFormatPattern, TextSeparator } from '../const';
-import { getArrayFirstItem, getArrayLastItem } from './array';
-import { formatDate, isOneDayDates, isOneMonthDates, isOneYearDates } from './date';
-import { sortByDateFrom, sortByDateTo } from './sort';
+import {HumanDateFormatPattern} from '../const';
+import {getArrayFirstItem, getArrayLastItem} from './array';
+import {formatDate, isOneDayDates, isOneMonthDates, isOneYearDates} from './date';
+import {sortByDateFrom, sortByDateTo} from './sort';
+
+const MAIN_TITLE_MAX_LENGTH = 3;
+
+const TextSeparator = {
+  TITLE: ' &mdash; ',
+  DATES: '&nbsp;&mdash;&nbsp;',
+};
 
 const getTripDestinations = (points) => points.slice().sort(sortByDateFrom).map((point) => point.destination.name);
 
@@ -42,15 +49,14 @@ const formatDates = (dateFrom, dateTo) => {
 };
 
 const getTripTerms = (points) => {
-  const { dateFrom } = getArrayFirstItem(points.slice().sort(sortByDateFrom));
-  const { dateTo } = getArrayFirstItem(points.slice().sort(sortByDateTo));
+  const {dateFrom} = getArrayFirstItem(points.slice().sort(sortByDateFrom));
+  const {dateTo} = getArrayFirstItem(points.slice().sort(sortByDateTo));
 
   return formatDates(dateFrom, dateTo);
 };
 
 const getTotalCost = (points) => points.reduce((acc, point) => {
-  const offersPrice =
-    point.offers.reduce((offerAcc, offer) => offerAcc + offer.price, 0);
+  const offersPrice = point.offers.reduce((offerAcc, offer) => offerAcc + offer.price, 0);
   return acc + point.basePrice + offersPrice;
 }, 0);
 
@@ -59,5 +65,5 @@ export const getTripInfo = (points) => {
   const terms = getTripTerms(points);
   const totalCost = getTotalCost(points);
 
-  return { title, terms, totalCost };
+  return {title, terms, totalCost};
 };

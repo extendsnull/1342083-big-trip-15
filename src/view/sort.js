@@ -1,6 +1,6 @@
 import Abstract from './abstract';
-import { SortType } from '../const';
-import { formatLabel } from '../utils/common';
+import {SortType} from '../const';
+import {formatLabel} from '../utils/common';
 
 const SORT_CONTROLS = [SortType.DAY, SortType.EVENT, SortType.TIME, SortType.PRICE, SortType.OFFER];
 const DISABLED_CONTROLS = [SortType.EVENT, SortType.OFFER];
@@ -48,7 +48,7 @@ export default class Sort extends Abstract {
     this._sortTypeChangeHandler = this._sortTypeChangeHandler.bind(this);
   }
 
-  _getTemplate() {
+  getTemplate() {
     return getSortTemplate(this._activeSortType);
   }
 

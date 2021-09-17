@@ -1,16 +1,16 @@
 import InfoView from '../view/info';
-import { RenderPosition, UpdateType } from '../const';
-import { getTripInfo } from '../utils/info';
-import { remove, render, replace } from '../utils/render';
+import {RenderPosition, UpdateType} from '../const';
+import {getTripInfo} from '../utils/info';
+import {remove, render, replace} from '../utils/render';
 
 export default class Info {
   constructor(container, pointsModel) {
-    this._isLoading = true;
-
     this._container = container;
     this._pointsModel = pointsModel;
 
     this._infoComponent = null;
+
+    this._isLoading = true;
 
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._pointsModel.addObserver(this._handleModelEvent);

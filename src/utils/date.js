@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
-import { HumanDateFormatPattern } from '../const';
-import { addLeadZero } from './common';
+import {HumanDateFormatPattern} from '../const';
+import {addLeadZero} from './common';
 
 dayjs.extend(duration);
 

@@ -4,6 +4,7 @@ import {RenderPosition} from '../const';
 export const createElement = (html) => {
   const templateParent = document.createElement('div');
   templateParent.innerHTML = html;
+
   return templateParent.firstElementChild;
 };
 

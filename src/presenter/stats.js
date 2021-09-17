@@ -1,6 +1,6 @@
 import StatsView from '../view/stats';
-import { remove, render } from '../utils/render';
-import { sortPointByDuration, sortPointsByMoney, sortPointsByType } from '../utils/stats';
+import {remove, render} from '../utils/render';
+import {sortPointByDuration, sortPointsByMoney, sortPointsByType} from '../utils/stats';
 
 export default class Stats {
   constructor(container, pointsModel, filterPresenter) {
@@ -27,7 +27,6 @@ export default class Stats {
   init() {
     this._statsComponent = new StatsView(this._getPoints());
     render(this._container, this._statsComponent);
-
     this._filterPresenter.init(true);
   }
 

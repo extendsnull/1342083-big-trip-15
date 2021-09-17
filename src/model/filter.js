@@ -1,10 +1,9 @@
 import AbstractObserver from '../utils/abstract-observer';
-import { FilterType } from '../const';
+import {FilterType} from '../const';
 
 export default class Filter extends AbstractObserver {
   constructor() {
     super();
-
     this._activeFilter = FilterType.EVERYTHING;
   }
 

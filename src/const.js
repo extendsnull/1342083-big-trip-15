@@ -6,23 +6,9 @@ export const BLANK_DESTINATION = {
 
 export const BLANK_POINT = {
   basePrice: 0,
-  destination: { ...BLANK_DESTINATION },
+  destination: {...BLANK_DESTINATION},
   isFavorite: false,
   offers: [],
-};
-
-export const MAIN_TITLE_MAX_LENGTH = 3;
-export const RANDOM_SEPARATOR = 0.5;
-
-export const ChartType = {
-  MONEY: 'MONEY',
-  TIME_SPEND: 'TIME-SPEND',
-  TYPE: 'TYPE',
-};
-
-export const DateFieldId = {
-  FROM: 'event-start-time',
-  TO: 'event-end-time',
 };
 
 export const FilterType = {
@@ -37,31 +23,6 @@ export const HumanDateFormatPattern = {
   ONLY_DAY: 'DD',
   MONTH_DAY: 'MMM DD',
   ONLY_TIME: 'HH:mm',
-};
-
-export const MachineDateFormatPattern = {
-  DEFAULT: 'YYYY-MM-DD',
-  WITH_HOURS: 'YYYY-MM-DDTHH:mm',
-};
-
-export const KeyName = {
-  ESC: 'Escape',
-};
-
-export const Mode = {
-  DEFAULT: 'DEFAULT',
-  EDITING: 'EDITING',
-};
-
-export const NavigationItem = {
-  TABLE: 'table',
-  STATS: 'stats',
-};
-
-export const NoPointsMessage = {
-  EVERYTHING: 'Click New Event to create your first point',
-  PAST: 'There are no past events now',
-  FUTURE: 'There are no future events now',
 };
 
 export const RenderPosition = {
@@ -88,11 +49,6 @@ export const ToastMessage = {
   DELETE: 'You can\'t delete point offline',
   EDIT: 'You can\'t edit point offline',
   SAVE: 'You can\'t save point offline',
-};
-
-export const TextSeparator = {
-  TITLE: ' &mdash; ',
-  DATES: '&nbsp;&mdash;&nbsp;',
 };
 
 export const UpdateType = {

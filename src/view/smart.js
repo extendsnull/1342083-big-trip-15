@@ -12,7 +12,7 @@ export default class Smart extends Abstract {
     }
 
     const oldState = this._state;
-    this._state = { ...oldState, ...stateUpdate };
+    this._state = {...oldState, ...stateUpdate};
 
     if (updateStateOnly) {
       return;
@@ -21,8 +21,8 @@ export default class Smart extends Abstract {
     this._updateElement();
   }
 
-  _restoreHandlers() {
-    throw new Error(`Non-abstract class '${this.constructor.name}' does not implement inherited abstract member '_restoreHandlers' from class 'Smart'.`);
+  restoreHandlers() {
+    throw new Error(`Non-abstract class '${this.constructor.name}' does not implement inherited abstract member 'restoreHandlers' from class 'Smart'.`);
   }
 
   _updateElement() {
@@ -34,7 +34,7 @@ export default class Smart extends Abstract {
 
       const newElement = this.getElement();
       parent.replaceChild(newElement, oldElement);
-      this._restoreHandlers();
+      this.restoreHandlers();
     }
   }
 }

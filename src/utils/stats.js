@@ -1,4 +1,4 @@
-import { getDuration } from '../utils/date';
+import {getDuration} from '../utils/date';
 
 export const sortPointsByMoney = (points) => {
   const typeToBasePrice = points.reduce((acc, point) => {

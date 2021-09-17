@@ -1,8 +1,8 @@
 import PointFormView from '../view/point-form';
-import { BLANK_POINT, RenderPosition, UpdateType, UserAction } from '../const';
-import { isEscKey } from '../utils/common';
-import { getArrayFirstItem } from '../utils/array';
-import { remove, render } from '../utils/render';
+import {BLANK_POINT, RenderPosition, UpdateType, UserAction} from '../const';
+import {isEscKey} from '../utils/common';
+import {getArrayFirstItem} from '../utils/array';
+import {remove, render} from '../utils/render';
 
 const getBlankPoint = (offers) => {
   const currentDate = Date.now();
@@ -20,10 +20,9 @@ export default class NewPoint {
   constructor(destinationsModel, offersModel, changeData) {
     this._destinationsModel = destinationsModel;
     this._offersModel = offersModel;
-
-    this._pointFormComponent = null;
     this._changeData = changeData;
 
+    this._pointFormComponent = null;
     this._formCloseCallback = null;
 
     this._bindContext();

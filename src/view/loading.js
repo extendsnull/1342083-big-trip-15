@@ -7,7 +7,7 @@ const getLoadingTemplate = () => (`
   </section>`);
 
 export default class Loading extends Abstract {
-  _getTemplate() {
+  getTemplate() {
     return getLoadingTemplate();
   }
 }

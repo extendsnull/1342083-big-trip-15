@@ -1,9 +1,15 @@
 import Smart from './smart';
-import { BLANK_DESTINATION, DateFieldId, HumanDateFormatPattern } from '../const';
-import { formatLabel } from '../utils/common';
-import { formatDate, getISOString } from '../utils/date';
+import {BLANK_DESTINATION, HumanDateFormatPattern} from '../const';
+import {formatLabel} from '../utils/common';
+import {formatDate, getISOString} from '../utils/date';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
+
+const DATEPICKER_BASE_SETTINGS = {
+  dateFormat: HumanDateFormatPattern.DEFAULT_FLATPICKR,
+  enableTime: true,
+  'time_24hr': true,
+};
 
 const ButtonText = {
   CANCEL: 'Cancel',
@@ -13,10 +19,16 @@ const ButtonText = {
   SAVING: 'Saving...',
 };
 
-const DATEPICKER_BASE_SETTINGS = {
-  dateFormat: HumanDateFormatPattern.DEFAULT_FLATPICKR,
-  enableTime: true,
-  'time_24hr': true,
+const DateFieldId = {
+  FROM: 'event-start-time',
+  TO: 'event-end-time',
+};
+
+const StateKey = {
+  IS_VALID: 'isValid',
+  IS_DISABLED: 'isDisabled',
+  IS_SAVING: 'isSaving',
+  IS_DELETING: 'isDeleting',
 };
 
 const getTypeItemsTemplate = (types, currentType) => {
@@ -73,7 +85,7 @@ const getRollupButtonTemplate = (isDisabled) => (`
 const getOffersTemplate = (offers, hasOffers, isDisabled) => {
   if (hasOffers) {
     const template = offers.map((offer, index) => {
-      const { title, price, isSelected } = offer;
+      const {title, price, isSelected} = offer;
       return `
         <div class="event__offer-selector">
           <input
@@ -119,7 +131,7 @@ const getDescriptionTemplate = (description, hasDescription) => {
 const getPicturesTemplate = (pictures, hasPictures) => {
   if (hasPictures) {
     const template = pictures.map((picture) => {
-      const { src, description } = picture;
+      const {src, description} = picture;
       return `
         <img
           class="event__photo"
@@ -143,7 +155,7 @@ const getDestinationTemplate = (destination, hasDescription, hasPictures) => {
   const hasDestinationInfo = hasDescription || hasPictures;
 
   if (hasDestinationInfo) {
-    const { description, pictures } = destination;
+    const {description, pictures} = destination;
 
     return `
       <section class="event__section event__section--destination">
@@ -157,7 +169,7 @@ const getDestinationTemplate = (destination, hasDescription, hasPictures) => {
 };
 
 const getDetailsTemplate = (point, availableOffers, isDisabled) => {
-  const { type, destination } = point;
+  const {type, destination} = point;
   const offers = availableOffers.size
     ? availableOffers
       .get(type)
@@ -185,7 +197,7 @@ const getDetailsTemplate = (point, availableOffers, isDisabled) => {
 };
 
 const getPointFormTemplate = (point, destinations, offers, isEditMode) => {
-  const { type, destination, dateFrom, dateTo, basePrice, isValid, isDisabled, isSaving, isDeleting } = point;
+  const {type, destination, dateFrom, dateTo, basePrice, isValid, isDisabled, isSaving, isDeleting} = point;
 
   const types = Array.from(offers.keys());
   const cities = Array.from(destinations.keys());
@@ -313,11 +325,10 @@ export default class PointForm extends Smart {
   constructor(point, destinations, offers, isEditMode = false) {
     super();
     this._state = PointForm.parsePointToState(point);
-
     this._destinations = destinations;
     this._offers = offers;
-
     this._isEditMode = isEditMode;
+
     this._datepickers = null;
 
     this._bindContext();
@@ -332,11 +343,11 @@ export default class PointForm extends Smart {
     }
   }
 
-  _getTemplate() {
+  getTemplate() {
     return getPointFormTemplate(this._state, this._destinations, this._offers, this._isEditMode);
   }
 
-  _restoreHandlers() {
+  restoreHandlers() {
     this._setInnerHandlers();
     this.setDeleteClickHandler(this._callback.deleteClick);
     this.setResetClickHandler(this._callback.resetClick);
@@ -435,7 +446,7 @@ export default class PointForm extends Smart {
       input.value = basePrice;
     }
 
-    this.updateState({ basePrice }, true);
+    this.updateState({basePrice}, true);
     this._validForm();
   }
 
@@ -460,17 +471,17 @@ export default class PointForm extends Smart {
 
   _dateChangeHandler(selectedDates, dateStr, instance) {
     const [date] = selectedDates;
-    const { id } = instance.element;
+    const {id} = instance.element;
     const value = getISOString(date);
 
     switch (id) {
       case DateFieldId.FROM: {
-        this.updateState({ dateFrom: value }, true);
+        this.updateState({dateFrom: value}, true);
         this._datepickers.to.set('minDate', value);
         break;
       }
       case DateFieldId.TO: {
-        this.updateState({ dateTo: value }, true);
+        this.updateState({dateTo: value}, true);
         this._datepickers.from.set('maxDate', value);
         break;
       }
@@ -485,8 +496,8 @@ export default class PointForm extends Smart {
   }
 
   _destinationChangeHandler(evt) {
-    const destination = this._destinations.get(evt.target.value) || { ...BLANK_DESTINATION };
-    this.updateState({ destination });
+    const destination = this._destinations.get(evt.target.value) || {...BLANK_DESTINATION};
+    this.updateState({destination});
     this._validForm();
   }
 
@@ -503,7 +514,7 @@ export default class PointForm extends Smart {
   _offerChangeHandler(evt) {
     const update = this._offers.get(this._state.type).find((offer) => offer.title === evt.target.value);
     const offers = PointForm.updateOffers(this._state.offers, update);
-    this.updateState({ offers }, true);
+    this.updateState({offers}, true);
   }
 
   _priceChangeHandler(evt) {
@@ -517,22 +528,28 @@ export default class PointForm extends Smart {
   _typeChangeHandler(evt) {
     evt.preventDefault();
     const type = evt.target.value;
-    this.updateState({ type, offers: [] });
+    this.updateState({type, offers: []});
   }
 
   static parsePointToState(point) {
     return {
       ...point,
-      isValid: Boolean(point.destination.name && point.basePrice && point.dateFrom && point.dateTo),
-      isDisabled: false,
-      isSaving: false,
-      isDeleting: false,
+      [StateKey.IS_VALID]: Boolean(point.destination.name && point.basePrice && point.dateFrom && point.dateTo),
+      [StateKey.IS_DISABLED]: false,
+      [StateKey.IS_SAVING]: false,
+      [StateKey.IS_DELETING]: false,
     };
   }
 
   static parseStateToPoint(state) {
-    const newPoint = { ...state };
-    ['isValid', 'isDisabled', 'isSaving', 'isDeleting'].forEach((key) => delete newPoint[key]);
+    const newPoint = {...state};
+    [
+      StateKey.IS_VALID,
+      StateKey.IS_DISABLED,
+      StateKey.IS_SAVING,
+      StateKey.IS_DELETING,
+    ].forEach((key) => delete newPoint[key]);
+
     return newPoint;
   }
 

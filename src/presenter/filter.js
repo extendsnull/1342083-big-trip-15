@@ -1,8 +1,8 @@
 import FilterView from '../view/filter';
-import { FilterType, UpdateType } from '../const';
-import { formatLabel } from '../utils/common';
-import { filter } from '../utils/filter';
-import { remove, render, replace } from '../utils/render';
+import {FilterType, UpdateType} from '../const';
+import {formatLabel} from '../utils/common';
+import {filter} from '../utils/filter';
+import {remove, render, replace} from '../utils/render';
 
 export default class Filter {
   constructor(container, filterModel, pointsModel) {
@@ -18,6 +18,16 @@ export default class Filter {
 
   init(isDisabled = false) {
     this._renderFilter(isDisabled);
+  }
+
+  _bindContext() {
+    this._handleModelEvent = this._handleModelEvent.bind(this);
+    this._handleFilterTypeChange = this._handleFilterTypeChange.bind(this);
+  }
+
+  _addObservers() {
+    this._filterModel.addObserver(this._handleModelEvent);
+    this._pointsModel.addObserver(this._handleModelEvent);
   }
 
   _getFilters() {
@@ -44,16 +54,6 @@ export default class Filter {
 
     replace(this._filterComponent, prevFilterComponent);
     remove(prevFilterComponent);
-  }
-
-  _bindContext() {
-    this._handleModelEvent = this._handleModelEvent.bind(this);
-    this._handleFilterTypeChange = this._handleFilterTypeChange.bind(this);
-  }
-
-  _addObservers() {
-    this._filterModel.addObserver(this._handleModelEvent);
-    this._pointsModel.addObserver(this._handleModelEvent);
   }
 
   _handleModelEvent() {

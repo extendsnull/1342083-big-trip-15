@@ -6,25 +6,20 @@ import BoardView from '../view/board';
 import PointPresenter from './point';
 import NewPointPresenter from './new-point';
 import AddButtonPresenter from './add-button';
-import { FilterType, SortType, State, UpdateType, UserAction } from '../const';
-import { filter } from '../utils/filter';
-import { remove, render } from '../utils/render';
-import { sortByDateFrom, sortByDuration, sortByPrice } from '../utils/sort';
+import {FilterType, SortType, State, UpdateType, UserAction} from '../const';
+import {filter} from '../utils/filter';
+import {remove, render} from '../utils/render';
+import {sortByDateFrom, sortByDuration, sortByPrice} from '../utils/sort';
 
 const ADD_BUTTON_CONTAINER = document.querySelector('.trip-main');
 
 export default class Board {
   constructor(container, pointsModel, filterModel, destinationsModel, offersModel, api) {
-    this._isLoading = true;
-
     this._container = container;
-    this._currentSortType = SortType.DAY;
-
     this._pointsModel = pointsModel;
     this._filterModel = filterModel;
     this._destinationsModel = destinationsModel;
     this._offersModel = offersModel;
-
     this._api = api;
 
     this._loadingComponent = null;
@@ -33,10 +28,11 @@ export default class Board {
     this._pointsListComponent = null;
     this._boardComponent = null;
 
+    this._isLoading = true;
+    this._currentSortType = SortType.DAY;
+
     this._bindContext();
     this._initInnerPresenters();
-
-    this._pointTypes = null;
   }
 
   init() {
@@ -47,6 +43,41 @@ export default class Board {
   destroy() {
     this._deleteObservers();
     this._clear(true);
+  }
+
+  _bindContext() {
+    this._createPoint = this._createPoint.bind(this);
+    this._handleModelEvent = this._handleModelEvent.bind(this);
+    this._handleViewAction = this._handleViewAction.bind(this);
+    this._handlePointsModeChange = this._handlePointsModeChange.bind(this);
+    this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
+    this._handleAddButtonClick = this._handleAddButtonClick.bind(this);
+    this._handleNewPointFormClose = this._handleNewPointFormClose.bind(this);
+  }
+
+  _initInnerPresenters() {
+    this._pointPresenters = new Map();
+
+    this._addButtonPresenter = new AddButtonPresenter(ADD_BUTTON_CONTAINER);
+    this._addButtonPresenter.setAddButtonClickHandler(this._handleAddButtonClick);
+    this._addButtonPresenter.init();
+
+    this._newPointPresenter = new NewPointPresenter(
+      this._destinationsModel,
+      this._offersModel,
+      this._handleViewAction,
+    );
+    this._newPointPresenter.setFormCloseCallback(this._handleNewPointFormClose);
+  }
+
+  _addObservers() {
+    this._pointsModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
+  }
+
+  _deleteObservers() {
+    this._pointsModel.deleteObserver(this._handleModelEvent);
+    this._filterModel.deleteObserver(this._handleModelEvent);
   }
 
   _createPoint() {
@@ -78,16 +109,6 @@ export default class Board {
         return points.sort(sortByPrice);
       }
     }
-  }
-
-  _addObservers() {
-    this._pointsModel.addObserver(this._handleModelEvent);
-    this._filterModel.addObserver(this._handleModelEvent);
-  }
-
-  _deleteObservers() {
-    this._pointsModel.deleteObserver(this._handleModelEvent);
-    this._filterModel.deleteObserver(this._handleModelEvent);
   }
 
   _handleModelEvent(updateType, update) {
@@ -153,41 +174,6 @@ export default class Board {
     }
   }
 
-  _bindContext() {
-    this._createPoint = this._createPoint.bind(this);
-    this._handleAddButtonClick = this._handleAddButtonClick.bind(this);
-    this._handleFormClose = this._handleFormClose.bind(this);
-    this._handleModelEvent = this._handleModelEvent.bind(this);
-    this._handleViewAction = this._handleViewAction.bind(this);
-    this._handlePointsModeChange = this._handlePointsModeChange.bind(this);
-    this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
-  }
-
-  _initInnerPresenters() {
-    this._pointPresenters = new Map();
-
-    this._addButtonPresenter = new AddButtonPresenter(ADD_BUTTON_CONTAINER);
-    this._addButtonPresenter.setAddButtonClickHandler(this._handleAddButtonClick);
-    this._addButtonPresenter.init();
-
-    this._newPointPresenter = new NewPointPresenter(
-      this._destinationsModel,
-      this._offersModel,
-      this._handleViewAction,
-    );
-    this._newPointPresenter.setFormCloseCallback(this._handleFormClose);
-  }
-
-  _handleAddButtonClick() {
-    const buttonIsDisabled = true;
-    this._createPoint();
-    this._addButtonPresenter.init(buttonIsDisabled);
-  }
-
-  _handleFormClose() {
-    this._addButtonPresenter.init(false);
-  }
-
   _handlePointsModeChange() {
     this._pointPresenters.forEach((presenter) => presenter.resetView());
 
@@ -202,6 +188,16 @@ export default class Board {
       this._clear();
       this._render();
     }
+  }
+
+  _handleAddButtonClick() {
+    const buttonIsDisabled = true;
+    this._createPoint();
+    this._addButtonPresenter.init(buttonIsDisabled);
+  }
+
+  _handleNewPointFormClose() {
+    this._addButtonPresenter.init(false);
   }
 
   _clearLoading() {
@@ -266,10 +262,7 @@ export default class Board {
 
     this._sortComponent = new SortView(this._currentSortType);
     this._sortComponent.setChangeSortTypeHandler(this._handleSortTypeChange);
-    render(
-      this._boardComponent.getElement(),
-      this._sortComponent,
-    );
+    render(this._boardComponent.getElement(), this._sortComponent);
   }
 
   _renderPoint(point) {
@@ -295,10 +288,7 @@ export default class Board {
       this._renderPoint(point);
     }
 
-    render(
-      this._boardComponent.getElement(),
-      this._pointsListComponent,
-    );
+    render(this._boardComponent.getElement(),this._pointsListComponent);
   }
 
   _renderBoard() {

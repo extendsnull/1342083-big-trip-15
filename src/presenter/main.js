@@ -3,7 +3,7 @@ import InfoPresenter from '../presenter/info';
 import FilterPresenter from '../presenter/filter';
 import BoardPresenter from '../presenter/board';
 import StatsPresenter from '../presenter/stats';
-import { UpdateType } from '../const';
+import {UpdateType} from '../const';
 
 const containers = {
   info: document.querySelector('.trip-main'),
@@ -20,6 +20,7 @@ export default class Main {
     this._filterModel = filterModel;
     this._destinationsModel = destinationsModel;
     this._offersModel = offersModel;
+
     this._presenters = {};
 
     this._init();

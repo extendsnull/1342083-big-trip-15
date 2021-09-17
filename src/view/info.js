@@ -1,7 +1,7 @@
 import Abstract from './abstract';
 
 const getInfoTemplate = (details) => {
-  const { title, terms, totalCost } = details;
+  const {title, terms, totalCost} = details;
 
   return `
     <section class="trip-main__trip-info trip-info">
@@ -26,7 +26,7 @@ export default class Info extends Abstract {
     this._details = details;
   }
 
-  _getTemplate() {
+  getTemplate() {
     return getInfoTemplate(this._details);
   }
 }
