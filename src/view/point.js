@@ -1,6 +1,6 @@
 import Abstract from './abstract';
 import {HumanDateFormatPattern} from '../const';
-import {formatLabel} from '../utils/common';
+import {formatLabel, isOnline} from '../utils/common';
 import {formatDate, getHumanizedDuration} from '../utils/date';
 
 const MachineDateFormatPattern = {
@@ -29,13 +29,19 @@ const getOffersTemplate = (offers, hasOffers) => {
   return '';
 };
 
-const getPointTemplate = (point, offers) => {
-  const {type, destination, dateFrom, dateTo, basePrice, isFavorite} = point;
+const getSelectedOffers = (type, offers, availableOffers) => {
+  if (isOnline()) {
+    return availableOffers.size
+      ? availableOffers.get(type).slice().filter((offer) => offers.find((item) => item.title === offer.title))
+      : [];
+  }
 
-  const selectedOffers = offers.size
-    ? offers.get(type).slice().filter((offer) => point.offers.find((item) => item.title === offer.title))
-    : [];
+  return offers;
+};
 
+const getPointTemplate = (point, availableOffers) => {
+  const {type, destination, dateFrom, dateTo, basePrice, isFavorite, offers} = point;
+  const selectedOffers = getSelectedOffers(type, offers, availableOffers);
   const hasOffers = Boolean(selectedOffers.length);
   const title = `${formatLabel(type)} ${destination.name}`;
 
